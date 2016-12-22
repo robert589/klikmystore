@@ -1,0 +1,59 @@
+.clog-form-header {
+  display: flex;
+  margin-bottom: 8px;
+}
+.clog-form-header > .checkbox-field {
+  margin-right: 8px;
+}
+.clog-form-header > .search-field {
+  width: 100%;
+  margin: 0 6px;
+}
+.clog-form-header > .input-field {
+  margin: 0 6px;
+}
+.clog-form-update {
+  display: flex;
+}
+.clog-form-change-file,
+.clog-form-cancel-file {
+  background: 0;
+  border: 0;
+  color: blue;
+  margin-left: 120px;
+}
+.clog-form-field {
+  display: flex;
+  margin-bottom: 8px;
+}
+.clog-form-subsection {
+  display: flex;
+}
+.clog-form-subsection-right {
+  width: 100%;
+}
+.clog-form-date-area,
+.clog-form-work-area,
+.clog-form-memo-area,
+.clog-form-subsection-left,
+.clog-form-subsection-right {
+  padding: 8px;
+  border: 1px solid black;
+}
+.clog-form-date-area,
+.clog-form-memo-area,
+.clog-form-subsection-left {
+  min-width: 240px;
+}
+.clog-form-work-area {
+  width: 100%;
+}
+.clog-form-work-area-label {
+  width: 200px;
+}
+.clog-form-work-area-item {
+  display: flex;
+}
+.clog-form > .form-submit {
+  margin: 8px 0;
+}

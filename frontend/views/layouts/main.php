@@ -9,7 +9,10 @@ use yii\bootstrap\NavBar;
 use yii\widgets\Breadcrumbs;
 use frontend\assets\AppAsset;
 use common\widgets\Alert;
-
+use frontend\widgets\MasterSidebar;
+use frontend\widgets\Sidebar;
+use common\libraries\UserLibrary;
+use frontend\widgets\TeacherSidebar;
 AppAsset::register($this);
 ?>
 <?php $this->beginPage() ?>
@@ -24,59 +27,68 @@ AppAsset::register($this);
 </head>
 <body>
 <?php $this->beginBody() ?>
+    <?php if(!Yii::$app->user->isGuest) { ?>
+    <header class="header clearfix">
+        <div class="logo-section"><a href="index.php">
+            
+        </div>
+        <div class="top-right-section">
+            <a class="fullview menu-link app-hamburger"></a>
+            <div class="top-profile-section">
+                <div class="top-profile-name">Hi, <?= \Yii::$app->user->identity->first_name ?> 
+                </div>
+                <div class="profile-dropdown">
+                    <a href="#" class="account">
+                        <img src=<?= Yii::$app->request->baseUrl  . "/images/profile-pic'.jpg" ?> class="profile-circle"/>
+                    </a>
+                    <div class="submenu" style="display: none;">
+                        <ul class="root">
+                            <li> 
+                                <?= Html::a('Logout',
+                                    ['site/logout'],
+                                    ['data-method'=>'post']); ?>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            </div>
+        </header>
 
-<div class="wrap">
-    <?php
-    NavBar::begin([
-        'brandLabel' => 'My Company',
-        'brandUrl' => Yii::$app->homeUrl,
-        'options' => [
-            'class' => 'navbar-inverse navbar-fixed-top',
-        ],
-    ]);
-    $menuItems = [
-        ['label' => 'Home', 'url' => ['/site/index']],
-        ['label' => 'About', 'url' => ['/site/about']],
-        ['label' => 'Contact', 'url' => ['/site/contact']],
-    ];
-    if (Yii::$app->user->isGuest) {
-        $menuItems[] = ['label' => 'Signup', 'url' => ['/site/signup']];
-        $menuItems[] = ['label' => 'Login', 'url' => ['/site/login']];
-    } else {
-        $menuItems[] = '<li>'
-            . Html::beginForm(['/site/logout'], 'post')
-            . Html::submitButton(
-                'Logout (' . Yii::$app->user->identity->username . ')',
-                ['class' => 'btn btn-link logout']
-            )
-            . Html::endForm()
-            . '</li>';
-    }
-    echo Nav::widget([
-        'options' => ['class' => 'navbar-nav navbar-right'],
-        'items' => $menuItems,
-    ]);
-    NavBar::end();
-    ?>
+        <div class="main-section clearfix">
+            <div class="left-section left-side" id="sidebar">
+                <div class="date-time-section clearfix">
+                    <?php
+                      date_default_timezone_set("Asia/Kolkata");
+                      echo date("h:ia");
+                      ?>
+                      <span><?php echo date("M d");?><br><?php echo date("Y");?>
+                      </span>
+                </div>
+                <div class="menu-section clearfix">
+                    <?= Sidebar::widget(['id' => 'cssmenu', 
+                            'items' => [
+                                ['label' => 'Daily Communication Log', 
+                                    'href' => Yii::$app->request->baseUrl . '/parent/view-logs', 
 
-    <div class="container">
-        <?= Breadcrumbs::widget([
-            'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
-        ]) ?>
-        <?= Alert::widget() ?>
+                                ]
+                            ]
+                        ]) ?>
+                </div>
+           </div>
+            <div class="right-section clearfix">
+                <?= $content ?>
+            </div>
+        </div>
+    <?php } else { ?>
         <?= $content ?>
-    </div>
-</div>
-
-<footer class="footer">
-    <div class="container">
-        <p class="pull-left">&copy; My Company <?= date('Y') ?></p>
-
-        <p class="pull-right"><?= Yii::powered() ?></p>
-    </div>
-</footer>
-
+    <?php } ?>
 <?php $this->endBody() ?>
+<script>
+require(["project/init"], function() {
+});
+</script>
+<input id="base-url" type="hidden" value="<?= Yii::$app->request->baseUrl ?>">
 </body>
 </html>
 <?php $this->endPage() ?>

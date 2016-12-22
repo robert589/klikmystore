@@ -1,0 +1,31 @@
+.dlog-item {
+  font-weight: bold;
+}
+.dlog-item-sub {
+  display: flex;
+  border: 1px solid black;
+}
+.dlog-item-sub-item {
+  min-width: 250px;
+  max-width: 250px;
+  border-right: 1px solid black;
+  padding: 8px;
+}
+.dlog-item-sub-right {
+  padding: 8px;
+  width: 100%;
+}
+.dlog-item-btn {
+  max-width: 120px;
+}
+.dlog-item-buttons {
+  display: flex;
+  margin: 8px 0;
+}
+.dlog-item-buttons > button {
+  margin-right: 8px;
+  width: 120px;
+}
+.dlog-item-chat-container {
+  margin: 8px 0;
+}

@@ -1,0 +1,24 @@
+.tab-container {
+    
+    padding: 0 12px;
+    
+    &-header {
+        background: lightblue;
+        display: flex;
+        color: white;
+        font-weight: bold;
+        
+        &-item {
+            width: 100%;
+            padding: 4px;
+            border-right: 2px solid white;
+        }
+        
+        &-item:hover, &-item.active {
+            background: white;
+            color: lightblue;
+            border: 1px solid lightblue;
+            cursor: pointer;
+        }
+    }
+}

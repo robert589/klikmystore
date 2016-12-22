@@ -33,3 +33,10 @@ phpunit.phar
 
 # vagrant runtime
 /.vagrant
+
+
+# node_modules
+/node_modules
+
+#file
+/frontend/web/file/*

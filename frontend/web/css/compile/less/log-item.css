@@ -1,0 +1,12 @@
+.log-item-sub {
+  display: flex;
+}
+.log-item-sub-item {
+  display: flex;
+  width: 100%;
+  line-height: 32px;
+  height: 32px;
+}
+.log-item-sub-item > .search-field > .search-field-input {
+  padding: 0px 6px;
+}

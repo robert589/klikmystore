@@ -1,0 +1,7 @@
+.addclass-form {
+  display: flex;
+}
+.addclass-form > .input-field {
+  margin: 0 4px;
+  min-width: 320px;
+}
