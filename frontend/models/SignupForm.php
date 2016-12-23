@@ -3,14 +3,20 @@ namespace frontend\models;
 
 use yii\base\Model;
 use common\models\User;
-
+use common\models\UserEmailAuthentication;
+use common\libraries\UserLibrary;
 /**
  * Signup form
  */
 class SignupForm extends Model
 {
-    public $username;
+    
+    public $first_name;
+    
+    public $last_name;
+    
     public $email;
+    
     public $password;
 
 
@@ -20,16 +26,19 @@ class SignupForm extends Model
     public function rules()
     {
         return [
-            ['username', 'trim'],
-            ['username', 'required'],
-            ['username', 'unique', 'targetClass' => '\common\models\User', 'message' => 'This username has already been taken.'],
-            ['username', 'string', 'min' => 2, 'max' => 255],
+            ['first_name', 'string'],
+            ['first_name', 'trim'],
+            ['first_name', 'required'],
+            
+            ['last_name', 'string'],
+            ['last_name', 'trim'],
+            
 
             ['email', 'trim'],
             ['email', 'required'],
             ['email', 'email'],
             ['email', 'string', 'max' => 255],
-            ['email', 'unique', 'targetClass' => '\common\models\User', 'message' => 'This email address has already been taken.'],
+            ['email', 'unique', 'targetClass' => '\common\models\UserEmailAuthentication', 'message' => 'This email address has already been taken.'],
 
             ['password', 'required'],
             ['password', 'string', 'min' => 6],
@@ -41,18 +50,36 @@ class SignupForm extends Model
      *
      * @return User|null the saved model or null if saving fails
      */
-    public function signup()
+    public function signup() 
     {
         if (!$this->validate()) {
-            return null;
+            return false;
         }
         
         $user = new User();
-        $user->username = $this->username;
-        $user->email = $this->email;
-        $user->setPassword($this->password);
+        $user->username = $this->generateUsername();
+        $user->first_name = $this->first_name;
+        $user->last_name = $this->last_name;
         $user->generateAuthKey();
+
+        if(!$user->save()) {
+            return false;
+        }
         
-        return $user->save() ? $user : null;
+        $userEmailAuth = new UserEmailAuthentication();
+        $userEmailAuth->setPassword($this->password);
+        $userEmailAuth->user_id = $user->id;
+        $userEmailAuth->email = $this->email;
+        $userEmailAuth->generatePasswordResetToken();
+        if(!$userEmailAuth->save()) {
+            return false;
+        }
+        return $user;
+    }
+    
+    
+    public function generateUsername(){
+        return UserLibrary::generateUsername($this->first_name, $this->last_name);
+
     }
 }

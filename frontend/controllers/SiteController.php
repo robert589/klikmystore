@@ -84,18 +84,22 @@ class SiteController extends Controller
      */
     public function actionLogin()
     {
-        if (!Yii::$app->user->isGuest) {
-            return $this->goHome();
-        }
-
+        $email = filter_input(INPUT_POST, "email");
+        $password = filter_input(INPUT_POST, "password");
+        
         $model = new LoginForm();
-        if ($model->load(Yii::$app->request->post()) && $model->login()) {
-            return $this->goBack();
+        $model->email = $email;
+        $model->password = $password;
+        $data = array();
+        if($model->login()) {
+            $data['status'] = 1;
         } else {
-            return $this->render('login', [
-                'model' => $model,
-            ]);
+            $data['status'] = 0;
+            if($model->hasErrors()) {
+                $data['errors'] = $model->getErrors();
+            }
         }
+        return json_encode($data);
     }
 
     /**

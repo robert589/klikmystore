@@ -1,21 +1,20 @@
 import {Component} from '../common/component';
 import {Modal} from './../common/modal';
 import {Button} from './../common/button';
-import {Login} from './login';
+import {LoginForm} from './login-form';
 
-export class App extends Component{
+export class Login extends Component{
 
-    login : Login;
-    
+    loginForm : LoginForm;
+
     constructor(root: HTMLElement) {
         super(root);
     }
     
     decorate() {
         super.decorate();
-        if(this.root.getElementsByClassName('login').length !== 0) {
-            this.login = new Login(document.getElementById("lgn"));
-        }
+        this.loginForm = new LoginForm(document.getElementById(this.id + "form"));
+
     }
     
     bindEvent() {

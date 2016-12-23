@@ -253,7 +253,270 @@ define("common/modal", ["require", "exports", "common/component", "common/button
     }(component_3.Component));
     exports.Modal = Modal;
 });
-define("project/app", ["require", "exports", "common/component"], function (require, exports, component_4) {
+define("common/validation", ["require", "exports"], function (require, exports) {
+    "use strict";
+    var Validation = (function () {
+        function Validation() {
+        }
+        return Validation;
+    }());
+    exports.Validation = Validation;
+});
+define("common/range-validation", ["require", "exports", "common/validation"], function (require, exports, validation_1) {
+    "use strict";
+    var RangeValidation = (function (_super) {
+        __extends(RangeValidation, _super);
+        function RangeValidation(targetField, min, max) {
+            var _this = _super.call(this) || this;
+            _this.targetField = targetField;
+            _this.min = min;
+            _this.max = max;
+            _this.errorMessage = _this.getErrorMessage();
+            _this.validate = _this.validateRange.bind(_this);
+            return _this;
+        }
+        RangeValidation.prototype.getErrorMessage = function () {
+            var message;
+            if (this.max !== null && this.min !== null) {
+                message =
+                    this.targetField.getDisplayName() + " must be in the range of " +
+                        this.min + " to " + this.max;
+            }
+            else if (this.min !== null) {
+                message = this.targetField.getDisplayName() + " cannot be less than "
+                    + this.min;
+            }
+            else {
+                message = this.targetField.getDisplayName() + " must be at most "
+                    + this.min;
+            }
+            return message;
+        };
+        RangeValidation.prototype.validateRange = function () {
+            var valid = (this.min === null ||
+                this.targetField.getValue() >= this.min)
+                && (this.max === null ||
+                    this.targetField.getValue() <= this.max);
+            if (!valid) {
+                this.targetField.showError(this.errorMessage);
+            }
+            return valid;
+        };
+        return RangeValidation;
+    }(validation_1.Validation));
+    exports.RangeValidation = RangeValidation;
+});
+define("common/form", ["require", "exports", "common/component", "common/system", "common/button"], function (require, exports, component_4, system_3, button_2) {
+    "use strict";
+    var Form = (function (_super) {
+        __extends(Form, _super);
+        function Form(root) {
+            var _this = _super.call(this, root) || this;
+            _this.rules();
+            return _this;
+        }
+        Form.prototype.decorate = function () {
+            _super.prototype.decorate.call(this);
+            //init variable
+            this.requiredFields = [];
+            this.allFields = [];
+            this.emailFields = [];
+            this.rangeValidations = [];
+            this.validations = [];
+            this.method = this.root.getAttribute('method');
+            this.url = this.root.getAttribute('url');
+            this.file = Boolean(this.root.getAttribute('data-file'));
+            this.submitButton = new button_2.Button(document.getElementById(this.id + "-submit-btn"), this.submit.bind(this));
+        };
+        Form.prototype.bindEvent = function () {
+            _super.prototype.bindEvent.call(this);
+            this.root.onsubmit = function (e) {
+                return false;
+            };
+            this.root.onkeypress = function (e) {
+                if (e.keyCode === 13) {
+                    this.submit(e);
+                }
+            }.bind(this);
+        };
+        Form.prototype.registerFields = function (fields) {
+            this.allFields = this.allFields.concat(fields);
+        };
+        Form.prototype.setRequiredField = function (fields) {
+            this.requiredFields = this.requiredFields.concat(fields);
+        };
+        Form.prototype.setRangeValidations = function (validations) {
+            this.rangeValidations = this.rangeValidations.concat(validations);
+        };
+        Form.prototype.setValidations = function (validations) {
+            this.validations = this.validations.concat(validations);
+        };
+        Form.prototype.setEmailField = function (fields) {
+            this.emailFields = this.emailFields.concat(fields);
+        };
+        Form.prototype.validate = function () {
+            this.hideAllErrors();
+            var valid = true;
+            //validate required fields
+            for (var _i = 0, _a = this.requiredFields; _i < _a.length; _i++) {
+                var field = _a[_i];
+                if (system_3.System.isEmptyValue(field.getValue())) {
+                    field.showError(field.getDisplayName() + " is required");
+                    valid = false;
+                }
+            }
+            //validate email fields
+            for (var _b = 0, _c = this.emailFields; _b < _c.length; _b++) {
+                var field = _c[_b];
+                if (!system_3.System.isEmail(field.getValue())) {
+                    field.showError("The input must be a valid email address");
+                    valid = false;
+                }
+            }
+            //execute range validations
+            for (var _d = 0, _e = this.rangeValidations; _d < _e.length; _d++) {
+                var validation = _e[_d];
+                if (!validation.validate()) {
+                    valid = false;
+                }
+            }
+            //execute all validations
+            for (var _f = 0, _g = this.validations; _f < _g.length; _f++) {
+                var validation = _g[_f];
+                if (!validation.validate()) {
+                    validation.targetField.showError(validation.errorMessage);
+                    valid = false;
+                }
+            }
+            return valid;
+        };
+        Form.prototype.hideAllErrors = function () {
+            for (var _i = 0, _a = this.allFields; _i < _a.length; _i++) {
+                var field = _a[_i];
+                field.hideError();
+            }
+        };
+        Form.prototype.getJson = function (sendCsrf) {
+            var data = {};
+            if (sendCsrf) {
+                data = system_3.System.addCsrf(data);
+            }
+            for (var _i = 0, _a = this.allFields; _i < _a.length; _i++) {
+                var field = _a[_i];
+                data[field.getName()] = field.getValue();
+            }
+            return data;
+        };
+        Form.prototype.submit = function (e) {
+            e.preventDefault();
+            var valid = this.validate();
+            if (valid) {
+                this.sendToServerSide();
+            }
+            return false;
+        };
+        Form.prototype.sendToServerSide = function () {
+            this.submitButton.disable(true);
+            var ajaxSettings = {
+                url: this.file ? system_3.System.addCsrfToUrl(this.url) : this.url,
+                type: this.method,
+                context: this,
+                data: this.getJson(true),
+                success: function (data) {
+                    var parsed = JSON.parse(data);
+                    if (parsed['status'] === 1) {
+                        this.successCb(parsed);
+                    }
+                    else {
+                        if (!system_3.System.isEmptyValue(parsed['errors'])) {
+                            this.handleErrors(parsed['errors']);
+                        }
+                    }
+                    this.submitButton.disable(false);
+                },
+                error: function () {
+                    this.submitButton.disable(false);
+                }
+            };
+            if (this.file) {
+                ajaxSettings['processData'] = false;
+                ajaxSettings['cache'] = false;
+                ajaxSettings['contentType'] = false;
+            }
+            $.ajax(ajaxSettings);
+        };
+        Form.prototype.handleErrors = function (errors) {
+            for (var _i = 0, _a = this.allFields; _i < _a.length; _i++) {
+                var field = _a[_i];
+                if (!system_3.System.isEmptyValue(errors[field.getName()])) {
+                    field.showError(errors[field.getName()][0]);
+                }
+            }
+        };
+        Form.prototype.findField = function (name) {
+            for (var _i = 0, _a = this.allFields; _i < _a.length; _i++) {
+                var field = _a[_i];
+                if (field.getName() === name) {
+                    return field;
+                }
+            }
+        };
+        return Form;
+    }(component_4.Component));
+    exports.Form = Form;
+});
+define("project/login-form", ["require", "exports", "common/form", "common/input-field"], function (require, exports, form_1, input_field_1) {
+    "use strict";
+    var LoginForm = (function (_super) {
+        __extends(LoginForm, _super);
+        function LoginForm(root) {
+            var _this = _super.call(this, root) || this;
+            _this.failCb = function () {
+            }.bind(_this);
+            _this.successCb = function (data) {
+                window.location.reload();
+            }.bind(_this);
+            return _this;
+        }
+        LoginForm.prototype.rules = function () {
+            this.setRequiredField([this.emailField, this.passwordField]);
+            this.setEmailField([this.emailField]);
+        };
+        LoginForm.prototype.decorate = function () {
+            _super.prototype.decorate.call(this);
+            this.emailField = new input_field_1.InputField(document.getElementById(this.id + "-email-field"));
+            this.passwordField = new input_field_1.InputField(document.getElementById(this.id + "-password-field"));
+            this.registerFields([this.emailField, this.passwordField]);
+        };
+        return LoginForm;
+    }(form_1.Form));
+    exports.LoginForm = LoginForm;
+});
+define("project/login", ["require", "exports", "common/component", "project/login-form"], function (require, exports, component_5, login_form_1) {
+    "use strict";
+    var Login = (function (_super) {
+        __extends(Login, _super);
+        function Login(root) {
+            return _super.call(this, root) || this;
+        }
+        Login.prototype.decorate = function () {
+            _super.prototype.decorate.call(this);
+            this.loginForm = new login_form_1.LoginForm(document.getElementById(this.id + "form"));
+        };
+        Login.prototype.bindEvent = function () {
+            _super.prototype.bindEvent.call(this);
+        };
+        Login.prototype.detach = function () {
+            _super.prototype.detach.call(this);
+        };
+        Login.prototype.unbindEvent = function () {
+            // no event to unbind
+        };
+        return Login;
+    }(component_5.Component));
+    exports.Login = Login;
+});
+define("project/app", ["require", "exports", "common/component", "project/login"], function (require, exports, component_6, login_1) {
     "use strict";
     var App = (function (_super) {
         __extends(App, _super);
@@ -262,6 +525,9 @@ define("project/app", ["require", "exports", "common/component"], function (requ
         }
         App.prototype.decorate = function () {
             _super.prototype.decorate.call(this);
+            if (this.root.getElementsByClassName('login').length !== 0) {
+                this.login = new login_1.Login(document.getElementById("lgn"));
+            }
         };
         App.prototype.bindEvent = function () {
             _super.prototype.bindEvent.call(this);
@@ -273,7 +539,7 @@ define("project/app", ["require", "exports", "common/component"], function (requ
             // no event to unbind
         };
         return App;
-    }(component_4.Component));
+    }(component_6.Component));
     exports.App = App;
 });
 define("project/init", ["require", "exports", "project/app"], function (require, exports, app_1) {
