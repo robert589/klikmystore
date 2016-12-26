@@ -1,0 +1,12 @@
+.dynamic-field {
+  margin-bottom: 16px;
+}
+.dynamic-field-add {
+  border-radius: 50%;
+  background: red;
+  color: white;
+  border: 2px solid red;
+}
+.dynamic-field-new {
+  display: flex;
+}

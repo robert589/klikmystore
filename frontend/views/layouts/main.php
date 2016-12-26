@@ -39,7 +39,6 @@ AppAsset::register($this);
                 </div>
                 <div class="profile-dropdown">
                     <a href="#" class="account">
-                        <img src=<?= Yii::$app->request->baseUrl  . "/images/profile-pic'.jpg" ?> class="profile-circle"/>
                     </a>
                     <div class="submenu" style="display: none;">
                         <ul class="root">

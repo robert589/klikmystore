@@ -43,6 +43,14 @@ export abstract class Field extends Component {
         }
         return constructedName;
     }
+
+    setIndex(index : number) {
+        this.root.setAttribute('data-index', index + "");
+    }
+
+    getIndex() : number {
+        return parseInt(this.root.getAttribute('data-index'));
+    }
     
     abstract getValue() : Object;
 }

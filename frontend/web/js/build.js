@@ -18,6 +18,13 @@ define("common/component", ["require", "exports"], function (require, exports) {
         };
         Component.prototype.detach = function () {
         };
+        /**
+         * Remove completely
+         */
+        Component.prototype.remove = function () {
+            this.detach();
+            this.root.parentElement.removeChild(this.root);
+        };
         Component.prototype.unbindEvent = function () {
         };
         Component.prototype.deconstruct = function () {
@@ -121,6 +128,12 @@ define("common/Field", ["require", "exports", "common/component", "common/system
                 constructedName += system_1.System.capitalizeFirstLetter(piece);
             }
             return constructedName;
+        };
+        Field.prototype.setIndex = function (index) {
+            this.root.setAttribute('data-index', index + "");
+        };
+        Field.prototype.getIndex = function () {
+            return parseInt(this.root.getAttribute('data-index'));
         };
         return Field;
     }(component_1.Component));
@@ -516,7 +529,194 @@ define("project/login", ["require", "exports", "common/component", "project/logi
     }(component_5.Component));
     exports.Login = Login;
 });
-define("project/app", ["require", "exports", "common/component", "project/login"], function (require, exports, component_6, login_1) {
+define("common/dynamic-field", ["require", "exports", "common/Field", "common/button"], function (require, exports, field_1, button_3) {
+    "use strict";
+    var DynamicField = (function (_super) {
+        __extends(DynamicField, _super);
+        function DynamicField(root) {
+            var _this = _super.call(this, root) || this;
+            _this.baseElementinString = _this.baseElement.innerHTML;
+            return _this;
+        }
+        DynamicField.prototype.decorate = function () {
+            _super.prototype.decorate.call(this);
+            this.addBtn = new button_3.Button(document.getElementById(this.id + "-add"), this.addField.bind(this));
+            this.rmvBtn = new button_3.Button(document.getElementById(this.id + "-remove"), this.removeField.bind(this));
+            this.baseElement = this.root.getElementsByClassName('dynamic-field-init')[0];
+            this.areaField = this.root.getElementsByClassName('dynamic-field-area')[0];
+        };
+        DynamicField.prototype.getValue = function () {
+            var value = [];
+            for (var i = 0; i < this.fields.length; i++) {
+                value.push(this.fields[i].getValue());
+            }
+            return value;
+        };
+        DynamicField.prototype.bindEvent = function () {
+            _super.prototype.bindEvent.call(this);
+        };
+        DynamicField.prototype.detach = function () {
+            _super.prototype.detach.call(this);
+        };
+        DynamicField.prototype.unbindEvent = function () {
+            // no event to unbind
+        };
+        DynamicField.prototype.findMaxIndexInFields = function () {
+            var max = -1;
+            for (var i = 0; i < this.fields.length; i++) {
+                if (max < this.fields[i].getIndex()) {
+                    max = this.fields[i].getIndex();
+                }
+            }
+            return max;
+        };
+        DynamicField.prototype.findFieldsWithMaxIndex = function () {
+            var max = -1;
+            var maxField = null;
+            for (var i = 0; i < this.fields.length; i++) {
+                if (max < this.fields[i].getIndex()) {
+                    max = this.fields[i].getIndex();
+                    maxField = this.fields[i];
+                }
+            }
+            return maxField;
+        };
+        /**
+         * Append the base string
+         */
+        DynamicField.prototype.addElement = function () {
+            var wrapper = document.createElement('div');
+            wrapper.innerHTML = this.baseElementinString;
+            var raw = wrapper.getElementsByClassName('dynamic-field-item')[0];
+            raw.setAttribute("id", raw.getAttribute("id") + "-"
+                + (this.findMaxIndexInFields() + 1));
+            this.areaField.appendChild(raw);
+            return raw;
+        };
+        DynamicField.prototype.removeField = function () {
+            var field = this.findFieldsWithMaxIndex();
+            var fieldElement = document.getElementById(field.getRoot().getAttribute('id'));
+            field.detach();
+            this.areaField.removeChild(fieldElement);
+        };
+        return DynamicField;
+    }(field_1.Field));
+    exports.DynamicField = DynamicField;
+});
+define("project/wholesale-field", ["require", "exports", "common/Field"], function (require, exports, field_2) {
+    "use strict";
+    var WholesaleField = (function (_super) {
+        __extends(WholesaleField, _super);
+        function WholesaleField(root) {
+            return _super.call(this, root) || this;
+        }
+        WholesaleField.prototype.decorate = function () {
+            _super.prototype.decorate.call(this);
+        };
+        WholesaleField.prototype.bindEvent = function () {
+            _super.prototype.bindEvent.call(this);
+        };
+        WholesaleField.prototype.detach = function () {
+            _super.prototype.detach.call(this);
+        };
+        WholesaleField.prototype.getValue = function () {
+            return null;
+        };
+        WholesaleField.prototype.unbindEvent = function () {
+            // no event to unbind
+        };
+        return WholesaleField;
+    }(field_2.Field));
+    exports.WholesaleField = WholesaleField;
+});
+define("project/dynamic-wholesale-field", ["require", "exports", "common/dynamic-field", "project/wholesale-field"], function (require, exports, dynamic_field_1, wholesale_field_1) {
+    "use strict";
+    var DynamicWholesaleField = (function (_super) {
+        __extends(DynamicWholesaleField, _super);
+        function DynamicWholesaleField(root) {
+            var _this = _super.call(this, root) || this;
+            _this.fields = [];
+            _this.fields.push(new wholesale_field_1.WholesaleField(_this.baseElement.querySelector("*")));
+            _this.fields[0].setIndex(0);
+            return _this;
+        }
+        DynamicWholesaleField.prototype.decorate = function () {
+            _super.prototype.decorate.call(this);
+        };
+        /**
+         * Don't forget to set index
+         */
+        DynamicWholesaleField.prototype.addField = function () {
+            var raw = this.addElement();
+            var field = new wholesale_field_1.WholesaleField(raw);
+            field.setIndex(this.findMaxIndexInFields() + 1);
+            this.fields.push(field);
+        };
+        DynamicWholesaleField.prototype.bindEvent = function () {
+            _super.prototype.bindEvent.call(this);
+        };
+        DynamicWholesaleField.prototype.detach = function () {
+            _super.prototype.detach.call(this);
+        };
+        DynamicWholesaleField.prototype.unbindEvent = function () {
+            // no event to unbind
+        };
+        return DynamicWholesaleField;
+    }(dynamic_field_1.DynamicField));
+    exports.DynamicWholesaleField = DynamicWholesaleField;
+});
+define("project/add-product-form", ["require", "exports", "common/form", "project/dynamic-wholesale-field"], function (require, exports, form_2, dynamic_wholesale_field_1) {
+    "use strict";
+    var AddProductForm = (function (_super) {
+        __extends(AddProductForm, _super);
+        function AddProductForm(root) {
+            return _super.call(this, root) || this;
+        }
+        AddProductForm.prototype.decorate = function () {
+            _super.prototype.decorate.call(this);
+            this.wholeSaleField =
+                new dynamic_wholesale_field_1.DynamicWholesaleField(document.getElementById(this.id + "-dynamic-wholesale"));
+        };
+        AddProductForm.prototype.bindEvent = function () {
+            _super.prototype.bindEvent.call(this);
+        };
+        AddProductForm.prototype.rules = function () {
+        };
+        AddProductForm.prototype.detach = function () {
+            _super.prototype.detach.call(this);
+        };
+        AddProductForm.prototype.unbindEvent = function () {
+            // no event to unbind
+        };
+        return AddProductForm;
+    }(form_2.Form));
+    exports.AddProductForm = AddProductForm;
+});
+define("project/add-product", ["require", "exports", "common/component", "project/add-product-form"], function (require, exports, component_6, add_product_form_1) {
+    "use strict";
+    var AddProduct = (function (_super) {
+        __extends(AddProduct, _super);
+        function AddProduct(root) {
+            return _super.call(this, root) || this;
+        }
+        AddProduct.prototype.decorate = function () {
+            _super.prototype.decorate.call(this);
+            this.form = new add_product_form_1.AddProductForm(document.getElementById(this.id + "form"));
+        };
+        AddProduct.prototype.bindEvent = function () {
+            _super.prototype.bindEvent.call(this);
+        };
+        AddProduct.prototype.detach = function () {
+            _super.prototype.detach.call(this);
+        };
+        AddProduct.prototype.unbindEvent = function () {
+            // no event to unbind
+        };
+        return AddProduct;
+    }(component_6.Component));
+    exports.AddProduct = AddProduct;
+});
+define("project/app", ["require", "exports", "common/component", "project/login", "project/add-product"], function (require, exports, component_7, login_1, add_product_1) {
     "use strict";
     var App = (function (_super) {
         __extends(App, _super);
@@ -527,6 +727,9 @@ define("project/app", ["require", "exports", "common/component", "project/login"
             _super.prototype.decorate.call(this);
             if (this.root.getElementsByClassName('login').length !== 0) {
                 this.login = new login_1.Login(document.getElementById("lgn"));
+            }
+            else if (this.root.getElementsByClassName('add-product').length !== 0) {
+                this.addProduct = new add_product_1.AddProduct(document.getElementById('ap'));
             }
         };
         App.prototype.bindEvent = function () {
@@ -539,7 +742,7 @@ define("project/app", ["require", "exports", "common/component", "project/login"
             // no event to unbind
         };
         return App;
-    }(component_6.Component));
+    }(component_7.Component));
     exports.App = App;
 });
 define("project/init", ["require", "exports", "project/app"], function (require, exports, app_1) {

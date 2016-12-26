@@ -12,3 +12,6 @@
   -moz-box-sizing: border-box;
   box-sizing: border-box;
 }
+.input-field-input[type="file"] {
+  height: auto;
+}

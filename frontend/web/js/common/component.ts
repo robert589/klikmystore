@@ -18,6 +18,14 @@ export abstract class Component {
     detach() {
 
     }
+    
+    /**
+     * Remove completely
+     */
+    remove() {
+        this.detach();
+        this.root.parentElement.removeChild(this.root);
+    }
 
     unbindEvent() {
 

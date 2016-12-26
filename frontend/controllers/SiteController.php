@@ -75,6 +75,8 @@ class SiteController extends Controller
         if(Yii::$app->user->isGuest) {
             return $this->render('login');
         }
+        
+        return $this->render('index');
     }
 
     /**
@@ -84,12 +86,8 @@ class SiteController extends Controller
      */
     public function actionLogin()
     {
-        $email = filter_input(INPUT_POST, "email");
-        $password = filter_input(INPUT_POST, "password");
-        
         $model = new LoginForm();
-        $model->email = $email;
-        $model->password = $password;
+        $model->loadData($_POST);
         $data = array();
         if($model->login()) {
             $data['status'] = 1;

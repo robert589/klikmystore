@@ -2,12 +2,12 @@
 namespace common\models;
 
 use Yii;
-use yii\base\Model;
+use common\components\RModel;
 use common\models\UserEmailAuthentication;
 /**
  * Login form
  */
-class LoginForm extends Model
+class LoginForm extends RModel
 {
     public $email;
     public $password;
@@ -15,21 +15,21 @@ class LoginForm extends Model
 
     private $_user;
 
-
-    /**
-     * @inheritdoc
-     */
-    public function rules()
-    {
-        return [
-            // username and password are both required
-            [['email', 'password'], 'required'],
-            // rememberMe must be a boolean value
-            ['rememberMe', 'boolean'],
-            // password is validated by validatePassword()
-            ['password', 'validatePassword'],
-        ];
-    }
+    
+        /**
+         * @inheritdoc
+         */
+        public function rules()
+        {
+            return [
+                // username and password are both required
+                [['email', 'password'], 'required'],
+                // rememberMe must be a boolean value
+                ['rememberMe', 'boolean'],
+                // password is validated by validatePassword()
+                ['password', 'validatePassword'],
+            ];
+        }
 
     /**
      * Validates the password.

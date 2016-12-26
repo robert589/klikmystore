@@ -1,0 +1,9 @@
+.view {
+  background: white;
+  padding: 16px;
+}
+.view-header {
+  padding: 8px 0;
+  font-weight: bold;
+  font-size: 22px;
+}
