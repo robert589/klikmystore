@@ -716,7 +716,60 @@ define("project/add-product", ["require", "exports", "common/component", "projec
     }(component_6.Component));
     exports.AddProduct = AddProduct;
 });
-define("project/app", ["require", "exports", "common/component", "project/login", "project/add-product"], function (require, exports, component_7, login_1, add_product_1) {
+define("project/add-category-form", ["require", "exports", "common/form", "common/input-field"], function (require, exports, form_3, input_field_2) {
+    "use strict";
+    var AddCategoryForm = (function (_super) {
+        __extends(AddCategoryForm, _super);
+        function AddCategoryForm(root) {
+            return _super.call(this, root) || this;
+        }
+        AddCategoryForm.prototype.rules = function () {
+            this.registerFields([this.nameField, this.descField]);
+            this.setRequiredField([this.nameField]);
+        };
+        AddCategoryForm.prototype.decorate = function () {
+            _super.prototype.decorate.call(this);
+            this.nameField = new input_field_2.InputField(document.getElementById(this.id + "-name-field"));
+            this.descField = new input_field_2.InputField(document.getElementById(this.id + "-description-field"));
+        };
+        AddCategoryForm.prototype.bindEvent = function () {
+            _super.prototype.bindEvent.call(this);
+        };
+        AddCategoryForm.prototype.detach = function () {
+            _super.prototype.detach.call(this);
+        };
+        AddCategoryForm.prototype.unbindEvent = function () {
+            // no event to unbind
+        };
+        return AddCategoryForm;
+    }(form_3.Form));
+    exports.AddCategoryForm = AddCategoryForm;
+});
+define("project/add-category", ["require", "exports", "common/component", "project/add-category-form"], function (require, exports, component_7, add_category_form_1) {
+    "use strict";
+    var AddCategory = (function (_super) {
+        __extends(AddCategory, _super);
+        function AddCategory(root) {
+            return _super.call(this, root) || this;
+        }
+        AddCategory.prototype.decorate = function () {
+            _super.prototype.decorate.call(this);
+            this.addCategoryForm = new add_category_form_1.AddCategoryForm(document.getElementById(this.id + "form"));
+        };
+        AddCategory.prototype.bindEvent = function () {
+            _super.prototype.bindEvent.call(this);
+        };
+        AddCategory.prototype.detach = function () {
+            _super.prototype.detach.call(this);
+        };
+        AddCategory.prototype.unbindEvent = function () {
+            // no event to unbind
+        };
+        return AddCategory;
+    }(component_7.Component));
+    exports.AddCategory = AddCategory;
+});
+define("project/app", ["require", "exports", "common/component", "project/login", "project/add-product", "project/add-category"], function (require, exports, component_8, login_1, add_product_1, add_category_1) {
     "use strict";
     var App = (function (_super) {
         __extends(App, _super);
@@ -731,6 +784,9 @@ define("project/app", ["require", "exports", "common/component", "project/login"
             else if (this.root.getElementsByClassName('add-product').length !== 0) {
                 this.addProduct = new add_product_1.AddProduct(document.getElementById('ap'));
             }
+            else if (this.root.getElementsByClassName('add-category').length !== 0) {
+                this.addCategory = new add_category_1.AddCategory(document.getElementById('pac'));
+            }
         };
         App.prototype.bindEvent = function () {
             _super.prototype.bindEvent.call(this);
@@ -742,7 +798,7 @@ define("project/app", ["require", "exports", "common/component", "project/login"
             // no event to unbind
         };
         return App;
-    }(component_7.Component));
+    }(component_8.Component));
     exports.App = App;
 });
 define("project/init", ["require", "exports", "project/app"], function (require, exports, app_1) {

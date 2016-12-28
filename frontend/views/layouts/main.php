@@ -67,9 +67,12 @@ AppAsset::register($this);
                 <div class="menu-section clearfix">
                     <?= Sidebar::widget(['id' => 'cssmenu', 
                             'items' => [
-                                ['label' => 'Daily Communication Log', 
-                                    'href' => Yii::$app->request->baseUrl . '/parent/view-logs', 
-
+                                ['label' => 'Produk',
+                                 'href' => '#', 
+                                 'items' => [
+                                     ['label' => 'Tambah Produk', 'href' => '#'],
+                                     ['label' => 'Tambah Kategori' , 'href' => '#']
+                                 ]
                                 ]
                             ]
                         ]) ?>

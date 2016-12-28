@@ -2,7 +2,7 @@
     use common\widgets\Button;
 ?>
 
-<div id="<?= $id ?>" class="dynamic-field" data-name="<?= $name ?>">
+<div id="<?= $id ?>" class="dynamic-field <?= $newClass ?>" data-name="<?= $name ?>">
     <div class="dynamic-field-init"><?= $content ?></div>
     <div class="dynamic-field-area">
         

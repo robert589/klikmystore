@@ -3,7 +3,7 @@
 namespace console\controllers;
 use Yii;
 use yii\console\Controller;
-class ModelController extends Controller {
+class ServiceController extends Controller {
     
     public $name;
     
@@ -19,7 +19,7 @@ class ModelController extends Controller {
     
     public function actionCreate()
     {
-        $dirPath = "frontend/models/" . $this->name . ".php" ;
+        $dirPath = "frontend/services/" . $this->name . ".php" ;
         $attributes = explode(",", $this->attrs);
         
         $text = $this->getHeaderText($this->name);
@@ -48,12 +48,12 @@ class ModelController extends Controller {
 "<?php
 namespace frontend\models;
 
-use common\components\RModel;
+use common\components\RService;
 /**
- * $name model
+ * $name service
  *
  */
-class $name extends RModel
+class $name extends RService
 {
 
 ";

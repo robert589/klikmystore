@@ -10,6 +10,8 @@ class DynamicField extends Widget {
     
     public $name;
     
+    public $newClass;
+    
     public function init() {
         parent::init();
         ob_start();
@@ -17,7 +19,8 @@ class DynamicField extends Widget {
 
     public function run() {
         $content = ob_get_clean();
-        return $this->render('dynamic-field', ['content' => $content, 'id' => $this->id, 'name' => $this->name]);
+        return $this->render('dynamic-field', ['content' => $content, 'newClass' => $this->newClass,
+                            'id' => $this->id, 'name' => $this->name]);
     }
 
 }

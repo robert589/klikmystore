@@ -1,10 +1,22 @@
 import {Form} from '../common/form';
 import {DynamicWholesaleField} from './dynamic-wholesale-field';
+import {InputField} from './../common/input-field';
 
 export class AddProductForm extends Form{
-
+    
+    imageField : InputField;
+    
     wholeSaleField : DynamicWholesaleField;
 
+    nameField : InputField;
+
+    skuField : InputField;
+
+    weightField : InputField;
+
+    linkField : InputField;
+
+    
     constructor(root: HTMLElement) {
         super(root);
     }

@@ -61,7 +61,7 @@
         </div>
         <div class="form-field-right">
             <?= InputField::widget(['id' => $id . '-weight-field', 
-                    'type' => InputField::TEXT, 'name' => 'weight', 
+                    'type' => InputField::NUMBER, 'name' => 'weight', 
                     'value' => null ]) ?>
         </div>
     </div>
@@ -164,6 +164,10 @@
                     'type' => InputField::NUMBER, 'name' => 'price4', 
                     'value' => null ]) ?>
         </div>
+    </div>
+
+    <div class="form-label">
+        Harga Grosir
     </div>
 
     <div class="form-field">
