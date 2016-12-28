@@ -550,6 +550,10 @@ define("common/dynamic-field", ["require", "exports", "common/Field", "common/bu
             for (var i = 0; i < this.fields.length; i++) {
                 value.push(this.fields[i].getValue());
             }
+            //if there is nothing
+            if (value.length === 1 && value[0] === null) {
+                return null;
+            }
             return value;
         };
         DynamicField.prototype.bindEvent = function () {
@@ -620,6 +624,7 @@ define("project/wholesale-field", ["require", "exports", "common/Field"], functi
             _super.prototype.detach.call(this);
         };
         WholesaleField.prototype.getValue = function () {
+            var data = {};
             return null;
         };
         WholesaleField.prototype.unbindEvent = function () {
@@ -665,22 +670,233 @@ define("project/dynamic-wholesale-field", ["require", "exports", "common/dynamic
     }(dynamic_field_1.DynamicField));
     exports.DynamicWholesaleField = DynamicWholesaleField;
 });
-define("project/add-product-form", ["require", "exports", "common/form", "project/dynamic-wholesale-field"], function (require, exports, form_2, dynamic_wholesale_field_1) {
+define("common/search-field-dropdown-item", ["require", "exports", "common/component"], function (require, exports, component_6) {
+    "use strict";
+    var SearchFieldDropdownItem = (function (_super) {
+        __extends(SearchFieldDropdownItem, _super);
+        function SearchFieldDropdownItem(root) {
+            return _super.call(this, root) || this;
+        }
+        Object.defineProperty(SearchFieldDropdownItem, "CLICK_SFDI_EVENT", {
+            get: function () { return "CLICK_SFDI_EVENT"; },
+            enumerable: true,
+            configurable: true
+        });
+        ;
+        SearchFieldDropdownItem.prototype.decorate = function () {
+            _super.prototype.decorate.call(this);
+            this.text = this.root.getAttribute("data-text");
+            this.itemId = this.root.getAttribute("data-itemId");
+        };
+        SearchFieldDropdownItem.prototype.bindEvent = function () {
+            _super.prototype.bindEvent.call(this);
+            var sfdiJson = {
+                text: this.text,
+                itemId: this.itemId
+            };
+            this.clickSfdiEvent = new CustomEvent(SearchFieldDropdownItem.CLICK_SFDI_EVENT, { detail: sfdiJson });
+            this.root.addEventListener("click", function (e) {
+                this.root.dispatchEvent(this.clickSfdiEvent);
+            }.bind(this));
+        };
+        SearchFieldDropdownItem.prototype.unbindEvent = function () {
+            this.root.addEventListener(SearchFieldDropdownItem.CLICK_SFDI_EVENT, null);
+            this.root.addEventListener("click", null);
+        };
+        return SearchFieldDropdownItem;
+    }(component_6.Component));
+    exports.SearchFieldDropdownItem = SearchFieldDropdownItem;
+});
+define("common/search-field", ["require", "exports", "common/Field", "common/system", "common/search-field-dropdown-item"], function (require, exports, field_3, system_4, search_field_dropdown_item_1) {
+    "use strict";
+    var SearchField = (function (_super) {
+        __extends(SearchField, _super);
+        function SearchField(root) {
+            var _this = _super.call(this, root) || this;
+            _this.additionalData = [];
+            _this.initValue();
+            return _this;
+        }
+        Object.defineProperty(SearchField, "GET_VALUE_EVENT", {
+            get: function () { return "SEARCH_FIELD_GET_VALUE_EVENT"; },
+            enumerable: true,
+            configurable: true
+        });
+        ;
+        Object.defineProperty(SearchField, "LOSE_VALUE_EVENT", {
+            get: function () { return "SEARCH_FIELD_LOSE_VALUE_EVENT"; },
+            enumerable: true,
+            configurable: true
+        });
+        ;
+        SearchField.prototype.decorate = function () {
+            _super.prototype.decorate.call(this);
+            this.url = this.root.getAttribute('data-url');
+            this.items = [];
+            this.input = this.root.getElementsByClassName('search-field-input')[0];
+            this.dropdown = this.root.getElementsByClassName('search-field-dropdown')[0];
+            this.loading = this.root.getElementsByClassName('search-field-loading')[0];
+        };
+        SearchField.prototype.bindEvent = function () {
+            this.input.addEventListener('input', function (e) {
+                this.sendAjax();
+                if (this.curText !== this.input.value) {
+                    this.resetValue();
+                }
+            }.bind(this));
+            this.input.addEventListener('click', function (e) {
+                this.sendAjax();
+            }.bind(this));
+            this.getValueEvent = new CustomEvent(SearchField.GET_VALUE_EVENT);
+            this.loseValueEvent = new CustomEvent(SearchField.LOSE_VALUE_EVENT);
+            document.addEventListener('click', function (e) {
+                if (e.target && !e.target.closest('.search-field-dropdown')) {
+                    this.emptyDropdown();
+                }
+            }.bind(this));
+        };
+        SearchField.prototype.resetValue = function () {
+            this.curText = null;
+            this.valueId = null;
+            this.input.classList.remove('selected');
+            this.root.dispatchEvent(this.loseValueEvent);
+        };
+        SearchField.prototype.emptyText = function () {
+            this.input.value = null;
+        };
+        SearchField.prototype.emptyDropdown = function () {
+            this.hideDropdown();
+            this.dropdown.innerHTML = null;
+            var i = 0;
+            for (i = 0; i < this.items.length; i++) {
+                this.items[i].deconstruct();
+            }
+            this.items = [];
+        };
+        SearchField.prototype.setAdditionalData = function (data) {
+            this.additionalData = data;
+        };
+        SearchField.prototype.showLoading = function () {
+            this.loading.classList.remove('app-hide');
+        };
+        SearchField.prototype.hideLoading = function () {
+            this.loading.classList.add('app-hide');
+        };
+        SearchField.prototype.sendAjax = function () {
+            this.showLoading();
+            var data = {};
+            data['q'] = this.input.value;
+            data['id'] = this.id;
+            //merge
+            for (var attrname in this.additionalData) {
+                data[attrname] = this.additionalData[attrname];
+            }
+            system_4.System.addCsrf(data);
+            $.ajax({
+                url: this.url,
+                method: 'get',
+                context: this,
+                data: data,
+                success: function (data) {
+                    this.hideLoading();
+                    var parsed = JSON.parse(data);
+                    if (parsed.status === 1) {
+                        this.emptyDropdown();
+                        this.setDropdown(parsed.views);
+                    }
+                },
+                error: function () {
+                    this.hideLoading();
+                }
+            });
+        };
+        SearchField.prototype.initValue = function () {
+            /**
+             * Need improvement
+             */
+            if (!system_4.System.isEmptyValue(this.input.value)) {
+                var index = this.root.getAttribute('data-index');
+                var id = (system_4.System.isEmptyValue(index)) ? this.input.value : index;
+                this.setValue(id, this.input.value);
+            }
+        };
+        SearchField.prototype.setDropdown = function (views) {
+            this.dropdown.innerHTML = views;
+            var results = this.dropdown.getElementsByClassName('sfdi');
+            var i;
+            for (i = 0; i < results.length; i++) {
+                this.items.push(new search_field_dropdown_item_1.SearchFieldDropdownItem(results.item(i)));
+                this.items[i].attachEvent(search_field_dropdown_item_1.SearchFieldDropdownItem.CLICK_SFDI_EVENT, function (e) {
+                    this.setValue(e.detail.itemId, e.detail.text);
+                    this.emptyDropdown();
+                }.bind(this));
+            }
+            this.showDropdown();
+        };
+        SearchField.prototype.hideDropdown = function () {
+            this.dropdown.classList.add('app-hide');
+        };
+        SearchField.prototype.showDropdown = function () {
+            this.dropdown.classList.remove('app-hide');
+        };
+        SearchField.prototype.setValue = function (id, text) {
+            this.input.value = text;
+            this.valueId = id;
+            this.curText = text;
+            this.input.classList.add('selected');
+            this.root.dispatchEvent(this.getValueEvent);
+        };
+        SearchField.prototype.getValue = function () {
+            return this.valueId;
+        };
+        SearchField.prototype.disable = function () {
+            this.input.setAttribute('disabled', "true");
+        };
+        SearchField.prototype.enable = function () {
+            this.input.removeAttribute('disabled');
+        };
+        return SearchField;
+    }(field_3.Field));
+    exports.SearchField = SearchField;
+});
+define("project/add-product-form", ["require", "exports", "common/form", "project/dynamic-wholesale-field", "common/input-field", "common/search-field", "common/system"], function (require, exports, form_2, dynamic_wholesale_field_1, input_field_2, search_field_1, system_5) {
     "use strict";
     var AddProductForm = (function (_super) {
         __extends(AddProductForm, _super);
         function AddProductForm(root) {
-            return _super.call(this, root) || this;
+            var _this = _super.call(this, root) || this;
+            _this.successCb = function (data) {
+                window.location.href = system_5.System.getBaseUrl() + "/product/list";
+            };
+            return _this;
         }
         AddProductForm.prototype.decorate = function () {
             _super.prototype.decorate.call(this);
             this.wholeSaleField =
                 new dynamic_wholesale_field_1.DynamicWholesaleField(document.getElementById(this.id + "-dynamic-wholesale"));
+            this.categoryField = new search_field_1.SearchField(document.getElementById(this.id + "-category-field"));
+            this.imageField = new input_field_2.InputField(document.getElementById(this.id + "-picture-field"));
+            this.nameField = new input_field_2.InputField(document.getElementById(this.id + "-name-field"));
+            this.skuField = new input_field_2.InputField(document.getElementById(this.id + "-sku-field"));
+            this.weightField = new input_field_2.InputField(document.getElementById(this.id + "-weight-field"));
+            this.linkField = new input_field_2.InputField(document.getElementById(this.id + "-link-field"));
+            this.quantityField = new input_field_2.InputField(document.getElementById(this.id + "-quantity-field"));
+            this.minQuantityField = new input_field_2.InputField(document.getElementById(this.id + "-min-quantity-field"));
+            this.price1Field = new input_field_2.InputField(document.getElementById(this.id + "-price1-field"));
+            this.price2Field = new input_field_2.InputField(document.getElementById(this.id + "-price2-field"));
+            this.price3Field = new input_field_2.InputField(document.getElementById(this.id + "-price3-field"));
+            this.price4Field = new input_field_2.InputField(document.getElementById(this.id + "-price4-field"));
         };
         AddProductForm.prototype.bindEvent = function () {
             _super.prototype.bindEvent.call(this);
         };
         AddProductForm.prototype.rules = function () {
+            this.registerFields([this.wholeSaleField, this.categoryField, this.nameField, this.skuField, this.weightField,
+                this.linkField, this.quantityField, this.minQuantityField, this.price1Field, this.price2Field,
+                this.price3Field, this.price4Field]);
+            this.setRequiredField([this.categoryField, this.nameField, this.skuField, this.weightField,
+                this.linkField, this.quantityField, this.minQuantityField, this.price1Field, this.price2Field,
+                this.price3Field, this.price4Field]);
         };
         AddProductForm.prototype.detach = function () {
             _super.prototype.detach.call(this);
@@ -692,7 +908,7 @@ define("project/add-product-form", ["require", "exports", "common/form", "projec
     }(form_2.Form));
     exports.AddProductForm = AddProductForm;
 });
-define("project/add-product", ["require", "exports", "common/component", "project/add-product-form"], function (require, exports, component_6, add_product_form_1) {
+define("project/add-product", ["require", "exports", "common/component", "project/add-product-form"], function (require, exports, component_7, add_product_form_1) {
     "use strict";
     var AddProduct = (function (_super) {
         __extends(AddProduct, _super);
@@ -713,10 +929,10 @@ define("project/add-product", ["require", "exports", "common/component", "projec
             // no event to unbind
         };
         return AddProduct;
-    }(component_6.Component));
+    }(component_7.Component));
     exports.AddProduct = AddProduct;
 });
-define("project/add-category-form", ["require", "exports", "common/form", "common/input-field"], function (require, exports, form_3, input_field_2) {
+define("project/add-category-form", ["require", "exports", "common/form", "common/input-field"], function (require, exports, form_3, input_field_3) {
     "use strict";
     var AddCategoryForm = (function (_super) {
         __extends(AddCategoryForm, _super);
@@ -735,8 +951,8 @@ define("project/add-category-form", ["require", "exports", "common/form", "commo
         };
         AddCategoryForm.prototype.decorate = function () {
             _super.prototype.decorate.call(this);
-            this.nameField = new input_field_2.InputField(document.getElementById(this.id + "-name-field"));
-            this.descField = new input_field_2.InputField(document.getElementById(this.id + "-description-field"));
+            this.nameField = new input_field_3.InputField(document.getElementById(this.id + "-name-field"));
+            this.descField = new input_field_3.InputField(document.getElementById(this.id + "-description-field"));
         };
         AddCategoryForm.prototype.bindEvent = function () {
             _super.prototype.bindEvent.call(this);
@@ -751,7 +967,7 @@ define("project/add-category-form", ["require", "exports", "common/form", "commo
     }(form_3.Form));
     exports.AddCategoryForm = AddCategoryForm;
 });
-define("project/add-category", ["require", "exports", "common/component", "project/add-category-form"], function (require, exports, component_7, add_category_form_1) {
+define("project/add-category", ["require", "exports", "common/component", "project/add-category-form"], function (require, exports, component_8, add_category_form_1) {
     "use strict";
     var AddCategory = (function (_super) {
         __extends(AddCategory, _super);
@@ -772,10 +988,10 @@ define("project/add-category", ["require", "exports", "common/component", "proje
             // no event to unbind
         };
         return AddCategory;
-    }(component_7.Component));
+    }(component_8.Component));
     exports.AddCategory = AddCategory;
 });
-define("project/app", ["require", "exports", "common/component", "project/login", "project/add-product", "project/add-category"], function (require, exports, component_8, login_1, add_product_1, add_category_1) {
+define("project/app", ["require", "exports", "common/component", "project/login", "project/add-product", "project/add-category"], function (require, exports, component_9, login_1, add_product_1, add_category_1) {
     "use strict";
     var App = (function (_super) {
         __extends(App, _super);
@@ -804,7 +1020,7 @@ define("project/app", ["require", "exports", "common/component", "project/login"
             // no event to unbind
         };
         return App;
-    }(component_8.Component));
+    }(component_9.Component));
     exports.App = App;
 });
 define("project/init", ["require", "exports", "project/app"], function (require, exports, app_1) {

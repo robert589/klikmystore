@@ -1,5 +1,6 @@
 <?php
     use common\widgets\Form;
+    use common\widgets\SearchField;
     use frontend\widgets\DynamicWholesaleField;
     use common\widgets\InputField;
     use common\widgets\Button;
@@ -84,9 +85,9 @@
             Kategori
         </div>
         <div class="form-field-right">
-            <?= InputField::widget(['id' => $id . '-category-field', 
-                    'type' => InputField::TEXT, 'name' => 'category', 
-                    'value' => null ]) ?>
+            <?= SearchField::widget(['id' => $id . '-category-field', 
+                     'url' => Yii::$app->request->baseUrl . '/product/search-category',
+                     'name' => 'category' ]) ?>
         </div>
     </div>
 
@@ -128,7 +129,7 @@
         </div>
         <div class="form-field-right">
             <?= InputField::widget(['id' => $id . '-price1-field', 
-                    'type' => InputField::NUMBER, 'name' => 'price1', 
+                    'type' => InputField::NUMBER, 'name' => 'price_1', 
                     'value' => null ]) ?>
         </div>
     </div>
@@ -139,7 +140,7 @@
         </div>
         <div class="form-field-right">
             <?= InputField::widget(['id' => $id . '-price2-field', 
-                    'type' => InputField::NUMBER, 'name' => 'price2', 
+                    'type' => InputField::NUMBER, 'name' => 'price_2', 
                     'value' => null ]) ?>
         </div>
     </div>
@@ -150,7 +151,7 @@
         </div>
         <div class="form-field-right">
             <?= InputField::widget(['id' => $id . '-price3-field', 
-                    'type' => InputField::NUMBER, 'name' => 'price3', 
+                    'type' => InputField::NUMBER, 'name' => 'price_3', 
                     'value' => null ]) ?>
         </div>
     </div>
@@ -161,7 +162,7 @@
         </div>
         <div class="form-field-right">
             <?= InputField::widget(['id' => $id . '-price4-field', 
-                    'type' => InputField::NUMBER, 'name' => 'price4', 
+                    'type' => InputField::NUMBER, 'name' => 'price_4', 
                     'value' => null ]) ?>
         </div>
     </div>

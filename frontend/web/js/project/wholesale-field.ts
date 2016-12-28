@@ -20,6 +20,7 @@ export class WholesaleField extends Field{
     }
 
     getValue() {
+        let data : Object = {};
         return null;
     }
     

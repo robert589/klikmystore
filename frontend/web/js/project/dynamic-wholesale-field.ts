@@ -13,7 +13,6 @@ export class DynamicWholesaleField extends DynamicField{
     
     decorate() {
         super.decorate();
-        
     }
     
     /**

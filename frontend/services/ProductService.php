@@ -62,4 +62,11 @@ class ProductService extends RService
         return $dataProvider;
 
     }
+    
+    public function searchCategory($query) {
+        $vos = $this->categoryDao->searchCategory($query);
+        
+        
+        return $vos;
+    }
 }

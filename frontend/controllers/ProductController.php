@@ -2,7 +2,9 @@
 namespace frontend\controllers;
 
 use Yii;
+use common\widgets\SearchFieldDropdownItem;
 use frontend\models\AddCategoryForm;
+use frontend\models\AddProductForm;
 use yii\web\Controller;
 /**
  * Product controller
@@ -21,6 +23,19 @@ class ProductController extends Controller
     }
     public function actionAdd() {
         return $this->render('add-product', ['id' => 'ap']);
+    }
+    
+    public function actionProcessAdd() {
+        $model = new AddProductForm();
+        $model->loadData($_POST);
+        $model->user_id = \Yii::$app->user->getId();
+        $valid = $model->add();
+        $data['status'] = ($valid) ? 1 : 0;
+        if($model->hasErrors()) {
+            $data['errors'] = $model->getErrors();
+        }
+        
+        return json_encode($data);
     }
     
     public function actionProcessAddCategory() {
@@ -46,8 +61,24 @@ class ProductController extends Controller
         
     }
     
+    public function actionProductList() {
+        
+    }
+    
     public function actionAddCategory() {
         return $this->render('add-category', ['id' => 'pac']);
+    }
+    
+    public function actionSearchCategory() {
+        $query = filter_var($_GET['q']);
+        $data['status'] = 1;
+        $views = '';
+        $vos = $this->productService->searchCategory($query);
+        foreach($vos as $vo) {
+            $views .= SearchFieldDropdownItem::widget(['id' => 'sfcat-' . $vo->getId(), 'itemId' => $vo->getId(), 'text' => ucfirst($vo->getName())]);
+        }
+        $data['views'] = $views;
+        return json_encode($data);
     }
 }
 

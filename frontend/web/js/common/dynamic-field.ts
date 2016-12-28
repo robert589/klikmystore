@@ -40,9 +40,14 @@ export abstract class DynamicField extends Field{
 
     getValue () {
         let value : Object[] = [];
+
         for(let i = 0 ; i < this.fields.length; i++ ) {
             value.push(this.fields[i].getValue());
         }    
+        //if there is nothing
+        if(value.length === 1 && value[0] === null) {
+            return null;
+        } 
         return value;
     }
 
