@@ -9,9 +9,12 @@ export class AddCategoryForm extends Form{
 
     constructor(root: HTMLElement) {
         super(root);
+        this.failCb = function(data) {
+           
+        }.bind(this);
         this.successCb = function(data) {
             window.location.reload();
-        }
+        }.bind(this);
     }
 
     rules() {

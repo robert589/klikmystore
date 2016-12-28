@@ -721,7 +721,13 @@ define("project/add-category-form", ["require", "exports", "common/form", "commo
     var AddCategoryForm = (function (_super) {
         __extends(AddCategoryForm, _super);
         function AddCategoryForm(root) {
-            return _super.call(this, root) || this;
+            var _this = _super.call(this, root) || this;
+            _this.failCb = function (data) {
+            }.bind(_this);
+            _this.successCb = function (data) {
+                window.location.reload();
+            }.bind(_this);
+            return _this;
         }
         AddCategoryForm.prototype.rules = function () {
             this.registerFields([this.nameField, this.descField]);

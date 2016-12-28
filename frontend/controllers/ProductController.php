@@ -9,6 +9,16 @@ use yii\web\Controller;
  */
 class ProductController extends Controller
 {
+    private $productService;
+    
+    public function init() {
+        $this->productService = new \frontend\services\ProductService();
+        $this->productService->user_id = \Yii::$app->user->getId();
+        
+        if(!$this->productService->checkEligibility()) {
+            return $this->redirect('../site/error?name=' . "Not Authorized  ");
+        }
+    }
     public function actionAdd() {
         return $this->render('add-product', ['id' => 'ap']);
     }
@@ -27,6 +37,13 @@ class ProductController extends Controller
         }
         
         return json_encode($data);
+    }
+    
+    
+    public function actionCategoryList() {
+        $provider = $this->productService->getCategory();
+        return $this->render('category-list', ['provider' => $provider, 'id' => 'pcl']);
+        
     }
     
     public function actionAddCategory() {

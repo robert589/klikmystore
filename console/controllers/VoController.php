@@ -3,7 +3,7 @@
 namespace console\controllers;
 use Yii;
 use yii\console\Controller;
-class ActiveController extends Controller {
+class VoController extends Controller {
     
     public $name;
     
@@ -14,54 +14,138 @@ class ActiveController extends Controller {
     }
     
     public function optionAliases() {
-        return ['n' => 'name'];
+        return ['n' => 'name', "a" => "attrs"];
     }
     
     public function actionCreate()
     {
-        $dirPath = "frontend/models/" . $this->name . ".php" ;
         $attributes = explode(",", $this->attrs);
         
-        $text = $this->getHeaderText($this->name);
-        $text .= $this->generateAttrs($attributes);
-        $text .= $this->getFooterText();
-        if (file_put_contents($dirPath, $text) !== false) {
+        $builderPath = "frontend/vos/" . $this->name . "Builder.php" ;
+        $builderText = $this->getBuilderText($this->name);
+        $builderText .= $this->generateAttrs($attributes, true);
+        $builderText .= $this->generateRules($attributes);
+        $builderText .= $this->generateGetters($attributes);
+        $builderText .= $this->generateSetters($attributes);
+        $builderText .= $this->getFooterText();
+        if (file_put_contents($builderPath, $builderText) !== false) {
         } else {
-            echo "Cannot create file";
+            echo "Cannot create Builder";
         }
+        
+        $voPath = "frontend/vos/" . $this->name . ".php";
+        $voText = $this->getVoText($this->name);
+        $voText .= $this->generateAttrs($attributes);
+        $voText .= $this->getVoConstructor($this->name, $attributes);
+        $voText .= $this->generateGetters($attributes);
+        $voText .= $this->getFooterText();
+        if (file_put_contents($voPath, $voText) !== false) {
+        } else {
+            echo "Cannot create Vo";
+        }
+        
     }
     
-    private function generateAttrs($attrs) {
-        $text = "//attributes";
+    public function generateRules($attrs) {
+        $text  = "\n\n    public function rules() { \n";
+        $text .= "        return [\n";
         foreach($attrs as $attr) {
-            $text .= "public $" . $attr  . ';'
-                    . ''
-                    . ''; 
+        $text .= "           ['$attr','string'],\n";
+        }
+        $text .= "        ];\n";
+        $text .= "    }";
+        return $text;
+    }
+    
+    private function generateGetters($attrs) {
+        $text = "\n"
+                . "\n"
+                . "    //getters";
+        foreach($attrs as $attr) {
+            $text .= "\n" . "\n"
+                    . "    public function get" . ucfirst($attr) . "() { \n"
+                    . "        return \$this->" . $attr . "; \n"
+                    . "    }";
+        }
+        
+        return $text;
+    }
+    
+    private function generateSetters($attrs) {
+        $text = "\n"
+                . "\n"
+                . "    //setters";
+        foreach($attrs as $attr) {
+            $text .= "\n" . 
+                     "\n" .
+                     "    public function set" . ucfirst($attr) . "(\$$attr) { \n"
+                    . "        \$this->" . $attr . " = \$$attr; \n"
+                    . "    }";
+        }
+        
+        return $text;
+    }
+    
+    private function generateAttrs($attrs, $public = false) {
+        $text = "    //attributes";
+        $isPublic = ($public) ? "public" : "private";
+        foreach($attrs as $attr) {
+            $text .= "\n"
+                    . "\n"
+                    . "    $isPublic $" . $attr  . ';'; 
         }
             
         return $text;
         
     }
     
-    private function getHeaderText($name) {
+    private function getBuilderText($name) {
         return 
 "<?php
-namespace frontend\models;
+namespace frontend\\vos;
 
 use yii\db\ActiveRecord;
+use common\components\RVoBuilder;
 /**
- * $name model
+ * $name builder
  *
  */
-class $name extends RModel
+class " .$name . "Builder extends RVoBuilder
 {
+    function build() { return new " . $name . "(\$this);  }
+";    
+    }
+    
+    private function getVoText($name) {
+        return 
+"<?php
+namespace frontend\\vos;
 
+use yii\db\ActiveRecord;
+use common\components\RVo;
+/**
+ * $name vo
+ *
+ */
+class $name implements RVo
+{
+    public static function createBuilder() { return new $name" . "Builder();} 
 ";
+    }
+    
+    private function getVoConstructor($name, $attrs) {
+        $text = "\n\n    public function __construct($name" . "Builder \$builder) { \n";
+        foreach($attrs as $attr) {
+            $text .= "        \$this->$attr = \$builder->get" . ucfirst($attr) . "(); \n";
+        }
+        $text .= "    }";
+        return $text;
     }
     
     
     private function getFooterText() {
-        return "}";
+        return "\n"
+        . "}";
     }
     private function convertToDb($name) {
         $matcher = [];

@@ -10,7 +10,7 @@ use common\models\Principal;
 class UserLibrary {
     
     public static function isAdmin($id) {
-        return Admin::find()->where(['admin_id' => $id])->exists();
+        return Admin::find()->where(['id' => $id])->exists();
     }
     
     

@@ -70,8 +70,9 @@ AppAsset::register($this);
                                 ['label' => 'Produk',
                                  'href' => '#', 
                                  'items' => [
-                                     ['label' => 'Tambah Produk', 'href' => '#'],
-                                     ['label' => 'Tambah Kategori' , 'href' => '#']
+                                     ['label' => 'Tambah Produk', 'href' => Yii::$app->request->baseUrl . "/product/add"],
+                                     ['label' => 'Daftar Kategori' , 'href' => Yii::$app->request->baseUrl . "/product/category-list"],
+                                     ['label' => 'Tambah Kategori' , 'href' => Yii::$app->request->baseUrl . "/product/add-category"]
                                  ]
                                 ]
                             ]

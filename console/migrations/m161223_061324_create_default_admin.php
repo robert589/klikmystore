@@ -2,7 +2,7 @@
 
 use yii\db\Migration;
 use frontend\models\SignupForm;
-
+use common\models\Admin;
 class m161223_061324_create_default_admin extends Migration
 {
     public function up()
@@ -12,7 +12,11 @@ class m161223_061324_create_default_admin extends Migration
         $model->last_name = "Klikmystore";
         $model->email = "admin.klikmystore@gmail.com";
         $model->password = "password";
-        $model->signup();
+        $user = $model->signup();
+        
+        $admin = new Admin();
+        $admin->id = $user->id;
+        $admin->save();
     }
 
     public function down()

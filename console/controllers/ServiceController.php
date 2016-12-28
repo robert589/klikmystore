@@ -46,7 +46,7 @@ class ServiceController extends Controller {
     private function getHeaderText($name) {
         return 
 "<?php
-namespace frontend\models;
+namespace frontend\services;
 
 use common\components\RService;
 /**
