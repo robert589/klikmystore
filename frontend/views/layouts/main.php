@@ -67,14 +67,63 @@ AppAsset::register($this);
                 <div class="menu-section clearfix">
                     <?= Sidebar::widget(['id' => 'cssmenu', 
                             'items' => [
+                                ['label' => 'Dashboard',
+                                 'href' => '#'
+                                ],
                                 ['label' => 'Produk',
                                  'href' => '#', 
                                  'items' => [
+                                     ['label' => 'Daftar Produk', 'href' => Yii::$app->request->baseUrl . "/product/list"],
                                      ['label' => 'Tambah Produk', 'href' => Yii::$app->request->baseUrl . "/product/add"],
                                      ['label' => 'Daftar Kategori' , 'href' => Yii::$app->request->baseUrl . "/product/category-list"],
-                                     ['label' => 'Tambah Kategori' , 'href' => Yii::$app->request->baseUrl . "/product/add-category"]
-                                 ]
-                                ]
+                                     ['label' => 'Tambah Kategori' , 'href' => Yii::$app->request->baseUrl . "/product/add-category"],
+                                     
+                                   ],
+                                ],
+                                [   'label' => 'Order',
+                                    'href' => '#',
+                                    'items' => [
+                                        ['label' => 'Daftar Order', 'href' => Yii::$app->request->baseUrl . "/order/list"],
+                                        ['label' => 'Tambah Order', 'href' => Yii::$app->request->baseUrl . "/order/add"],
+                                        ['label' => 'Marketplace', 'href' => Yii::$app->request->baseUrl . '/order/marketplace'],
+                                        ['label' => 'Tambah Marketplace', 'href' => Yii::$app->request->baseUrl . '/order/create-marketplace'],
+                                        ['label' => 'Courier', 'href' => Yii::$app->request->baseUrl . '/order/courier'],
+                                        ['label' => 'Tambah Courier', 'href' => Yii::$app->request->baseUrl . '/order/create-courier'],
+
+                                    ]
+                                ],
+                                [   'label' => 'Inventory',
+                                    'href' => '#',
+                                    'items' => [
+                                        ['label' => 'Daftar Order', 'href' => Yii::$app->request->baseUrl . "/inventory/list"],
+                                        ['label' => 'Tambah Order', 'href' => Yii::$app->request->baseUrl . "/inventory/add"]
+                                    ]
+                                ],
+                                [   
+                                    'label' => 'Laporan',
+                                    'href' => '#',
+                                    'items' => [
+                                        ['label' => 'Daftar Karyawan', 'href' => Yii::$app->request->baseUrl . "/employee/list"],
+                                        ['label' => 'Tambah Karyawan', 'href' => Yii::$app->request->baseUrl . "/employee/add"]
+                                    ]
+                                ],    
+                                [   
+                                    'label' => 'Pengaturan',
+                                    'href' => '#',
+                                    'items' => [
+                                        ['label' => 'Daftar Karyawan', 'href' => Yii::$app->request->baseUrl . "/employee/list"],
+                                        ['label' => 'Tambah Karyawan', 'href' => Yii::$app->request->baseUrl . "/employee/add"]
+                                    ]
+                                ],    
+                                [   
+                                    'label' => 'Karyawan',
+                                    'href' => '#',
+                                    'items' => [
+                                        ['label' => 'Daftar Karyawan', 'href' => Yii::$app->request->baseUrl . "/employee/list"],
+                                        ['label' => 'Tambah Karyawan', 'href' => Yii::$app->request->baseUrl . "/employee/add"]
+                                    ]
+                                ]    
+                                
                             ]
                         ]) ?>
                 </div>

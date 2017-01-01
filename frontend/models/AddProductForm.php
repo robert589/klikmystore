@@ -1,6 +1,7 @@
 <?php
 namespace frontend\models;
 
+use common\models\ProductInventory;
 use common\models\ProductCategory;
 use common\models\ProductWholesale;
 use common\models\Product;
@@ -121,9 +122,16 @@ class AddProductForm extends RModel
         $model->price_2 = $this->price_2;
         $model->price_3 = $this->price_3;
         $model->price_4 = $this->price_4;
-        $model->quantity = $this->quantity;
+        $model->init_quantity = $this->quantity;
         $model->min_quantity = $this->min_quantity;
         if(!$model->save()) {
+            return false;
+        }
+        
+        $inventoryModel = new ProductInventory();
+        $inventoryModel->product_id = $model->id;
+        $inventoryModel->quantity = $this->quantity;
+        if(!$inventoryModel->save()) {
             return false;
         }
         

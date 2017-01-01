@@ -99,12 +99,14 @@ export abstract class DynamicField extends Field{
         return raw;
     }
 
-
     removeField() {
         let field : Field = this.findFieldsWithMaxIndex();
         let fieldElement : HTMLElement = document.getElementById(
                                         field.getRoot().getAttribute('id'));
         field.detach();
         this.areaField.removeChild(fieldElement);
-    }
-}
+        let index : number = this.fields.indexOf(field);
+        if (index > -1) {
+            this.fields.splice(index, 1);
+        }
+    }}

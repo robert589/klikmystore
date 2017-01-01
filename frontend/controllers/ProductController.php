@@ -61,7 +61,7 @@ class ProductController extends Controller
         
     }
     
-    public function actionProductList() {
+    public function actionList() {
         
     }
     

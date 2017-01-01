@@ -4,6 +4,8 @@ import {Button} from './../common/button';
 import {Login} from './login';
 import {AddProduct} from './add-product';
 import {AddCategory} from './add-category';
+import {OrderCreateMarketplace} from './order-create-marketplace';
+import {OrderCreateCourier} from './order-create-courier';
 
 export class App extends Component{
 
@@ -13,6 +15,9 @@ export class App extends Component{
 
     addCategory : AddCategory;
 
+    orderCreateMarketplace : OrderCreateMarketplace;
+
+    orderCreateCourier : OrderCreateCourier;
     constructor(root: HTMLElement) {
         super(root);
     }
@@ -28,6 +33,13 @@ export class App extends Component{
         else if(this.root.getElementsByClassName('add-category').length !== 0) {
             this.addCategory = new AddCategory(document.getElementById('pac'));
         }
+        else if(this.root.getElementsByClassName('order-cm').length !== 0) {
+            this.orderCreateMarketplace = new OrderCreateMarketplace(document.getElementById("ocm"));
+        }
+        else if(this.root.getElementsByClassName('order-cc').length !== 0) {
+            this.orderCreateCourier = new OrderCreateCourier(document.getElementById("occ"));
+        }
+    
     }
     
     bindEvent() {

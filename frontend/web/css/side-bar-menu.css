@@ -102,7 +102,6 @@
 #cssmenu ul ul li:hover > a,
 #cssmenu ul ul li.open > a,
 #cssmenu ul ul li.active > a {
-  background: #262e37 ;
   color: #ffffff;
 }
 #cssmenu ul ul li:first-child > a {

@@ -602,6 +602,10 @@ define("common/dynamic-field", ["require", "exports", "common/Field", "common/bu
             var fieldElement = document.getElementById(field.getRoot().getAttribute('id'));
             field.detach();
             this.areaField.removeChild(fieldElement);
+            var index = this.fields.indexOf(field);
+            if (index > -1) {
+                this.fields.splice(index, 1);
+            }
         };
         return DynamicField;
     }(field_1.Field));
@@ -991,7 +995,121 @@ define("project/add-category", ["require", "exports", "common/component", "proje
     }(component_8.Component));
     exports.AddCategory = AddCategory;
 });
-define("project/app", ["require", "exports", "common/component", "project/login", "project/add-product", "project/add-category"], function (require, exports, component_9, login_1, add_product_1, add_category_1) {
+define("project/create-marketplace-form", ["require", "exports", "common/form", "common/input-field"], function (require, exports, form_4, input_field_4) {
+    "use strict";
+    var CreateMarketplaceForm = (function (_super) {
+        __extends(CreateMarketplaceForm, _super);
+        function CreateMarketplaceForm(root) {
+            var _this = _super.call(this, root) || this;
+            _this.successCb = function (data) {
+                window.location.reload();
+            }.bind(_this);
+            return _this;
+        }
+        CreateMarketplaceForm.prototype.rules = function () {
+            this.setRequiredField([this.codeField, this.nameField]);
+            this.registerFields([this.codeField, this.nameField]);
+        };
+        CreateMarketplaceForm.prototype.decorate = function () {
+            _super.prototype.decorate.call(this);
+            this.codeField = new input_field_4.InputField(document.getElementById(this.id + "-code-field"));
+            this.nameField = new input_field_4.InputField(document.getElementById(this.id + "-name-field"));
+        };
+        CreateMarketplaceForm.prototype.bindEvent = function () {
+            _super.prototype.bindEvent.call(this);
+        };
+        CreateMarketplaceForm.prototype.detach = function () {
+            _super.prototype.detach.call(this);
+        };
+        CreateMarketplaceForm.prototype.unbindEvent = function () {
+            // no event to unbind
+        };
+        return CreateMarketplaceForm;
+    }(form_4.Form));
+    exports.CreateMarketplaceForm = CreateMarketplaceForm;
+});
+define("project/order-create-marketplace", ["require", "exports", "common/component", "project/create-marketplace-form"], function (require, exports, component_9, create_marketplace_form_1) {
+    "use strict";
+    var OrderCreateMarketplace = (function (_super) {
+        __extends(OrderCreateMarketplace, _super);
+        function OrderCreateMarketplace(root) {
+            return _super.call(this, root) || this;
+        }
+        OrderCreateMarketplace.prototype.decorate = function () {
+            _super.prototype.decorate.call(this);
+            this.form = new create_marketplace_form_1.CreateMarketplaceForm(document.getElementById(this.id + "form"));
+        };
+        OrderCreateMarketplace.prototype.bindEvent = function () {
+            _super.prototype.bindEvent.call(this);
+        };
+        OrderCreateMarketplace.prototype.detach = function () {
+            _super.prototype.detach.call(this);
+        };
+        OrderCreateMarketplace.prototype.unbindEvent = function () {
+            // no event to unbind
+        };
+        return OrderCreateMarketplace;
+    }(component_9.Component));
+    exports.OrderCreateMarketplace = OrderCreateMarketplace;
+});
+define("project/create-courier-form", ["require", "exports", "common/form", "common/input-field"], function (require, exports, form_5, input_field_5) {
+    "use strict";
+    var CreateCourierForm = (function (_super) {
+        __extends(CreateCourierForm, _super);
+        function CreateCourierForm(root) {
+            var _this = _super.call(this, root) || this;
+            _this.successCb = function (data) {
+                window.location.reload();
+            }.bind(_this);
+            return _this;
+        }
+        CreateCourierForm.prototype.rules = function () {
+            this.setRequiredField([this.codeField, this.nameField]);
+            this.registerFields([this.codeField, this.nameField]);
+        };
+        CreateCourierForm.prototype.decorate = function () {
+            _super.prototype.decorate.call(this);
+            this.codeField = new input_field_5.InputField(document.getElementById(this.id + "-code-field"));
+            this.nameField = new input_field_5.InputField(document.getElementById(this.id + "-name-field"));
+        };
+        CreateCourierForm.prototype.bindEvent = function () {
+            _super.prototype.bindEvent.call(this);
+        };
+        CreateCourierForm.prototype.detach = function () {
+            _super.prototype.detach.call(this);
+        };
+        CreateCourierForm.prototype.unbindEvent = function () {
+            // no event to unbind
+        };
+        return CreateCourierForm;
+    }(form_5.Form));
+    exports.CreateCourierForm = CreateCourierForm;
+});
+define("project/order-create-courier", ["require", "exports", "common/component", "project/create-courier-form"], function (require, exports, component_10, create_courier_form_1) {
+    "use strict";
+    var OrderCreateCourier = (function (_super) {
+        __extends(OrderCreateCourier, _super);
+        function OrderCreateCourier(root) {
+            return _super.call(this, root) || this;
+        }
+        OrderCreateCourier.prototype.decorate = function () {
+            _super.prototype.decorate.call(this);
+            this.form = new create_courier_form_1.CreateCourierForm(document.getElementById(this.id + "form"));
+        };
+        OrderCreateCourier.prototype.bindEvent = function () {
+            _super.prototype.bindEvent.call(this);
+        };
+        OrderCreateCourier.prototype.detach = function () {
+            _super.prototype.detach.call(this);
+        };
+        OrderCreateCourier.prototype.unbindEvent = function () {
+            // no event to unbind
+        };
+        return OrderCreateCourier;
+    }(component_10.Component));
+    exports.OrderCreateCourier = OrderCreateCourier;
+});
+define("project/app", ["require", "exports", "common/component", "project/login", "project/add-product", "project/add-category", "project/order-create-marketplace", "project/order-create-courier"], function (require, exports, component_11, login_1, add_product_1, add_category_1, order_create_marketplace_1, order_create_courier_1) {
     "use strict";
     var App = (function (_super) {
         __extends(App, _super);
@@ -1009,6 +1127,12 @@ define("project/app", ["require", "exports", "common/component", "project/login"
             else if (this.root.getElementsByClassName('add-category').length !== 0) {
                 this.addCategory = new add_category_1.AddCategory(document.getElementById('pac'));
             }
+            else if (this.root.getElementsByClassName('order-cm').length !== 0) {
+                this.orderCreateMarketplace = new order_create_marketplace_1.OrderCreateMarketplace(document.getElementById("ocm"));
+            }
+            else if (this.root.getElementsByClassName('order-cc').length !== 0) {
+                this.orderCreateCourier = new order_create_courier_1.OrderCreateCourier(document.getElementById("occ"));
+            }
         };
         App.prototype.bindEvent = function () {
             _super.prototype.bindEvent.call(this);
@@ -1020,7 +1144,7 @@ define("project/app", ["require", "exports", "common/component", "project/login"
             // no event to unbind
         };
         return App;
-    }(component_9.Component));
+    }(component_11.Component));
     exports.App = App;
 });
 define("project/init", ["require", "exports", "project/app"], function (require, exports, app_1) {
