@@ -8,6 +8,14 @@
   border: 1px;
   width: 100%;
 }
+.button-link {
+  border: 0;
+  color: lightgray;
+  font-size: 12px;
+}
+.button-link:hover {
+  text-decoration: underline;
+}
 .button-blue {
   background: #0000FF;
 }

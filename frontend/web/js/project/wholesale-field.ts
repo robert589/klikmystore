@@ -14,7 +14,8 @@ export class WholesaleField extends Field{
     
     bindEvent() {
         super.bindEvent();
-   }
+    }
+    
     detach() {
         super.detach();
     }

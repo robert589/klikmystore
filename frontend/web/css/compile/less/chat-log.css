@@ -1,9 +1,0 @@
-.chat-log {
-  padding: 8px;
-  background: whitesmoke;
-  font-weight: normal;
-}
-.chat-log-list {
-  max-height: 250px;
-  overflow-y: auto;
-}

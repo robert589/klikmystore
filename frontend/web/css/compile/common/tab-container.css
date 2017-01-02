@@ -1,6 +1,3 @@
-.tab-container {
-  padding: 0 12px;
-}
 .tab-container-header {
   background: lightblue;
   display: flex;
@@ -10,7 +7,6 @@
 .tab-container-header-item {
   width: 100%;
   padding: 4px;
-  border-right: 2px solid white;
 }
 .tab-container-header-item:hover,
 .tab-container-header-item.active {

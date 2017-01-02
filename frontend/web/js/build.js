@@ -1109,7 +1109,176 @@ define("project/order-create-courier", ["require", "exports", "common/component"
     }(component_10.Component));
     exports.OrderCreateCourier = OrderCreateCourier;
 });
-define("project/app", ["require", "exports", "common/component", "project/login", "project/add-product", "project/add-category", "project/order-create-marketplace", "project/order-create-courier"], function (require, exports, component_11, login_1, add_product_1, add_category_1, order_create_marketplace_1, order_create_courier_1) {
+define("project/create-order-form", ["require", "exports", "common/component", "common/button", "common/search-field"], function (require, exports, component_11, button_4, search_field_2) {
+    "use strict";
+    var CreateOrderForm = (function (_super) {
+        __extends(CreateOrderForm, _super);
+        function CreateOrderForm(root) {
+            return _super.call(this, root) || this;
+        }
+        Object.defineProperty(CreateOrderForm, "TRIGGER_USER_FORM_EVENT", {
+            get: function () { return "CO_FORM_TRIGGER_USER_FORM_EVENT"; },
+            enumerable: true,
+            configurable: true
+        });
+        ;
+        Object.defineProperty(CreateOrderForm, "OLD_INDEX", {
+            get: function () { return 0; },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(CreateOrderForm, "NEW_INDEX", {
+            get: function () { return 1; },
+            enumerable: true,
+            configurable: true
+        });
+        CreateOrderForm.prototype.decorate = function () {
+            _super.prototype.decorate.call(this);
+            this.addUserBtn = new button_4.Button(document.getElementById(this.id + "-add-user-1"), this.triggerUserFormEvent.bind(this));
+            this.receiverField = new search_field_2.SearchField(document.getElementById(this.id + "-receiver-field"));
+            this.senderField = new search_field_2.SearchField(document.getElementById(this.id + "-sender-field"));
+        };
+        CreateOrderForm.prototype.triggerUserFormEvent = function (e) {
+            e.preventDefault();
+            this.root.dispatchEvent(this.userFormEvent);
+        };
+        CreateOrderForm.prototype.bindEvent = function () {
+            _super.prototype.bindEvent.call(this);
+            this.userFormEvent = new CustomEvent(CreateOrderForm.TRIGGER_USER_FORM_EVENT);
+        };
+        CreateOrderForm.prototype.detach = function () {
+            _super.prototype.detach.call(this);
+        };
+        CreateOrderForm.prototype.unbindEvent = function () {
+            // no event to unbind
+        };
+        return CreateOrderForm;
+    }(component_11.Component));
+    exports.CreateOrderForm = CreateOrderForm;
+});
+define("common/text-area-field", ["require", "exports", "common/Field"], function (require, exports, Field_2) {
+    "use strict";
+    var TextAreaField = (function (_super) {
+        __extends(TextAreaField, _super);
+        function TextAreaField(root) {
+            return _super.call(this, root) || this;
+        }
+        TextAreaField.prototype.decorate = function () {
+            _super.prototype.decorate.call(this);
+            this.inputElement = this.root.getElementsByClassName('text-area-field-edit')[0];
+        };
+        TextAreaField.prototype.bindEvent = function () {
+            _super.prototype.bindEvent.call(this);
+        };
+        TextAreaField.prototype.getValue = function () {
+            return this.inputElement.innerHTML;
+        };
+        TextAreaField.prototype.resetValue = function () {
+            this.inputElement.innerHTML = null;
+        };
+        return TextAreaField;
+    }(Field_2.Field));
+    exports.TextAreaField = TextAreaField;
+});
+define("project/add-user-form", ["require", "exports", "common/form", "common/input-field", "common/text-area-field"], function (require, exports, form_6, input_field_6, text_area_field_1) {
+    "use strict";
+    var AddUserForm = (function (_super) {
+        __extends(AddUserForm, _super);
+        function AddUserForm(root) {
+            var _this = _super.call(this, root) || this;
+            _this.successCb = function (data) {
+                this.root.dispatchEvent(this.successfullyAddedEvent);
+            }.bind(_this);
+            return _this;
+        }
+        Object.defineProperty(AddUserForm, "SUCCESSFULLY_ADDED", {
+            get: function () { return "AU_FORM_SUCCESSFULLY_ADDED"; },
+            enumerable: true,
+            configurable: true
+        });
+        ;
+        AddUserForm.prototype.rules = function () {
+            this.setRequiredField([this.firstNameField]);
+            this.registerFields([this.firstNameField, this.lastNameField, this.telpField, this.addrField]);
+        };
+        AddUserForm.prototype.decorate = function () {
+            _super.prototype.decorate.call(this);
+            this.firstNameField = new input_field_6.InputField(document.getElementById(this.id + "-first-name"));
+            this.lastNameField = new input_field_6.InputField(document.getElementById(this.id + "-last-name"));
+            this.telpField = new input_field_6.InputField(document.getElementById(this.id + "-telephone"));
+            this.addrField = new text_area_field_1.TextAreaField(document.getElementById(this.id + "-address"));
+        };
+        AddUserForm.prototype.bindEvent = function () {
+            _super.prototype.bindEvent.call(this);
+            this.successfullyAddedEvent = new CustomEvent(AddUserForm.SUCCESSFULLY_ADDED);
+        };
+        AddUserForm.prototype.detach = function () {
+            _super.prototype.detach.call(this);
+        };
+        AddUserForm.prototype.unbindEvent = function () {
+            // no event to unbind
+        };
+        return AddUserForm;
+    }(form_6.Form));
+    exports.AddUserForm = AddUserForm;
+});
+define("project/add-user-form-modal", ["require", "exports", "common/modal", "project/add-user-form"], function (require, exports, modal_1, add_user_form_1) {
+    "use strict";
+    var AddUserFormModal = (function (_super) {
+        __extends(AddUserFormModal, _super);
+        function AddUserFormModal(root) {
+            return _super.call(this, root) || this;
+        }
+        AddUserFormModal.prototype.decorate = function () {
+            _super.prototype.decorate.call(this);
+            this.form = new add_user_form_1.AddUserForm(document.getElementById(this.id + "-form"));
+        };
+        AddUserFormModal.prototype.bindEvent = function () {
+            _super.prototype.bindEvent.call(this);
+            this.form.attachEvent(add_user_form_1.AddUserForm.SUCCESSFULLY_ADDED, function () {
+                this.hide();
+            }.bind(this));
+        };
+        AddUserFormModal.prototype.detach = function () {
+            _super.prototype.detach.call(this);
+        };
+        AddUserFormModal.prototype.unbindEvent = function () {
+            // no event to unbind
+        };
+        return AddUserFormModal;
+    }(modal_1.Modal));
+    exports.AddUserFormModal = AddUserFormModal;
+});
+define("project/create-order", ["require", "exports", "common/component", "project/create-order-form", "project/add-user-form-modal"], function (require, exports, component_12, create_order_form_1, add_user_form_modal_1) {
+    "use strict";
+    var CreateOrder = (function (_super) {
+        __extends(CreateOrder, _super);
+        function CreateOrder(root) {
+            return _super.call(this, root) || this;
+        }
+        CreateOrder.prototype.decorate = function () {
+            _super.prototype.decorate.call(this);
+            this.form = new create_order_form_1.CreateOrderForm(document.getElementById(this.id + "-form"));
+            this.addUserFormModal = new add_user_form_modal_1.AddUserFormModal(document.getElementById(this.id + "-usermodal"));
+        };
+        CreateOrder.prototype.bindEvent = function () {
+            _super.prototype.bindEvent.call(this);
+            this.form.attachEvent(create_order_form_1.CreateOrderForm.TRIGGER_USER_FORM_EVENT, this.showAddUserFormModal.bind(this));
+        };
+        CreateOrder.prototype.showAddUserFormModal = function () {
+            this.addUserFormModal.show();
+        };
+        CreateOrder.prototype.detach = function () {
+            _super.prototype.detach.call(this);
+        };
+        CreateOrder.prototype.unbindEvent = function () {
+            // no event to unbind
+        };
+        return CreateOrder;
+    }(component_12.Component));
+    exports.CreateOrder = CreateOrder;
+});
+define("project/app", ["require", "exports", "common/component", "project/login", "project/add-product", "project/add-category", "project/order-create-marketplace", "project/order-create-courier", "project/create-order"], function (require, exports, component_13, login_1, add_product_1, add_category_1, order_create_marketplace_1, order_create_courier_1, create_order_1) {
     "use strict";
     var App = (function (_super) {
         __extends(App, _super);
@@ -1133,6 +1302,9 @@ define("project/app", ["require", "exports", "common/component", "project/login"
             else if (this.root.getElementsByClassName('order-cc').length !== 0) {
                 this.orderCreateCourier = new order_create_courier_1.OrderCreateCourier(document.getElementById("occ"));
             }
+            else if (this.root.getElementsByClassName('create-order').length !== 0) {
+                this.createOrder = new create_order_1.CreateOrder(document.getElementById("oc"));
+            }
         };
         App.prototype.bindEvent = function () {
             _super.prototype.bindEvent.call(this);
@@ -1144,7 +1316,7 @@ define("project/app", ["require", "exports", "common/component", "project/login"
             // no event to unbind
         };
         return App;
-    }(component_11.Component));
+    }(component_13.Component));
     exports.App = App;
 });
 define("project/init", ["require", "exports", "project/app"], function (require, exports, app_1) {

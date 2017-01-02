@@ -4,6 +4,7 @@ namespace frontend\controllers;
 use Yii;
 use yii\web\Controller;
 use frontend\models\CreateMarketplaceForm;
+use frontend\services\OrderService;
 use frontend\models\CreateCourierForm;
 /**
  * Order controller
@@ -12,8 +13,12 @@ class OrderController extends Controller
 {
     private $orderService;
     
+    public function init() {
+        $this->orderService = new OrderService();
+    }
+    
     public function actionCreate() {
-        
+        return $this->render('create-order', ['id' => 'oc']);
     }
     
     public function actionProcessCreate() {

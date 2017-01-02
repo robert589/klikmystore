@@ -10,6 +10,6 @@ class OrderService extends RService
 {
 
     //attributes
-    public $;
+    public $user_id;
 
 }

@@ -27,7 +27,6 @@
   padding: 16px 16px 16px 10px;
   border-top: 1px ridge rgba(6, 26, 68, 0.20);
   cursor: pointer;
-  z-index: 2;
   font-size: 14x;
   text-transform:none;
   text-decoration: none;
@@ -65,7 +64,6 @@
   width: 6px;
   height: 6px;
   right: 20px;
-  z-index: 10;
   -webkit-transform: rotate(-135deg);
   -moz-transform: rotate(-135deg);
   -ms-transform: rotate(-135deg);

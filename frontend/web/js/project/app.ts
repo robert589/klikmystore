@@ -6,7 +6,7 @@ import {AddProduct} from './add-product';
 import {AddCategory} from './add-category';
 import {OrderCreateMarketplace} from './order-create-marketplace';
 import {OrderCreateCourier} from './order-create-courier';
-
+import {CreateOrder} from './create-order';
 export class App extends Component{
 
     login : Login;
@@ -18,6 +18,8 @@ export class App extends Component{
     orderCreateMarketplace : OrderCreateMarketplace;
 
     orderCreateCourier : OrderCreateCourier;
+
+    createOrder : CreateOrder;
     constructor(root: HTMLElement) {
         super(root);
     }
@@ -39,7 +41,9 @@ export class App extends Component{
         else if(this.root.getElementsByClassName('order-cc').length !== 0) {
             this.orderCreateCourier = new OrderCreateCourier(document.getElementById("occ"));
         }
-    
+        else if(this.root.getElementsByClassName('create-order').length !== 0) {
+            this.createOrder = new CreateOrder(document.getElementById("oc"));
+        }
     }
     
     bindEvent() {
