@@ -1283,6 +1283,10 @@ define("project/create-order-form", ["require", "exports", "common/component", "
             this.receiverField = new search_field_3.SearchField(document.getElementById(this.id + "-receiver-field"));
             this.senderField = new search_field_3.SearchField(document.getElementById(this.id + "-sender-field"));
             this.productOrderField = new product_order_field_1.ProductOrderField(document.getElementById(this.id + "-po-field"));
+            this.marketplaceField = new search_field_3.SearchField(document.getElementById(this.id + "-marketplace"));
+            this.courierField = new search_field_3.SearchField(document.getElementById(this.id + "-courier"));
+            this.cityField = new search_field_3.SearchField(document.getElementById(this.id + "-city"));
+            this.districtField = new search_field_3.SearchField(document.getElementById(this.id + "-district"));
         };
         CreateOrderForm.prototype.triggerUserFormEvent = function (e) {
             e.preventDefault();
@@ -1291,6 +1295,18 @@ define("project/create-order-form", ["require", "exports", "common/component", "
         CreateOrderForm.prototype.bindEvent = function () {
             _super.prototype.bindEvent.call(this);
             this.userFormEvent = new CustomEvent(CreateOrderForm.TRIGGER_USER_FORM_EVENT);
+            this.cityField.attachEvent(search_field_3.SearchField.GET_VALUE_EVENT, this.enableDistrictField.bind(this));
+            this.cityField.attachEvent(search_field_3.SearchField.LOSE_VALUE_EVENT, this.disableDistrictField.bind(this));
+        };
+        CreateOrderForm.prototype.disableDistrictField = function () {
+            this.districtField.disable();
+            this.districtField.resetValue();
+        };
+        CreateOrderForm.prototype.enableDistrictField = function () {
+            this.districtField.enable();
+            var data = [];
+            data['city_id'] = this.cityField.getValue();
+            this.districtField.setAdditionalData(data);
         };
         CreateOrderForm.prototype.detach = function () {
             _super.prototype.detach.call(this);

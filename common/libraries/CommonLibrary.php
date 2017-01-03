@@ -11,4 +11,9 @@ class CommonLibrary {
 
         return $str;
     }
+    
+    public static function capitalizeOnlyFirstLetter($text) {
+
+        return str_replace('\' ', '\'', ucwords(str_replace('\'', '\' ', strtolower($text))));
+    }
 }

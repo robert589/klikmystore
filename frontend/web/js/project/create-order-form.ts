@@ -19,6 +19,15 @@ export class CreateOrderForm extends Component{
     receiverField : SearchField;
 
     productOrderField : ProductOrderField;
+
+    marketplaceField : SearchField;
+
+    courierField : SearchField;
+
+    cityField : SearchField;
+
+    districtField : SearchField;
+
     constructor(root: HTMLElement) {
         super(root);
     }
@@ -30,6 +39,10 @@ export class CreateOrderForm extends Component{
         this.receiverField = new SearchField(document.getElementById(this.id + "-receiver-field"));
         this.senderField = new SearchField(document.getElementById(this.id + "-sender-field"));
         this.productOrderField = new ProductOrderField(document.getElementById(this.id + "-po-field"));
+        this.marketplaceField = new SearchField(document.getElementById(this.id + "-marketplace"));
+        this.courierField = new SearchField(document.getElementById(this.id + "-courier"));
+        this.cityField = new SearchField(document.getElementById(this.id + "-city"));
+        this.districtField = new SearchField(document.getElementById(this.id + "-district"));
     }
 
     triggerUserFormEvent(e) {
@@ -40,7 +53,22 @@ export class CreateOrderForm extends Component{
     bindEvent() {
         super.bindEvent();
         this.userFormEvent = new CustomEvent(CreateOrderForm.TRIGGER_USER_FORM_EVENT);
+        this.cityField.attachEvent(SearchField.GET_VALUE_EVENT, this.enableDistrictField.bind(this));
+        this.cityField.attachEvent(SearchField.LOSE_VALUE_EVENT, this.disableDistrictField.bind(this));
     }
+
+    disableDistrictField() {
+        this.districtField.disable();
+        this.districtField.resetValue();
+    }
+
+    enableDistrictField() {
+        this.districtField.enable();
+        let data = [];
+        data['city_id'] = this.cityField.getValue();
+        this.districtField.setAdditionalData(data);
+    }
+
     detach() {
         super.detach();
     }

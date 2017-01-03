@@ -3,6 +3,7 @@ namespace frontend\services;
 
 use frontend\daos\ProductDao;
 use common\components\RService;
+use frontend\daos\OrderDao;
 /**
  * OrderService service
  *
@@ -10,6 +11,9 @@ use common\components\RService;
 class OrderService extends RService
 {
     private $productDao;
+    
+    private $orderDao;
+    
     //attributes
     public $user_id;
     
@@ -23,6 +27,7 @@ class OrderService extends RService
     
     public function init() {
         $this->productDao = new ProductDao();
+        $this->orderDao = new OrderDao();
     }
     
     public function rules() {
@@ -55,6 +60,14 @@ class OrderService extends RService
         
         return $this->productInfo;
         
+    }
+    
+    public function searchMarketplace($query) {
+        return $this->orderDao->searchMarketplace($query);
+    }
+    
+    public function searchCourier($query) {
+        return $this->orderDao->searchCourier($query);
     }
 
 }

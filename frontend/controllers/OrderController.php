@@ -7,6 +7,7 @@ use frontend\widgets\ProductOrderFieldItem;
 use frontend\models\CreateMarketplaceForm;
 use frontend\services\OrderService;
 use frontend\models\CreateCourierForm;
+use common\widgets\SearchFieldDropdownItem;
 /**
  * Order controller
  */
@@ -39,8 +40,34 @@ class OrderController extends Controller
         return $this->render('order-create-marketplace', ['id' => 'ocm']);
     }
     
+    public function actionSearchMarketplace() {
+        $query = filter_var($_GET['q']);
+        $id = filter_var($_GET['id']);
+        $data['status'] = 1;
+        $views = '';
+        $vos = $this->orderService->searchMarketplace($query);
+        foreach($vos as $vo) {
+            $views .= SearchFieldDropdownItem::widget(['id' => $id . '-' . $vo->getCode(), 'itemId' => $vo->getCode(), 'text' => ucfirst($vo->getName())]);
+        }
+        $data['views'] = $views;
+        return json_encode($data);
+    }
+    
     public function actionCreateCourier() {
         return $this->render('order-create-courier', ['id' => 'occ']);
+    }
+    
+    public function actionSearchCourier() {
+        $query = filter_var($_GET['q']);
+        $id = filter_var($_GET['id']);
+        $data['status'] = 1;
+        $views = '';
+        $vos = $this->orderService->searchCourier($query);
+        foreach($vos as $vo) {
+            $views .= SearchFieldDropdownItem::widget(['id' => $id . '-' . $vo->getCode(), 'itemId' => $vo->getCode(), 'text' => ucfirst($vo->getName())]);
+        }
+        $data['views'] = $views;
+        return json_encode($data);
     }
     
     

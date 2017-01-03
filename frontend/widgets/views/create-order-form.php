@@ -72,7 +72,49 @@
                                 'url' => \Yii::$app->request->baseUrl . '/order/search-courier']) ?>
                 </div>
             </div>
+            
+            <div class="form-field">
+                <div class="form-field-left">
+                    Kota
+                </div>
+                <div class="form-field-right">
+                    <?= SearchField::widget(['id' => $id . '-city', 'placeholder' => 'Cari Kota',
+                                'url' => \Yii::$app->request->baseUrl . '/location/search-city']) ?>
+                </div>
+            </div>
+            <div class="form-field">
+                <div class="form-field-left">
+                    Kecamatan
+                </div>
+                <div class="form-field-right">
+                    <?= SearchField::widget(['id' => $id . '-district', 'placeholder' => 'Cari Kecamatan',
+                                'url' => \Yii::$app->request->baseUrl . '/location/search-district', 'disabled' => true]) ?>
+                </div>
+            </div>
+            
+            <div class="form-field">
+                <div class="form-field-left">
+                    Kode Job
+                </div>
+                <div class="form-field-right">
+                    <?= SearchField::widget(['id' => $id . '-courier', 'placeholder' => 'Cari Kurir',
+                                'url' => \Yii::$app->request->baseUrl . '/order/search-courier']) ?>
+                </div>
+            </div>
+            
+            <div class="form-field">
+                <div class="form-field-left">
+                    Tanggal Pickup
+                </div>
+                <div class="form-field-right">
+                    <?= InputField::widget(['id' => $id . '-courier', 'placeholder' => 'Cari Kurir',
+                                'datepicker' => true]) ?>
+                </div>
+            </div>
         </div>
+    </div>
+    <div class="co-form-right">
+
     </div>
     <?= Button::widget(['id' => $id . '-submit-btn' , 
         'text' => 'Add', 'newClass' => 'form-submit']) ?>
