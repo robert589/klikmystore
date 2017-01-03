@@ -1,6 +1,7 @@
 import {Component} from '../common/component';
 import {Button} from './../common/button';
 import {SearchField} from './../common/search-field';
+import {ProductOrderField} from './product-order-field';
 
 export class CreateOrderForm extends Component{
 
@@ -17,6 +18,7 @@ export class CreateOrderForm extends Component{
 
     receiverField : SearchField;
 
+    productOrderField : ProductOrderField;
     constructor(root: HTMLElement) {
         super(root);
     }
@@ -26,7 +28,8 @@ export class CreateOrderForm extends Component{
         this.addUserBtn = new Button(document.getElementById(this.id + "-add-user-1"), 
                         this.triggerUserFormEvent.bind(this));
         this.receiverField = new SearchField(document.getElementById(this.id + "-receiver-field"));
-        this.senderField = new SearchField(document.getElementById(this.id + "-sender-field"))
+        this.senderField = new SearchField(document.getElementById(this.id + "-sender-field"));
+        this.productOrderField = new ProductOrderField(document.getElementById(this.id + "-po-field"));
     }
 
     triggerUserFormEvent(e) {

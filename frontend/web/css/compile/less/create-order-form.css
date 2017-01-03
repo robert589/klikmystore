@@ -2,3 +2,10 @@
   width: 320px;
   display: inline-block;
 }
+.co-form-right {
+  display: inline-block;
+}
+.co-form > .form-submit {
+  display: block;
+  margin-top: 8px;
+}

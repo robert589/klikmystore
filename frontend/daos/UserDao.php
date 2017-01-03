@@ -10,9 +10,10 @@ use frontend\vos\UserVoBuilder;
 class UserDao implements Dao
 {
     const SEARCH_USER = "select user.id, user.first_name, user.last_name 
-            from user
+            from user 
              where user.first_name LIKE :query or user.last_name LIKE :query or
-                 concat(user.first_name, ' ', user.last_name) LIKE :query ";
+                 concat(user.first_name, ' ', user.last_name) LIKE :query 
+                 limit 4";
 
     public function searchUser($query) {
         $query = "%$query%";
@@ -21,9 +22,11 @@ class UserDao implements Dao
             ->bindParam(':query', $query)
             ->queryAll();
         
+        //\Yii::$app->end(var_dump($results));
         $vos = [];
         foreach($results as $result) {
             $builder = new UserVoBuilder();
+            
             $builder->loadData($result);
             $vos[] = $builder->build();
         }

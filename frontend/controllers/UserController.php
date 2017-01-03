@@ -32,14 +32,13 @@ class UserController extends Controller
     }
     
     public function actionSearchUser() {
-        $query = filter_var($_GET['query']);
+        $query = filter_var($_GET['q']);
         $id = filter_var($_GET['id']);
         $data['status'] = 1;
         $data['views'] = "";
-        $vos .= $this->userService->searchUser($query);
-        
+        $vos = $this->userService->searchUser($query);
         foreach($vos as $vo) {
-            $data['views'] .= SearchFieldDropdownItem::widget(['id' => $id . '-' . $vos->getId(), 
+            $data['views'] .= SearchFieldDropdownItem::widget(['id' => $id . '-' . $vo->getId(), 
                                                 'itemId' => $vo->getId(), 'text' => $vo->getName() ]);
         }
         

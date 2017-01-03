@@ -80,5 +80,19 @@ class ProductController extends Controller
         $data['views'] = $views;
         return json_encode($data);
     }
+    
+    public function actionSearchProduct() {
+        $query = filter_var($_GET['q']);
+        $id = filter_var($_GET['id']);
+        $data['status'] = 1;
+        $views = '';
+        $vos = $this->productService->searchProduct($query);
+        foreach($vos as $vo) {
+            $views .= SearchFieldDropdownItem::widget(['id' => $id . '-' . $vo->getId(), 'itemId' => $vo->getId(), 'text' => ucfirst($vo->getName())]);
+        }
+        $data['views'] = $views;
+        return json_encode($data);
+        
+    }
 }
 

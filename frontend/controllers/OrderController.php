@@ -3,6 +3,7 @@ namespace frontend\controllers;
 
 use Yii;
 use yii\web\Controller;
+use frontend\widgets\ProductOrderFieldItem;
 use frontend\models\CreateMarketplaceForm;
 use frontend\services\OrderService;
 use frontend\models\CreateCourierForm;
@@ -15,6 +16,7 @@ class OrderController extends Controller
     
     public function init() {
         $this->orderService = new OrderService();
+        $this->orderService->user_id = \Yii::$app->user->getId();
     }
     
     public function actionCreate() {
@@ -63,6 +65,21 @@ class OrderController extends Controller
         $data['status'] = $model->create() ? 1 : 0;
         if($model->hasErrors()) {
             $data['errors'] = $model->getErrors();
+        }
+        
+        return json_encode($data);
+    }
+    
+    public function actionAddProductToOrder() {
+        $data = [];
+        $this->orderService->loadData($_POST);
+        $vo = $this->orderService->getProductInfoWithQuantityCheck();
+        if($vo) {
+            $data['status'] = 1;
+            $data['views'] = ProductOrderFieldItem::widget(['id' => "pof-item-" . $vo->getId(), 'vo' => $vo]);
+        } else {
+            $data['status']  = 0;
+            $data['errors'] = $this->orderService->getErrors();
         }
         
         return json_encode($data);

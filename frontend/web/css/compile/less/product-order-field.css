@@ -1,0 +1,19 @@
+.po-field-header {
+  display: flex;
+}
+.po-field-header > .search-field {
+  display: inline-block;
+  width: 100%;
+}
+.po-field-header > .input-field {
+  display: inline-block;
+  width: 60px;
+  margin: 0 4px;
+}
+.po-field-header > .input-field > .input-field-input {
+  height: auto;
+}
+.po-field-header > .button {
+  width: 32px;
+  padding: 6px 10px;
+}

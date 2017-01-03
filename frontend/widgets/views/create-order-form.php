@@ -6,6 +6,7 @@
     use common\widgets\CheckboxField;
     use common\widgets\TabContainer;
     use common\widgets\TabItem;
+    use frontend\widgets\ProductOrderField;
 ?>
 
 
@@ -28,26 +29,49 @@
                 </div>
                 <div class="form-field-right">
                     <?= SearchField::widget(['id' => $id . '-receiver-field', 'placeholder' => 'Cari Pengguna',
-                                            'url' => \Yii::$app->request->url . '/user/search-user']) ?>
+                                            'url' => \Yii::$app->request->baseUrl . '/user/search-user']) ?>
                 </div>
             </div>
         </div>
-        <div class="co-form-cluster">
-            <div class="form-field">
-                <div class="form-field-left">
-                    Pengirim
-                </div>
-                <div class="form-field-right">
-                    <?= SearchField::widget(['id' => $id . '-sender-field', 'placeholder' => 'Cari Pengguna',
-                                'url' => \Yii::$app->request->url . '/user/search-user']) ?>
-                </div>
+        <div class="form-field">
+            <div class="form-field-left">
+                Pengirim
+            </div>
+            <div class="form-field-right">
+                <?= SearchField::widget(['id' => $id . '-sender-field', 'placeholder' => 'Cari Pengguna',
+                            'url' => \Yii::$app->request->baseUrl . '/user/search-user']) ?>
+            </div>
+        </div>
+        <div class="form-field">
+            <div class="form-field-left">
+                Daftar Produk
+            </div>
+            <div class="form-field-right">
+                <?= ProductOrderField::widget(['id' => $id . '-po-field', 'name' => 'products']) ?>
             </div>
         </div>
     </div>
 
     <div class="co-form-right">
-        <div class="co-form-sender">
-            
+        <div class="co-form-cluster">
+            <div class="form-field">
+                <div class="form-field-left">
+                    Marketplace
+                </div>
+                <div class="form-field-right">
+                    <?= SearchField::widget(['id' => $id . '-marketplace', 'placeholder' => 'Cari Marketplace',
+                                'url' => \Yii::$app->request->baseUrl . '/order/search-marketplace']) ?>
+                </div>
+            </div>
+            <div class="form-field">
+                <div class="form-field-left">
+                    Courier
+                </div>
+                <div class="form-field-right">
+                    <?= SearchField::widget(['id' => $id . '-courier', 'placeholder' => 'Cari Kurir',
+                                'url' => \Yii::$app->request->baseUrl . '/order/search-courier']) ?>
+                </div>
+            </div>
         </div>
     </div>
     <?= Button::widget(['id' => $id . '-submit-btn' , 

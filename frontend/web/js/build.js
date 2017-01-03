@@ -1109,7 +1109,152 @@ define("project/order-create-courier", ["require", "exports", "common/component"
     }(component_10.Component));
     exports.OrderCreateCourier = OrderCreateCourier;
 });
-define("project/create-order-form", ["require", "exports", "common/component", "common/button", "common/search-field"], function (require, exports, component_11, button_4, search_field_2) {
+define("common/string", ["require", "exports"], function (require, exports) {
+    "use strict";
+    var String = (function () {
+        function String() {
+        }
+        String.trim = function (text) {
+            return text.replace(/^\s+|\s+$/g, "");
+        };
+        return String;
+    }());
+    exports.String = String;
+});
+define("project/product-order-field-item", ["require", "exports", "common/component", "common/string"], function (require, exports, component_11, string_1) {
+    "use strict";
+    var ProductOrderFieldItem = (function (_super) {
+        __extends(ProductOrderFieldItem, _super);
+        function ProductOrderFieldItem(root) {
+            var _this = _super.call(this, root) || this;
+            _this.quantity = _this.root.getAttribute('data-quantity');
+            return _this;
+        }
+        ProductOrderFieldItem.prototype.decorate = function () {
+            _super.prototype.decorate.call(this);
+            this.idElement = this.root.getElementsByClassName('pof-item-id')[0];
+            this.nameElement = this.root.getElementsByClassName('pof-item-name')[0];
+        };
+        ProductOrderFieldItem.prototype.bindEvent = function () {
+            _super.prototype.bindEvent.call(this);
+        };
+        ProductOrderFieldItem.prototype.detach = function () {
+            _super.prototype.detach.call(this);
+        };
+        ProductOrderFieldItem.prototype.getId = function () {
+            return string_1.String.trim(this.idElement.innerHTML);
+        };
+        ProductOrderFieldItem.prototype.unbindEvent = function () {
+            // no event to unbind
+        };
+        return ProductOrderFieldItem;
+    }(component_11.Component));
+    exports.ProductOrderFieldItem = ProductOrderFieldItem;
+});
+define("project/product-order-field", ["require", "exports", "common/Field", "common/search-field", "common/input-field", "common/button", "common/system", "project/product-order-field-item"], function (require, exports, field_4, search_field_2, input_field_6, button_4, system_6, product_order_field_item_1) {
+    "use strict";
+    var ProductOrderField = (function (_super) {
+        __extends(ProductOrderField, _super);
+        function ProductOrderField(root) {
+            var _this = _super.call(this, root) || this;
+            _this.products = [];
+            return _this;
+        }
+        Object.defineProperty(ProductOrderField, "NEW_PRODUCT_ADDED", {
+            get: function () {
+                return "POF_NEW_PRODUCT_ADDED";
+            },
+            enumerable: true,
+            configurable: true
+        });
+        ProductOrderField.prototype.decorate = function () {
+            _super.prototype.decorate.call(this);
+            this.quantityField = new input_field_6.InputField(document.getElementById(this.id + "-quantity"));
+            this.productSearchField = new search_field_2.SearchField(document.getElementById(this.id + "-product"));
+            this.addBtn = new button_4.Button(document.getElementById(this.id + "-add"), this.addProduct.bind(this));
+            this.listEl = this.root.getElementsByClassName('po-field-list')[0];
+        };
+        ProductOrderField.prototype.addProduct = function (e) {
+            e.preventDefault();
+            var valid = this.validateAdd();
+            if (valid) {
+                var data = {};
+                data['quantity'] = this.quantityField.getValue();
+                data['product_id'] = this.productSearchField.getValue();
+                data = system_6.System.addCsrf(data);
+                this.addBtn.disable(true);
+                $.ajax({
+                    url: system_6.System.getBaseUrl() + "/order/add-product-to-order",
+                    data: data,
+                    context: this,
+                    method: 'post',
+                    dataType: 'json',
+                    success: function (data) {
+                        if (parseInt(data.status) === 1) {
+                            this.addNewProductToElement(data.views);
+                        }
+                        this.addBtn.disable(false);
+                    },
+                    error: function (data) {
+                        this.addBtn.disable(false);
+                    }
+                });
+            }
+        };
+        ProductOrderField.prototype.addNewProductToElement = function (views) {
+            this.listEl.innerHTML += views;
+            var wrapper = document.createElement('div');
+            wrapper.innerHTML = views;
+            var rawElements = wrapper.getElementsByClassName('pof-item');
+            var item = new product_order_field_item_1.ProductOrderFieldItem(rawElements.item(0));
+            this.products.push(item);
+            this.dispatchProductAddedEvent();
+        };
+        ProductOrderField.prototype.dispatchProductAddedEvent = function () {
+            this.root.dispatchEvent(this.newProductAdded);
+        };
+        ProductOrderField.prototype.bindEvent = function () {
+            _super.prototype.bindEvent.call(this);
+            this.newProductAdded = new CustomEvent(ProductOrderField.NEW_PRODUCT_ADDED);
+        };
+        ProductOrderField.prototype.detach = function () {
+            _super.prototype.detach.call(this);
+        };
+        ProductOrderField.prototype.getValue = function () {
+            return this.values;
+        };
+        ProductOrderField.prototype.validateAdd = function () {
+            this.productSearchField.hideError();
+            this.quantityField.hideError();
+            var valid = true;
+            valid = this.checkExistence(this.productSearchField.getValue()) && valid;
+            valid = this.checkRange() && valid;
+            return valid;
+        };
+        ProductOrderField.prototype.checkRange = function () {
+            if (parseInt(this.quantityField.getValue()) > 0) {
+                return true;
+            }
+            this.productSearchField.showError("Quantity should be larger than 0");
+            return false;
+        };
+        ProductOrderField.prototype.checkExistence = function (id) {
+            for (var i = 0; i < this.products.length; i++) {
+                if (this.products[i].getId() == id) {
+                    this.productSearchField.showError("Product has been added");
+                    return false;
+                }
+            }
+            return true;
+        };
+        ProductOrderField.prototype.unbindEvent = function () {
+            // no event to unbind
+        };
+        return ProductOrderField;
+    }(field_4.Field));
+    exports.ProductOrderField = ProductOrderField;
+});
+define("project/create-order-form", ["require", "exports", "common/component", "common/button", "common/search-field", "project/product-order-field"], function (require, exports, component_12, button_5, search_field_3, product_order_field_1) {
     "use strict";
     var CreateOrderForm = (function (_super) {
         __extends(CreateOrderForm, _super);
@@ -1134,9 +1279,10 @@ define("project/create-order-form", ["require", "exports", "common/component", "
         });
         CreateOrderForm.prototype.decorate = function () {
             _super.prototype.decorate.call(this);
-            this.addUserBtn = new button_4.Button(document.getElementById(this.id + "-add-user-1"), this.triggerUserFormEvent.bind(this));
-            this.receiverField = new search_field_2.SearchField(document.getElementById(this.id + "-receiver-field"));
-            this.senderField = new search_field_2.SearchField(document.getElementById(this.id + "-sender-field"));
+            this.addUserBtn = new button_5.Button(document.getElementById(this.id + "-add-user-1"), this.triggerUserFormEvent.bind(this));
+            this.receiverField = new search_field_3.SearchField(document.getElementById(this.id + "-receiver-field"));
+            this.senderField = new search_field_3.SearchField(document.getElementById(this.id + "-sender-field"));
+            this.productOrderField = new product_order_field_1.ProductOrderField(document.getElementById(this.id + "-po-field"));
         };
         CreateOrderForm.prototype.triggerUserFormEvent = function (e) {
             e.preventDefault();
@@ -1153,7 +1299,7 @@ define("project/create-order-form", ["require", "exports", "common/component", "
             // no event to unbind
         };
         return CreateOrderForm;
-    }(component_11.Component));
+    }(component_12.Component));
     exports.CreateOrderForm = CreateOrderForm;
 });
 define("common/text-area-field", ["require", "exports", "common/Field"], function (require, exports, Field_2) {
@@ -1180,7 +1326,7 @@ define("common/text-area-field", ["require", "exports", "common/Field"], functio
     }(Field_2.Field));
     exports.TextAreaField = TextAreaField;
 });
-define("project/add-user-form", ["require", "exports", "common/form", "common/input-field", "common/text-area-field"], function (require, exports, form_6, input_field_6, text_area_field_1) {
+define("project/add-user-form", ["require", "exports", "common/form", "common/input-field", "common/text-area-field"], function (require, exports, form_6, input_field_7, text_area_field_1) {
     "use strict";
     var AddUserForm = (function (_super) {
         __extends(AddUserForm, _super);
@@ -1203,9 +1349,9 @@ define("project/add-user-form", ["require", "exports", "common/form", "common/in
         };
         AddUserForm.prototype.decorate = function () {
             _super.prototype.decorate.call(this);
-            this.firstNameField = new input_field_6.InputField(document.getElementById(this.id + "-first-name"));
-            this.lastNameField = new input_field_6.InputField(document.getElementById(this.id + "-last-name"));
-            this.telpField = new input_field_6.InputField(document.getElementById(this.id + "-telephone"));
+            this.firstNameField = new input_field_7.InputField(document.getElementById(this.id + "-first-name"));
+            this.lastNameField = new input_field_7.InputField(document.getElementById(this.id + "-last-name"));
+            this.telpField = new input_field_7.InputField(document.getElementById(this.id + "-telephone"));
             this.addrField = new text_area_field_1.TextAreaField(document.getElementById(this.id + "-address"));
         };
         AddUserForm.prototype.bindEvent = function () {
@@ -1249,7 +1395,7 @@ define("project/add-user-form-modal", ["require", "exports", "common/modal", "pr
     }(modal_1.Modal));
     exports.AddUserFormModal = AddUserFormModal;
 });
-define("project/create-order", ["require", "exports", "common/component", "project/create-order-form", "project/add-user-form-modal"], function (require, exports, component_12, create_order_form_1, add_user_form_modal_1) {
+define("project/create-order", ["require", "exports", "common/component", "project/create-order-form", "project/add-user-form-modal"], function (require, exports, component_13, create_order_form_1, add_user_form_modal_1) {
     "use strict";
     var CreateOrder = (function (_super) {
         __extends(CreateOrder, _super);
@@ -1275,10 +1421,10 @@ define("project/create-order", ["require", "exports", "common/component", "proje
             // no event to unbind
         };
         return CreateOrder;
-    }(component_12.Component));
+    }(component_13.Component));
     exports.CreateOrder = CreateOrder;
 });
-define("project/app", ["require", "exports", "common/component", "project/login", "project/add-product", "project/add-category", "project/order-create-marketplace", "project/order-create-courier", "project/create-order"], function (require, exports, component_13, login_1, add_product_1, add_category_1, order_create_marketplace_1, order_create_courier_1, create_order_1) {
+define("project/app", ["require", "exports", "common/component", "project/login", "project/add-product", "project/add-category", "project/order-create-marketplace", "project/order-create-courier", "project/create-order"], function (require, exports, component_14, login_1, add_product_1, add_category_1, order_create_marketplace_1, order_create_courier_1, create_order_1) {
     "use strict";
     var App = (function (_super) {
         __extends(App, _super);
@@ -1316,7 +1462,7 @@ define("project/app", ["require", "exports", "common/component", "project/login"
             // no event to unbind
         };
         return App;
-    }(component_13.Component));
+    }(component_14.Component));
     exports.App = App;
 });
 define("project/init", ["require", "exports", "project/app"], function (require, exports, app_1) {

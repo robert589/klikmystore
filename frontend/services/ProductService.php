@@ -3,6 +3,7 @@ namespace frontend\services;
 
 use common\components\RService;
 use frontend\daos\CategoryDao;
+use frontend\daos\ProductDao;
 use common\libraries\UserLibrary;
 /**
  * ProductService service
@@ -16,8 +17,13 @@ class ProductService extends RService
     
     private $categoryDao;
     
+    private $productDao;
+    
+    
     public function init() {
         $this->categoryDao = new CategoryDao();
+        $this->productDao = new ProductDao();
+        
     }
     
     public function rules() {
@@ -63,6 +69,10 @@ class ProductService extends RService
 
     }
     
+    public  function searchProduct($query) {
+        $vos = $this->productDao->searchProduct($query);
+        return $vos;
+    }
     public function searchCategory($query) {
         $vos = $this->categoryDao->searchCategory($query);
         

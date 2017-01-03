@@ -20,6 +20,7 @@ abstract class RVoBuilder extends Model{
         
         if(isset($data)) {
             $data = $this->generalizeDataForm($data);
+
             $this->setAttributes($data);
         }
         return true;
@@ -28,8 +29,9 @@ abstract class RVoBuilder extends Model{
     private function generalizeDataForm($data) {
         $newData = [];
         foreach($data as $index => $datum) {
-            if(strpost($index, "_") !== false) {
+            if(strpos($index, "_") !== false) {
                 $newIndex = CommonLibrary::underscoreToCamelCase($index);   
+
             } else {
                 $newIndex = $index;
             }

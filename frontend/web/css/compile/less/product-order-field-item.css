@@ -1,0 +1,13 @@
+.pof-item {
+  display: flex;
+  padding: 8px;
+}
+.pof-item-qty-view {
+  display: flex;
+}
+.pof-item-qty-view > .button {
+  background: none;
+  border: 0;
+  padding: 0;
+  color: black;
+}
