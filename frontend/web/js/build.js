@@ -1415,10 +1415,10 @@ define("project/create-order-form", ["require", "exports", "common/form", "commo
         function CreateOrderForm(root) {
             var _this = _super.call(this, root) || this;
             _this.registerFields([_this.senderField, _this.receiverField, _this.productOrderField, _this.marketplaceField,
-                _this.courierField, _this.cityField, _this.offlineOrderField, _this.dropshipField, _this.offlineOrderField,
-                _this.districtField, _this.paperTypeField]);
+                _this.courierField, _this.cityField, _this.dropshipField, _this.offlineOrderField, _this.pickupField,
+                _this.districtField, _this.paperTypeField, _this.jobCodeField, _this.printLabelField, _this.printInvoiceField]);
             _this.setRequiredField([_this.senderField, _this.receiverField, _this.courierField, _this.marketplaceField, _this.productOrderField,
-                _this.cityField, _this.districtField, _this.paperTypeField]);
+                _this.cityField, _this.districtField, _this.paperTypeField, _this.jobCodeField]);
             return _this;
         }
         Object.defineProperty(CreateOrderForm, "TRIGGER_USER_FORM_EVENT", {
@@ -1459,6 +1459,7 @@ define("project/create-order-form", ["require", "exports", "common/form", "commo
             this.printInvoiceField = new checkbox_field_1.CheckboxField(document.getElementById(this.id + "-print-invoice"));
             this.printLabelField = new checkbox_field_1.CheckboxField(document.getElementById(this.id + "-label"));
             this.pickupField = new input_field_8.InputField(document.getElementById(this.id + "-pickup"));
+            this.jobCodeField = new input_field_8.InputField(document.getElementById(this.id + "-jobcode"));
         };
         CreateOrderForm.prototype.triggerUserFormEvent = function (e) {
             e.preventDefault();

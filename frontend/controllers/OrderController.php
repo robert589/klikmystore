@@ -7,6 +7,7 @@ use frontend\widgets\ProductOrderFieldItem;
 use frontend\models\CreateMarketplaceForm;
 use frontend\services\OrderService;
 use frontend\models\CreateCourierForm;
+use frontend\models\CreateOrderForm;
 use common\widgets\SearchFieldDropdownItem;
 /**
  * Order controller
@@ -25,7 +26,17 @@ class OrderController extends Controller
     }
     
     public function actionProcessCreate() {
+        $model = new CreateOrderForm();
+        $model->user_id = Yii::$app->user->getId();
+        $model->loadData($_POST);
+        $status = $model->create();
+        $data = array();
+        $data['status'] = $status ? 1 : 0;
+        if($model->hasErrors()) {
+            $data['errors'] = $model->getErrors();
+        }
         
+        return json_encode($data);
     }
     
     public function actionList() {

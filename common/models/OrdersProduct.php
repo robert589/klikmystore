@@ -7,21 +7,11 @@ use yii\behaviors\TimestampBehavior;
  * Tag model
  *
  */
-class Order extends ActiveRecord
+class OrdersProduct extends ActiveRecord
 {
-    
-    const PENDING_STATUS = 10;
-    
-    const PROCESSED_STATUS = 11;
-    
-    const CANCELLED_STATUS = 0;
-    
-    const PRINT_THERMAL = "thermal";
-    
-    const PRINT_NORMAL = "normal";
     public static function tableName()
     {
-        return '{{%orders}}';
+        return '{{%orders_product}}';
     }
     
     

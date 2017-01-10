@@ -34,6 +34,8 @@ export class CreateOrderForm extends Form{
     
     dropshipField : CheckboxField;
 
+    jobCodeField : InputField;
+
     districtField : SearchField;
 
     paperTypeField : RadioField;
@@ -55,10 +57,10 @@ export class CreateOrderForm extends Form{
     constructor(root: HTMLElement) {
         super(root);
         this.registerFields([this.senderField, this.receiverField, this.productOrderField, this.marketplaceField,
-                                this.courierField, this.cityField, this.offlineOrderField, this.dropshipField, this.offlineOrderField,
-                                this.districtField, this.paperTypeField]);
+                                this.courierField, this.cityField, this.dropshipField, this.offlineOrderField, this.pickupField
+                                this.districtField, this.paperTypeField, this.jobCodeField, this.printLabelField, this.printInvoiceField]);
         this.setRequiredField([this.senderField, this.receiverField, this.courierField, this.marketplaceField, this.productOrderField, 
-                                    this.cityField, this.districtField, this.paperTypeField]);
+                                    this.cityField, this.districtField, this.paperTypeField, this.jobCodeField]);
     }
 
     rules() {
@@ -86,6 +88,7 @@ export class CreateOrderForm extends Form{
         this.printInvoiceField = new CheckboxField(document.getElementById(this.id + "-print-invoice"));
         this.printLabelField = new CheckboxField(document.getElementById(this.id + "-label"));
         this.pickupField = new InputField(document.getElementById(this.id + "-pickup"));
+        this.jobCodeField = new InputField(document.getElementById(this.id + "-jobcode"));
     }
 
     triggerUserFormEvent(e) {

@@ -6,6 +6,7 @@ export class CreateMarketplaceForm extends Form{
     codeField  : InputField;
 
     nameField : InputField;
+
     constructor(root: HTMLElement) {
         super(root);
         this.successCb = function(data) {

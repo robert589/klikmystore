@@ -16,7 +16,7 @@
         ['id' => $id, 
          'method' => 'post', 
          'url' => \Yii::$app->request->baseUrl 
-                    . '/product/process-create-order', 
+                    . '/order/process-create', 
         'widget_class' => 'form co-form' , 'enable_button' => false
         ]) ?>   
     
@@ -109,9 +109,8 @@
                     Kode Job
                 </div>
                 <div class="form-field-right">
-                    <?= SearchField::widget(['id' => $id . '-courier', 'placeholder' => 'Cari Kurir',
-                                'name' => 'job_code',
-                                'url' => \Yii::$app->request->baseUrl . '/order/search-courier']) ?>
+                    <?= InputField::widget(['id' => $id . '-jobcode', 'placeholder' => 'Cari Kurir',
+                                'name' => 'job_code']) ?>
                 </div>
             </div>
             
@@ -165,8 +164,8 @@
             </div>
             <div class="form-field-right app-row">
                 
-                <?= CheckboxField::widget(['id' => $id . '-label', 'item' => 'Print Label']) ?>
-                <?= CheckboxField::widget(['id' => $id . '-print-invoice', 'item' => 'Print Invoice']) ?>
+                <?= CheckboxField::widget(['id' => $id . '-label', 'item' => 'Print Label', 'name' => 'print_label']) ?>
+                <?= CheckboxField::widget(['id' => $id . '-print-invoice', 'item' => 'Print Invoice', 'name' => 'print_invoice']) ?>
             </div>
         </div>
         

@@ -1,8 +1,12 @@
 <?php
 namespace frontend\models;
 
+use common\models\Product;
+use common\models\OrdersProduct;
 use common\components\RModel;
+use common\models\ProductInventory;
 use common\models\Order;
+use frontend\daos\TariffDao;
 /**
  * CreateOrderForm model
  *
@@ -37,6 +41,14 @@ class CreateOrderForm extends RModel
     
     public $dropship;
     
+    public $products;
+    
+    public $district_id;
+    
+    private $tariffDao;
+    public function init() {
+        $this->tariffDao = new TariffDao();
+    }
     public function rules() {
         return [
             ["sender_id", "integer"],
@@ -47,6 +59,9 @@ class CreateOrderForm extends RModel
             
             ["marketplace_code", "string"],
             ["marketplace_code", "required"],
+            
+            ["district_id", "integer"],
+            ["district_id", "required"],
             
             ["courier_code", "string"],
             ["courier_code", "required"],
@@ -84,7 +99,11 @@ class CreateOrderForm extends RModel
     }
     
     public function checkProduct() {
-        
+        foreach($this->products as $product) {
+            if(!isset($product['id']) || !$this->checkQuantity($product['id'], $product['quantity'])) {
+                return $this->addError("products", "Out of stock or invalid");
+            }
+        }
     }
     
     public function create() {
@@ -99,10 +118,42 @@ class CreateOrderForm extends RModel
         $model->print_label = $this->print_label;
         $model->print_invoice = $this->print_invoice;
         $model->paper_type = $this->paper_type;
-        $model->status = $this->status;
+        $model->status = Order::PENDING_STATUS;
         $model->dropship = $this->dropship;
+        $model->district_id = $this->district_id;
+        $model->tariff = $this->tariffDao->getTariff($this->district_id, $this->courier_code);
         $model->offline_order = $this->offline_order;
-        return $model->save();
+        
+        if(!$model->save()) {
+            return false;
+        }
+        
+        foreach($this->products as $product) {
+            $modelProduct = new OrdersProduct();
+            $productDetail = $this->getProductDetail($product['id']);
+            $modelProduct->product_id = $product['id'];
+            $modelProduct->quantity = $product['quantity'];
+            $modelProduct->order_id = $model->id;
+            $modelProduct->price = $productDetail['price_1'];
+            $modelProduct->weight = $productDetail['weight'];
+            if(!$modelProduct->save()) {
+                return false;
+            }
+            
+        }
+        
+        return true;
+    }
+    
+    private function getProductDetail($id) {
+        return Product::find()->where(['id' => $id])->one();
+    }
+    
+    private function checkQuantity($id, $quantity) {
+        $curQuantity = ProductInventory::find()->where(['product_id' => $id])->one()['quantity'];
+        return !($curQuantity < $quantity);
+         
+
     }
 
 }
