@@ -47,7 +47,7 @@ class OrderService extends RService
     public function isAvailable() {
         $curQuantity = $this->productInfo->getQuantity();
         if($curQuantity < $this->quantity) {
-            $this->addError("product_id", "Product is out of stock");
+            $this->addError("quantity", "Product is out of stock");
         }
     }
     
@@ -68,6 +68,12 @@ class OrderService extends RService
     
     public function searchCourier($query) {
         return $this->orderDao->searchCourier($query);
+    }
+    
+    public function checkQuantity() {
+        $this->scenario = self::GET_PRODUCT_INFO_WITH_QUANTITY_CHECK;
+        $this->productInfo = $this->productDao->getProductInfo($this->product_id);
+        return $this->validate();
     }
 
 }

@@ -13,7 +13,17 @@
         <?= Button::widget(['id' => $id . '-add', 'text' => '<span class="glyphicon glyphicon-plus"></span>']) ?>
     </div>
     <div class="po-field-list">
-        
+        <div class="po-field-table-header">
+            <div class="po-field-table-id">
+                Id
+            </div>
+            <div class="po-field-table-name">
+                Name
+            </div>
+            <div class="po-field-table-qty">
+                Quantity
+            </div>
+        </div>
     </div>
     
     <div class="field-error app-hide">

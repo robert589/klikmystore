@@ -24,6 +24,27 @@ class DistrictVoBuilder extends RVoBuilder
     }
 
     //getters
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
 
     public function getName() { 
         return $this->name; 
@@ -34,7 +55,6 @@ class DistrictVoBuilder extends RVoBuilder
     }
 
     //setters
-
     public function setName($name) { 
         $this->name = $name; 
     }

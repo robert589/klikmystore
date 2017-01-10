@@ -10,11 +10,9 @@ use frontend\vos\DistrictVoBuilder;
  */
 class LocationDao implements Dao
 {   
-    const SEARCH_CITY = "SELECT concat(regency.name, ', ' , province.name) as name, regency.id from regency, province
-            where regency.province_id = province.id and 
-                (regency.name LIKE :query 
-                    or province.name LIKE :query 
-                    or concat(regency.name, ', ' , province.name) LIKE :query)
+    const SEARCH_CITY = "SELECT regency.name, regency.id 
+            from regency
+            where regency.name LIKE :query
             LIMIT 6";
     
     const SEARCH_DISTRICT = "select district.name, district.id from district, regency"

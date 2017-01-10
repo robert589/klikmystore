@@ -8,6 +8,9 @@
   vertical-align: top;
   display: inline-block;
 }
+.co-form-row {
+  display: flex;
+}
 .co-form > .form-submit {
   display: block;
   margin-top: 8px;

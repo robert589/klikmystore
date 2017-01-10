@@ -69,4 +69,11 @@ export class InputField extends Field {
     getDateFormat() {
         return this.dateFormat;
     }
+
+    disable() {
+        this.inputElement.setAttribute('disabled', "true");
+    }
+    enable() {
+        this.inputElement.removeAttribute('disabled');
+    }
 }

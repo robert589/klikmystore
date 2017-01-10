@@ -1,8 +1,30 @@
 .pof-item {
     display: flex;
-    padding: 8px;
+    
+    &-id {
+        padding: 4px;
+        width: 15%;
+        border: 1px solid lightgrey;
+        text-align: center;    
+    }
+    
+    &-name {
+        text-align: center;
+        padding: 4px;
+        width: 45%;
+        border: 1px solid lightgrey;        
+    }
     
     &-qty {
+        text-align: center;
+        padding: 4px;
+        border: 1px solid lightgrey;
+        width: 40%;
+        
+        &-value {
+            width: 100%;
+        }
+        
         &-view {
             display: flex;   
             

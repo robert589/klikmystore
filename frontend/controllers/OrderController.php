@@ -103,12 +103,22 @@ class OrderController extends Controller
         $vo = $this->orderService->getProductInfoWithQuantityCheck();
         if($vo) {
             $data['status'] = 1;
-            $data['views'] = ProductOrderFieldItem::widget(['id' => "pof-item-" . $vo->getId(), 'vo' => $vo]);
+            $data['views'] = ProductOrderFieldItem::widget(['id' => "pof-item-" . $vo->getId(), 'vo' => $vo, 'quantity' => $this->orderService->quantity]);
         } else {
             $data['status']  = 0;
             $data['errors'] = $this->orderService->getErrors();
         }
         
+        return json_encode($data);
+    }
+    
+    public function actionCheckQuantity() {
+        $data = [];
+        $this->orderService->loadData($_POST);
+        $data['status'] = ($this->orderService->checkQuantity()) ? 1 : 0;
+        if($this->orderService->hasErrors()) {
+            $data['errors'] = $this->orderService->getErrors();
+        }
         return json_encode($data);
     }
 }

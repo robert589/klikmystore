@@ -1,5 +1,30 @@
 .po-field {
-    
+    &-table {
+        &-header {
+            display: flex;
+            margin-top: 4px;
+        }
+        &-id {
+            padding: 4px;
+            width: 15%;
+            border: 1px solid lightgrey;
+            text-align: center;
+        }
+        
+        &-name {
+            text-align: center;
+            padding: 4px;
+            width: 45%;
+            border: 1px solid lightgrey;
+        }
+        
+        &-qty {
+            text-align: center;
+            padding: 4px;
+            border: 1px solid lightgrey;
+            width: 40%;
+        }
+    }
     &-header {
      
         display: flex;
@@ -23,6 +48,7 @@
         > .button {
            width: 32px; 
            padding: 6px 10px;
+           height: 34px;
         }
     }
 }

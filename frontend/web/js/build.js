@@ -198,6 +198,12 @@ define("common/input-field", ["require", "exports", "common/Field", "common/syst
         InputField.prototype.getDateFormat = function () {
             return this.dateFormat;
         };
+        InputField.prototype.disable = function () {
+            this.inputElement.setAttribute('disabled', "true");
+        };
+        InputField.prototype.enable = function () {
+            this.inputElement.removeAttribute('disabled');
+        };
         return InputField;
     }(Field_1.Field));
     exports.InputField = InputField;
@@ -1121,22 +1127,67 @@ define("common/string", ["require", "exports"], function (require, exports) {
     }());
     exports.String = String;
 });
-define("project/product-order-field-item", ["require", "exports", "common/component", "common/string"], function (require, exports, component_11, string_1) {
+define("project/product-order-field-item", ["require", "exports", "common/component", "common/string", "common/button", "common/input-field", "common/system"], function (require, exports, component_11, string_1, button_4, input_field_6, system_6) {
     "use strict";
     var ProductOrderFieldItem = (function (_super) {
         __extends(ProductOrderFieldItem, _super);
         function ProductOrderFieldItem(root) {
-            var _this = _super.call(this, root) || this;
-            _this.quantity = _this.root.getAttribute('data-quantity');
-            return _this;
+            return _super.call(this, root) || this;
         }
         ProductOrderFieldItem.prototype.decorate = function () {
             _super.prototype.decorate.call(this);
             this.idElement = this.root.getElementsByClassName('pof-item-id')[0];
             this.nameElement = this.root.getElementsByClassName('pof-item-name')[0];
+            this.quantityViewElement = document.getElementById(this.id + '-qty-view');
+            this.quantityEditElement = document.getElementById(this.id + "-qty-edit");
+            this.qtyValueElement = document.getElementById(this.id + "-qty-value");
+            this.editQtyBtn = new button_4.Button(document.getElementById(this.id + "-editqty-btn"), this.switchToEditQty.bind(this));
+            this.newQtyField = new input_field_6.InputField(document.getElementById(this.id + "-new-qty"));
+        };
+        ProductOrderFieldItem.prototype.switchToEditQty = function (e) {
+            e.preventDefault();
+            this.quantityEditElement.classList.remove('app-hide');
+            this.quantityViewElement.classList.add('app-hide');
         };
         ProductOrderFieldItem.prototype.bindEvent = function () {
             _super.prototype.bindEvent.call(this);
+            this.newQtyField.attachEvent("keypress", function (e) {
+                if (e.keyCode === 13) {
+                    e.preventDefault();
+                    this.submitNewQty();
+                }
+            }.bind(this));
+        };
+        ProductOrderFieldItem.prototype.submitNewQty = function () {
+            var data = {};
+            data['product_id'] = this.getProductId();
+            data['quantity'] = this.getQuantity();
+            data = system_6.System.addCsrf(data);
+            this.newQtyField.disable();
+            $.ajax({
+                url: system_6.System.getBaseUrl() + "/order/check-quantity",
+                method: "post",
+                data: data,
+                dataType: "json",
+                context: this,
+                success: function (data) {
+                    if (data.status == 1) {
+                        this.updateNewQuantity();
+                    }
+                    else {
+                        this.newQtyField.showError("Stock is not enough");
+                    }
+                    this.newQtyField.enable();
+                },
+                error: function (data) {
+                    this.newQtyField.enable();
+                }
+            });
+        };
+        ProductOrderFieldItem.prototype.updateNewQuantity = function () {
+            this.quantityEditElement.classList.add('app-hide');
+            this.setQuantity(this.newQtyField.getValue());
+            this.quantityViewElement.classList.remove('app-hide');
         };
         ProductOrderFieldItem.prototype.detach = function () {
             _super.prototype.detach.call(this);
@@ -1147,11 +1198,32 @@ define("project/product-order-field-item", ["require", "exports", "common/compon
         ProductOrderFieldItem.prototype.unbindEvent = function () {
             // no event to unbind
         };
+        ProductOrderFieldItem.prototype.getProductId = function () {
+            return string_1.String.trim(this.idElement.innerHTML);
+        };
+        ProductOrderFieldItem.prototype.getQuantity = function () {
+            return parseInt(string_1.String.trim(this.qtyValueElement.innerHTML));
+        };
+        ProductOrderFieldItem.prototype.getWeight = function () {
+            return parseInt(this.root.getAttribute('data-weight'));
+        };
+        ProductOrderFieldItem.prototype.setQuantity = function (value) {
+            this.qtyValueElement.innerHTML = "" + value;
+        };
+        ProductOrderFieldItem.prototype.getPrice = function () {
+            return parseInt(this.root.getAttribute('data-price'));
+        };
+        ProductOrderFieldItem.prototype.getValue = function () {
+            return {
+                id: this.getId(),
+                quantity: this.getQuantity()
+            };
+        };
         return ProductOrderFieldItem;
     }(component_11.Component));
     exports.ProductOrderFieldItem = ProductOrderFieldItem;
 });
-define("project/product-order-field", ["require", "exports", "common/Field", "common/search-field", "common/input-field", "common/button", "common/system", "project/product-order-field-item"], function (require, exports, field_4, search_field_2, input_field_6, button_4, system_6, product_order_field_item_1) {
+define("project/product-order-field", ["require", "exports", "common/Field", "common/search-field", "common/input-field", "common/button", "common/system", "project/product-order-field-item"], function (require, exports, field_4, search_field_2, input_field_7, button_5, system_7, product_order_field_item_1) {
     "use strict";
     var ProductOrderField = (function (_super) {
         __extends(ProductOrderField, _super);
@@ -1169,9 +1241,9 @@ define("project/product-order-field", ["require", "exports", "common/Field", "co
         });
         ProductOrderField.prototype.decorate = function () {
             _super.prototype.decorate.call(this);
-            this.quantityField = new input_field_6.InputField(document.getElementById(this.id + "-quantity"));
+            this.quantityField = new input_field_7.InputField(document.getElementById(this.id + "-quantity"));
             this.productSearchField = new search_field_2.SearchField(document.getElementById(this.id + "-product"));
-            this.addBtn = new button_4.Button(document.getElementById(this.id + "-add"), this.addProduct.bind(this));
+            this.addBtn = new button_5.Button(document.getElementById(this.id + "-add"), this.addProduct.bind(this));
             this.listEl = this.root.getElementsByClassName('po-field-list')[0];
         };
         ProductOrderField.prototype.addProduct = function (e) {
@@ -1181,10 +1253,10 @@ define("project/product-order-field", ["require", "exports", "common/Field", "co
                 var data = {};
                 data['quantity'] = this.quantityField.getValue();
                 data['product_id'] = this.productSearchField.getValue();
-                data = system_6.System.addCsrf(data);
+                data = system_7.System.addCsrf(data);
                 this.addBtn.disable(true);
                 $.ajax({
-                    url: system_6.System.getBaseUrl() + "/order/add-product-to-order",
+                    url: system_7.System.getBaseUrl() + "/order/add-product-to-order",
                     data: data,
                     context: this,
                     method: 'post',
@@ -1192,6 +1264,9 @@ define("project/product-order-field", ["require", "exports", "common/Field", "co
                     success: function (data) {
                         if (parseInt(data.status) === 1) {
                             this.addNewProductToElement(data.views);
+                        }
+                        else {
+                            this.productSearchField.showError(data.errors.quantity);
                         }
                         this.addBtn.disable(false);
                     },
@@ -1221,7 +1296,32 @@ define("project/product-order-field", ["require", "exports", "common/Field", "co
             _super.prototype.detach.call(this);
         };
         ProductOrderField.prototype.getValue = function () {
+            var values = [];
+            for (var i = 0; i < this.products.length; i++) {
+                values.push(this.products[i].getValue());
+            }
             return this.values;
+        };
+        ProductOrderField.prototype.getTotalPrice = function () {
+            var price = 0;
+            for (var i = 0; i < this.products.length; i++) {
+                price += this.products[i].getQuantity() * this.products[i].getPrice();
+            }
+            return price;
+        };
+        ProductOrderField.prototype.getTotalQuantity = function () {
+            var quantity = 0;
+            for (var i = 0; i < this.products.length; i++) {
+                quantity += this.products[i].getQuantity();
+            }
+            return quantity;
+        };
+        ProductOrderField.prototype.getTotalWeight = function () {
+            var weight = 0;
+            for (var i = 0; i < this.products.length; i++) {
+                weight += this.products[i].getWeight();
+            }
+            return weight;
         };
         ProductOrderField.prototype.validateAdd = function () {
             this.productSearchField.hideError();
@@ -1254,7 +1354,30 @@ define("project/product-order-field", ["require", "exports", "common/Field", "co
     }(field_4.Field));
     exports.ProductOrderField = ProductOrderField;
 });
-define("project/create-order-form", ["require", "exports", "common/component", "common/button", "common/search-field", "project/product-order-field"], function (require, exports, component_12, button_5, search_field_3, product_order_field_1) {
+define("common/checkbox-field", ["require", "exports", "common/Field"], function (require, exports, Field_2) {
+    "use strict";
+    var CheckboxField = (function (_super) {
+        __extends(CheckboxField, _super);
+        function CheckboxField(root) {
+            return _super.call(this, root) || this;
+        }
+        CheckboxField.prototype.decorate = function () {
+            _super.prototype.decorate.call(this);
+            this.inputElement = this.root.getElementsByClassName('checkbox-field-item')[0];
+        };
+        CheckboxField.prototype.bindEvent = function () {
+        };
+        CheckboxField.prototype.detach = function () {
+            this.inputElement = null;
+        };
+        CheckboxField.prototype.getValue = function () {
+            return this.inputElement.checked;
+        };
+        return CheckboxField;
+    }(Field_2.Field));
+    exports.CheckboxField = CheckboxField;
+});
+define("project/create-order-form", ["require", "exports", "common/form", "common/button", "common/search-field", "project/product-order-field", "common/checkbox-field"], function (require, exports, form_6, button_6, search_field_3, product_order_field_1, checkbox_field_1) {
     "use strict";
     var CreateOrderForm = (function (_super) {
         __extends(CreateOrderForm, _super);
@@ -1277,9 +1400,11 @@ define("project/create-order-form", ["require", "exports", "common/component", "
             enumerable: true,
             configurable: true
         });
+        CreateOrderForm.prototype.rules = function () {
+        };
         CreateOrderForm.prototype.decorate = function () {
             _super.prototype.decorate.call(this);
-            this.addUserBtn = new button_5.Button(document.getElementById(this.id + "-add-user-1"), this.triggerUserFormEvent.bind(this));
+            this.addUserBtn = new button_6.Button(document.getElementById(this.id + "-add-user-1"), this.triggerUserFormEvent.bind(this));
             this.receiverField = new search_field_3.SearchField(document.getElementById(this.id + "-receiver-field"));
             this.senderField = new search_field_3.SearchField(document.getElementById(this.id + "-sender-field"));
             this.productOrderField = new product_order_field_1.ProductOrderField(document.getElementById(this.id + "-po-field"));
@@ -1287,6 +1412,11 @@ define("project/create-order-form", ["require", "exports", "common/component", "
             this.courierField = new search_field_3.SearchField(document.getElementById(this.id + "-courier"));
             this.cityField = new search_field_3.SearchField(document.getElementById(this.id + "-city"));
             this.districtField = new search_field_3.SearchField(document.getElementById(this.id + "-district"));
+            this.totalPriceElement = this.root.getElementsByClassName('co-form-price')[0];
+            this.totalQuantityElement = this.root.getElementsByClassName('co-form-quantity')[0];
+            this.totalWeightElement = this.root.getElementsByClassName('co-form-weight')[0];
+            this.offlineOrderField = new checkbox_field_1.CheckboxField(document.getElementById(this.id + "-offline-order"));
+            this.dropshipField = new checkbox_field_1.CheckboxField(document.getElementById(this.id + "-dropship"));
         };
         CreateOrderForm.prototype.triggerUserFormEvent = function (e) {
             e.preventDefault();
@@ -1295,8 +1425,35 @@ define("project/create-order-form", ["require", "exports", "common/component", "
         CreateOrderForm.prototype.bindEvent = function () {
             _super.prototype.bindEvent.call(this);
             this.userFormEvent = new CustomEvent(CreateOrderForm.TRIGGER_USER_FORM_EVENT);
+            this.courierField.attachEvent(search_field_3.SearchField.GET_VALUE_EVENT, this.enableCityField.bind(this));
+            this.courierField.attachEvent(search_field_3.SearchField.LOSE_VALUE_EVENT, this.disableCityField.bind(this));
             this.cityField.attachEvent(search_field_3.SearchField.GET_VALUE_EVENT, this.enableDistrictField.bind(this));
             this.cityField.attachEvent(search_field_3.SearchField.LOSE_VALUE_EVENT, this.disableDistrictField.bind(this));
+            this.productOrderField.attachEvent(product_order_field_1.ProductOrderField.NEW_PRODUCT_ADDED, this.updateLabel.bind(this));
+        };
+        CreateOrderForm.prototype.setTotalPrice = function (price) {
+            this.totalPriceElement.innerHTML = "" + price;
+        };
+        CreateOrderForm.prototype.setTotalQuantity = function (quantity) {
+            this.totalQuantityElement.innerHTML = "" + quantity;
+        };
+        CreateOrderForm.prototype.setTotalWeight = function (weight) {
+            this.totalWeightElement.innerHTML = "" + weight;
+        };
+        CreateOrderForm.prototype.updateLabel = function () {
+            this.setTotalQuantity(this.productOrderField.getTotalQuantity());
+            this.setTotalWeight(this.productOrderField.getTotalWeight());
+            this.setTotalPrice(this.productOrderField.getTotalPrice());
+        };
+        CreateOrderForm.prototype.enableCityField = function () {
+            this.cityField.enable();
+            var data = [];
+            data['courier_code'] = this.courierField.getValue();
+            this.cityField.setAdditionalData(data);
+        };
+        CreateOrderForm.prototype.disableCityField = function () {
+            this.cityField.disable();
+            this.cityField.resetValue();
         };
         CreateOrderForm.prototype.disableDistrictField = function () {
             this.districtField.disable();
@@ -1315,10 +1472,10 @@ define("project/create-order-form", ["require", "exports", "common/component", "
             // no event to unbind
         };
         return CreateOrderForm;
-    }(component_12.Component));
+    }(form_6.Form));
     exports.CreateOrderForm = CreateOrderForm;
 });
-define("common/text-area-field", ["require", "exports", "common/Field"], function (require, exports, Field_2) {
+define("common/text-area-field", ["require", "exports", "common/Field"], function (require, exports, Field_3) {
     "use strict";
     var TextAreaField = (function (_super) {
         __extends(TextAreaField, _super);
@@ -1339,10 +1496,10 @@ define("common/text-area-field", ["require", "exports", "common/Field"], functio
             this.inputElement.innerHTML = null;
         };
         return TextAreaField;
-    }(Field_2.Field));
+    }(Field_3.Field));
     exports.TextAreaField = TextAreaField;
 });
-define("project/add-user-form", ["require", "exports", "common/form", "common/input-field", "common/text-area-field"], function (require, exports, form_6, input_field_7, text_area_field_1) {
+define("project/add-user-form", ["require", "exports", "common/form", "common/input-field", "common/text-area-field"], function (require, exports, form_7, input_field_8, text_area_field_1) {
     "use strict";
     var AddUserForm = (function (_super) {
         __extends(AddUserForm, _super);
@@ -1365,9 +1522,9 @@ define("project/add-user-form", ["require", "exports", "common/form", "common/in
         };
         AddUserForm.prototype.decorate = function () {
             _super.prototype.decorate.call(this);
-            this.firstNameField = new input_field_7.InputField(document.getElementById(this.id + "-first-name"));
-            this.lastNameField = new input_field_7.InputField(document.getElementById(this.id + "-last-name"));
-            this.telpField = new input_field_7.InputField(document.getElementById(this.id + "-telephone"));
+            this.firstNameField = new input_field_8.InputField(document.getElementById(this.id + "-first-name"));
+            this.lastNameField = new input_field_8.InputField(document.getElementById(this.id + "-last-name"));
+            this.telpField = new input_field_8.InputField(document.getElementById(this.id + "-telephone"));
             this.addrField = new text_area_field_1.TextAreaField(document.getElementById(this.id + "-address"));
         };
         AddUserForm.prototype.bindEvent = function () {
@@ -1381,7 +1538,7 @@ define("project/add-user-form", ["require", "exports", "common/form", "common/in
             // no event to unbind
         };
         return AddUserForm;
-    }(form_6.Form));
+    }(form_7.Form));
     exports.AddUserForm = AddUserForm;
 });
 define("project/add-user-form-modal", ["require", "exports", "common/modal", "project/add-user-form"], function (require, exports, modal_1, add_user_form_1) {
@@ -1411,7 +1568,7 @@ define("project/add-user-form-modal", ["require", "exports", "common/modal", "pr
     }(modal_1.Modal));
     exports.AddUserFormModal = AddUserFormModal;
 });
-define("project/create-order", ["require", "exports", "common/component", "project/create-order-form", "project/add-user-form-modal"], function (require, exports, component_13, create_order_form_1, add_user_form_modal_1) {
+define("project/create-order", ["require", "exports", "common/component", "project/create-order-form", "project/add-user-form-modal"], function (require, exports, component_12, create_order_form_1, add_user_form_modal_1) {
     "use strict";
     var CreateOrder = (function (_super) {
         __extends(CreateOrder, _super);
@@ -1437,10 +1594,10 @@ define("project/create-order", ["require", "exports", "common/component", "proje
             // no event to unbind
         };
         return CreateOrder;
-    }(component_13.Component));
+    }(component_12.Component));
     exports.CreateOrder = CreateOrder;
 });
-define("project/app", ["require", "exports", "common/component", "project/login", "project/add-product", "project/add-category", "project/order-create-marketplace", "project/order-create-courier", "project/create-order"], function (require, exports, component_14, login_1, add_product_1, add_category_1, order_create_marketplace_1, order_create_courier_1, create_order_1) {
+define("project/app", ["require", "exports", "common/component", "project/login", "project/add-product", "project/add-category", "project/order-create-marketplace", "project/order-create-courier", "project/create-order"], function (require, exports, component_13, login_1, add_product_1, add_category_1, order_create_marketplace_1, order_create_courier_1, create_order_1) {
     "use strict";
     var App = (function (_super) {
         __extends(App, _super);
@@ -1478,7 +1635,7 @@ define("project/app", ["require", "exports", "common/component", "project/login"
             // no event to unbind
         };
         return App;
-    }(component_14.Component));
+    }(component_13.Component));
     exports.App = App;
 });
 define("project/init", ["require", "exports", "project/app"], function (require, exports, app_1) {

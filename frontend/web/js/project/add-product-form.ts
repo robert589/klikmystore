@@ -3,6 +3,7 @@ import {DynamicWholesaleField} from './dynamic-wholesale-field';
 import {InputField} from './../common/input-field';
 import {SearchField} from './../common/search-field';
 import {System} from './../common/system';
+
 export class AddProductForm extends Form{
     
     imageField : InputField;

@@ -1,3 +1,25 @@
+.po-field-table-header {
+  display: flex;
+  margin-top: 4px;
+}
+.po-field-table-id {
+  padding: 4px;
+  width: 15%;
+  border: 1px solid lightgrey;
+  text-align: center;
+}
+.po-field-table-name {
+  text-align: center;
+  padding: 4px;
+  width: 45%;
+  border: 1px solid lightgrey;
+}
+.po-field-table-qty {
+  text-align: center;
+  padding: 4px;
+  border: 1px solid lightgrey;
+  width: 40%;
+}
 .po-field-header {
   display: flex;
 }
@@ -16,4 +38,5 @@
 .po-field-header > .button {
   width: 32px;
   padding: 6px 10px;
+  height: 34px;
 }

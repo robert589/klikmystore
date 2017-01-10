@@ -3,7 +3,8 @@ import {SearchField} from '../common/search-field';
 import {InputField} from '../common/input-field';
 import {Button} from '../common/button';
 import {System} from '../common/system';
-import {ProductOrderFieldItem} from './product-order-field-item';
+import {ProductOrderFieldItem, ProductOrderFieldItemJson} from './product-order-field-item';
+
 export class ProductOrderField extends Field{
 
     public static get NEW_PRODUCT_ADDED() {
@@ -54,6 +55,8 @@ export class ProductOrderField extends Field{
                 success : function(data) {
                     if(parseInt(data.status) === 1) {
                         this.addNewProductToElement(data.views);
+                    } else {
+                        this.productSearchField.showError(data.errors.quantity);
                     }
                     this.addBtn.disable(false);
                 },
@@ -83,12 +86,41 @@ export class ProductOrderField extends Field{
         super.bindEvent();
         this.newProductAdded = new CustomEvent(ProductOrderField.NEW_PRODUCT_ADDED);
     }
+
     detach() {
         super.detach();
     }
     
     getValue() {
+        let values :ProductOrderFieldItemJson[] = [];
+        for(let i = 0; i < this.products.length; i++) {
+            values.push(this.products[i].getValue());
+        }
         return this.values;
+    }
+
+    getTotalPrice() {
+        let price : number = 0;
+        for(let i = 0; i < this.products.length; i++) {
+            price += this.products[i].getQuantity() * this.products[i].getPrice();
+        }
+        return price;
+    }
+
+    getTotalQuantity() {
+        let quantity : number = 0;
+        for(let i = 0; i < this.products.length; i++) {
+            quantity += this.products[i].getQuantity();
+        }
+        return quantity;
+    }
+
+    getTotalWeight() : number{
+        let weight : number = 0;
+        for(let i = 0; i < this.products.length; i++) {
+            weight += this.products[i].getWeight();
+        }
+        return weight;
     }
 
     validateAdd() : boolean{
@@ -121,9 +153,4 @@ export class ProductOrderField extends Field{
     unbindEvent() {
         // no event to unbind
     }
-}
-
-interface ProductOrderFieldItemJson {
-    id : string;
-    quantity : number;
 }

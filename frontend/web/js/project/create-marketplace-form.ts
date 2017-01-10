@@ -16,7 +16,7 @@ export class CreateMarketplaceForm extends Form{
     rules() {
         this.setRequiredField([this.codeField, this.nameField]);
         this.registerFields([this.codeField, this.nameField]);
-
+        
     }
     
     decorate() {

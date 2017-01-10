@@ -18,6 +18,9 @@
 .app-fullwidth {
   width: 100%;
 }
+.app-row {
+  display: flex;
+}
 .container {
   max-width: 1200px;
   margin: auto;

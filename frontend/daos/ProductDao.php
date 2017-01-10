@@ -15,7 +15,8 @@ class ProductDao implements Dao
              where product.name LIKE :query 
              limit 4";
     
-    const PRODUCT_INFO = "select product.id, product.name, product_inventory.quantity"
+    const PRODUCT_INFO = "select product.id, product.name, "
+            . "         product_inventory.quantity, product.price_1, product.weight "
             . " from product, product_inventory"
             . " where product.id = product_inventory.product_id and product.id = :product_id ";
     

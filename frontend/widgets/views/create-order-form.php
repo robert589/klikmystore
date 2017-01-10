@@ -2,10 +2,12 @@
     use common\widgets\InputField;
     use common\widgets\SearchField;
     use common\widgets\Button;  
+    use common\models\Order;
     use common\widgets\Form;
     use common\widgets\CheckboxField;
     use common\widgets\TabContainer;
     use common\widgets\TabItem;
+    use common\widgets\RadioField;
     use frontend\widgets\ProductOrderField;
 ?>
 
@@ -19,7 +21,12 @@
         ]) ?>   
     
     <div class="co-form-left">
+        
         <div class="co-form-cluster">
+            <div class="app-row">
+                <?=   CheckboxField::widget(['id' => $id . '-offline-order', 'item' => 'Offline Order']) ?>
+                <?=   CheckboxField::widget(['id' => $id . '-dropship', 'item' => 'Dropship']) ?>
+            </div>
             <div class="form-field">
                 <div class="form-field-left">
                     Penerima
@@ -79,7 +86,7 @@
                 </div>
                 <div class="form-field-right">
                     <?= SearchField::widget(['id' => $id . '-city', 'placeholder' => 'Cari Kota',
-                                'url' => \Yii::$app->request->baseUrl . '/location/search-city']) ?>
+                                'url' => \Yii::$app->request->baseUrl . '/location/search-city', 'disabled' => true]) ?>
                 </div>
             </div>
             <div class="form-field">
@@ -107,14 +114,64 @@
                     Tanggal Pickup
                 </div>
                 <div class="form-field-right">
-                    <?= InputField::widget(['id' => $id . '-courier', 'placeholder' => 'Cari Kurir',
+                    <?= InputField::widget(['id' => $id . '-courier', 'placeholder' => 'Cari Tanggal',
                                 'datepicker' => true]) ?>
                 </div>
             </div>
         </div>
     </div>
     <div class="co-form-right">
-
+        <div class="co-form-row">
+            Total Kuantitas: 
+            <div class="co-form-value co-form-quantity">
+                0
+            </div>
+        </div>
+        <div class="co-form-row">
+            Total Berat: 
+            <div class="co-form-value co-form-weight">
+                0
+            </div> gram
+        </div>
+        <div class="co-form-row">
+            Total Harga Barang: Rp.
+            <div class="co-form-value co-form-price">
+                0.00
+            </div>
+        </div>
+        <div class="co-form-row">
+            Ongkir: Rp.
+            <div class="co-form-value">
+                0.00
+            </div>
+        </div>
+        <div class="co-form-row">
+            Total Harga: Rp.
+            <div class="co-form-value">
+                0.00
+            </div>
+        </div>
+        
+        <div class="form-field">
+            <div class="form-field-left">
+                Print
+            </div>
+            <div class="form-field-right app-row">
+                
+                <?= CheckboxField::widget(['id' => $id . '-label', 'item' => 'Print Label']) ?>
+                <?= CheckboxField::widget(['id' => $id . '-invoice', 'item' => 'Print Invoice']) ?>
+            </div>
+        </div>
+        
+        <div class="form-field">
+            <div class="form-field-left">
+                Ukuran Kertas
+            </div>
+            <div class="form-field-right app-row">
+                <?= RadioField::widget(['id' => $id . '-paper-size', 
+                                    'items' => [Order::PRINT_THERMAL => "Print Thermal", Order::PRINT_NORMAL => "Print Normal"]]) ?>
+            </div>
+        </div>
     </div>
     <?= Button::widget(['id' => $id . '-submit-btn' , 
         'text' => 'Add', 'newClass' => 'form-submit']) ?>
