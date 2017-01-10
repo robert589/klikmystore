@@ -4,6 +4,7 @@ namespace frontend\services;
 use frontend\daos\ProductDao;
 use common\components\RService;
 use frontend\daos\OrderDao;
+use frontend\daos\TariffDao;
 /**
  * OrderService service
  *
@@ -14,6 +15,8 @@ class OrderService extends RService
     
     private $orderDao;
     
+    private $tariffDao;
+    
     //attributes
     public $user_id;
     
@@ -21,11 +24,18 @@ class OrderService extends RService
     
     public $quantity;
     
+    public $courier_code;
+    
+    public $district_id;
+    
     const GET_PRODUCT_INFO_WITH_QUANTITY_CHECK = "product_info_with_quantity_check";
     
+    const GET_TARIFF = "gettariff";
+
     private $productInfo;
     
     public function init() {
+        $this->tariffDao = new TariffDao();
         $this->productDao = new ProductDao();
         $this->orderDao = new OrderDao();
     }
@@ -40,7 +50,11 @@ class OrderService extends RService
             
             ['quantity', 'integer'],
             ['quantity', 'required', 'on' => self::GET_PRODUCT_INFO_WITH_QUANTITY_CHECK],
-            ['quantity', 'isAvailable']
+            ['quantity', 'isAvailable', 'on' => self::GET_PRODUCT_INFO_WITH_QUANTITY_CHECK],
+            ['district_id', 'integer'],
+            ['district_id', 'required', 'on' => self::GET_TARIFF],
+            ['courier_code', 'string'],
+            ['courier_code', 'required', 'on' => self::GET_TARIFF],
         ];
     }
     
@@ -49,6 +63,14 @@ class OrderService extends RService
         if($curQuantity < $this->quantity) {
             $this->addError("quantity", "Product is out of stock");
         }
+    }
+    
+    public function getTariff() {
+        $this->setScenario(self::GET_TARIFF);
+        if(!$this->validate()) {
+            return false;
+        }
+        return $this->tariffDao->getTariff($this->district_id, $this->courier_code);
     }
     
     public function getProductInfoWithQuantityCheck() {

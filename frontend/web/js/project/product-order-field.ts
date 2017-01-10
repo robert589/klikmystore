@@ -96,7 +96,7 @@ export class ProductOrderField extends Field{
         for(let i = 0; i < this.products.length; i++) {
             values.push(this.products[i].getValue());
         }
-        return this.values;
+        return values;
     }
 
     getTotalPrice() {

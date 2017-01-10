@@ -23,6 +23,15 @@ class LocationService extends RService
         return $this->locationDao->searchCity($q);
     }
     
+    public function searchCityByCourier($q, $courierCode) {
+        return $this->locationDao->searchCityByCourier($q, $courierCode);
+        
+    }
+    
+    public function searchDistrictForTariff($q, $regencyId, $courierCode) {
+        return $this->locationDao->searchDistrictForTariff($q, $regencyId, $courierCode);
+    }
+    
     public function searchDistrict($q, $cityId) {
         return $this->locationDao->searchDistrict($q, $cityId);
     }

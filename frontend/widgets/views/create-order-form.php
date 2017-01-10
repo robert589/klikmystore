@@ -24,18 +24,19 @@
         
         <div class="co-form-cluster">
             <div class="app-row">
-                <?=   CheckboxField::widget(['id' => $id . '-offline-order', 'item' => 'Offline Order']) ?>
-                <?=   CheckboxField::widget(['id' => $id . '-dropship', 'item' => 'Dropship']) ?>
+                <?=   CheckboxField::widget(['id' => $id . '-offline-order', 'item' => 'Offline Order', 'name' => 'offline_order']) ?>
+                <?=   CheckboxField::widget(['id' => $id . '-dropship', 'item' => 'Dropship', 'name' => 'dropship']) ?>
             </div>
             <div class="form-field">
                 <div class="form-field-left">
                     Penerima
                     <?= Button::widget(['id' => $id . '-add-user-1', 'widgetClass' => 'button-link',
-                                        'color' => Button::NONE_COLOR,
+                                        'color' => Button::NONE_COLOR, 
                                         'text' => 'Tambah Pengguna baru']) ?>
                 </div>
                 <div class="form-field-right">
                     <?= SearchField::widget(['id' => $id . '-receiver-field', 'placeholder' => 'Cari Pengguna',
+                                            'name' => 'receiver_id',
                                             'url' => \Yii::$app->request->baseUrl . '/user/search-user']) ?>
                 </div>
             </div>
@@ -46,6 +47,7 @@
             </div>
             <div class="form-field-right">
                 <?= SearchField::widget(['id' => $id . '-sender-field', 'placeholder' => 'Cari Pengguna',
+                            'name' => 'sender_id',
                             'url' => \Yii::$app->request->baseUrl . '/user/search-user']) ?>
             </div>
         </div>
@@ -67,6 +69,7 @@
                 </div>
                 <div class="form-field-right">
                     <?= SearchField::widget(['id' => $id . '-marketplace', 'placeholder' => 'Cari Marketplace',
+                                'name' => 'marketplace_code',
                                 'url' => \Yii::$app->request->baseUrl . '/order/search-marketplace']) ?>
                 </div>
             </div>
@@ -76,6 +79,7 @@
                 </div>
                 <div class="form-field-right">
                     <?= SearchField::widget(['id' => $id . '-courier', 'placeholder' => 'Cari Kurir',
+                                'name' => 'courier_code',
                                 'url' => \Yii::$app->request->baseUrl . '/order/search-courier']) ?>
                 </div>
             </div>
@@ -86,7 +90,8 @@
                 </div>
                 <div class="form-field-right">
                     <?= SearchField::widget(['id' => $id . '-city', 'placeholder' => 'Cari Kota',
-                                'url' => \Yii::$app->request->baseUrl . '/location/search-city', 'disabled' => true]) ?>
+                                'name' => 'city_id',
+                                'url' => \Yii::$app->request->baseUrl . '/location/search-city-by-courier', 'disabled' => true]) ?>
                 </div>
             </div>
             <div class="form-field">
@@ -94,8 +99,8 @@
                     Kecamatan
                 </div>
                 <div class="form-field-right">
-                    <?= SearchField::widget(['id' => $id . '-district', 'placeholder' => 'Cari Kecamatan',
-                                'url' => \Yii::$app->request->baseUrl . '/location/search-district', 'disabled' => true]) ?>
+                    <?= SearchField::widget(['id' => $id . '-district', 'placeholder' => 'Cari Kecamatan', 'name' => 'district_id',
+                                'url' => \Yii::$app->request->baseUrl . '/location/search-district-for-tariff', 'disabled' => true]) ?>
                 </div>
             </div>
             
@@ -105,6 +110,7 @@
                 </div>
                 <div class="form-field-right">
                     <?= SearchField::widget(['id' => $id . '-courier', 'placeholder' => 'Cari Kurir',
+                                'name' => 'job_code',
                                 'url' => \Yii::$app->request->baseUrl . '/order/search-courier']) ?>
                 </div>
             </div>
@@ -114,7 +120,8 @@
                     Tanggal Pickup
                 </div>
                 <div class="form-field-right">
-                    <?= InputField::widget(['id' => $id . '-courier', 'placeholder' => 'Cari Tanggal',
+                    <?= InputField::widget(['id' => $id . '-pickup', 'placeholder' => 'Cari Tanggal',
+                                'name' => 'pickup',
                                 'datepicker' => true]) ?>
                 </div>
             </div>
@@ -141,7 +148,7 @@
         </div>
         <div class="co-form-row">
             Ongkir: Rp.
-            <div class="co-form-value">
+            <div class="co-form-value co-form-tariff">
                 0.00
             </div>
         </div>
@@ -159,7 +166,7 @@
             <div class="form-field-right app-row">
                 
                 <?= CheckboxField::widget(['id' => $id . '-label', 'item' => 'Print Label']) ?>
-                <?= CheckboxField::widget(['id' => $id . '-invoice', 'item' => 'Print Invoice']) ?>
+                <?= CheckboxField::widget(['id' => $id . '-print-invoice', 'item' => 'Print Invoice']) ?>
             </div>
         </div>
         
@@ -168,7 +175,7 @@
                 Ukuran Kertas
             </div>
             <div class="form-field-right app-row">
-                <?= RadioField::widget(['id' => $id . '-paper-size', 
+                <?= RadioField::widget(['id' => $id . '-paper-size', 'name' => 'paper_type',
                                     'items' => [Order::PRINT_THERMAL => "Print Thermal", Order::PRINT_NORMAL => "Print Normal"]]) ?>
             </div>
         </div>

@@ -57,6 +57,9 @@ class CreateOrderForm extends RModel
             ["pickup", "string"],
             ["pickup", "required"],
             
+            ['products', 'required'],
+            ['products', 'checkProduct'],
+            
             ["user_id", "integer"],
             ["user_id", "required"],
             
@@ -78,6 +81,10 @@ class CreateOrderForm extends RModel
             ['offline_order', 'boolean'],
             ['offline_order', 'required']
         ];   
+    }
+    
+    public function checkProduct() {
+        
     }
     
     public function create() {

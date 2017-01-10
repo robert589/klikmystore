@@ -118,8 +118,21 @@ class OrderController extends Controller
         $data['status'] = ($this->orderService->checkQuantity()) ? 1 : 0;
         if($this->orderService->hasErrors()) {
             $data['errors'] = $this->orderService->getErrors();
+        }   
+        return json_encode($data);
+    }
+    
+    public function actionGetTariff() {
+        $data = [];
+        $this->orderService->loadData($_GET);
+        $tariff = $this->orderService->getTariff();
+        $data['status'] = $tariff ? 1 : 0;
+        $data['tariff'] = $tariff;
+        if($this->orderService->hasErrors()) {
+           $data['errors'] = $this->orderService->getErrors();
         }
         return json_encode($data);
+
     }
 }
 

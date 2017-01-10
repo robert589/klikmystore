@@ -1300,7 +1300,7 @@ define("project/product-order-field", ["require", "exports", "common/Field", "co
             for (var i = 0; i < this.products.length; i++) {
                 values.push(this.products[i].getValue());
             }
-            return this.values;
+            return values;
         };
         ProductOrderField.prototype.getTotalPrice = function () {
             var price = 0;
@@ -1377,12 +1377,49 @@ define("common/checkbox-field", ["require", "exports", "common/Field"], function
     }(Field_2.Field));
     exports.CheckboxField = CheckboxField;
 });
-define("project/create-order-form", ["require", "exports", "common/form", "common/button", "common/search-field", "project/product-order-field", "common/checkbox-field"], function (require, exports, form_6, button_6, search_field_3, product_order_field_1, checkbox_field_1) {
+define("common/radio-field", ["require", "exports", "common/Field"], function (require, exports, Field_3) {
+    "use strict";
+    var RadioField = (function (_super) {
+        __extends(RadioField, _super);
+        function RadioField(root) {
+            return _super.call(this, root) || this;
+        }
+        RadioField.prototype.decorate = function () {
+            _super.prototype.decorate.call(this);
+            this.inputElements = [];
+            var rawInputs = this.root.getElementsByClassName('radio-field-item');
+            for (var i = 0; i < rawInputs.length; i++) {
+                this.inputElements.push(rawInputs.item(i));
+            }
+        };
+        RadioField.prototype.bindEvent = function () {
+        };
+        RadioField.prototype.detach = function () {
+        };
+        RadioField.prototype.getValue = function () {
+            for (var i = 0; i < this.inputElements.length; i++) {
+                if (this.inputElements[i].checked) {
+                    return this.inputElements[i].value;
+                }
+            }
+            return null;
+        };
+        return RadioField;
+    }(Field_3.Field));
+    exports.RadioField = RadioField;
+});
+define("project/create-order-form", ["require", "exports", "common/form", "common/button", "common/search-field", "project/product-order-field", "common/checkbox-field", "common/system", "common/radio-field", "common/input-field"], function (require, exports, form_6, button_6, search_field_3, product_order_field_1, checkbox_field_1, system_8, radio_field_1, input_field_8) {
     "use strict";
     var CreateOrderForm = (function (_super) {
         __extends(CreateOrderForm, _super);
         function CreateOrderForm(root) {
-            return _super.call(this, root) || this;
+            var _this = _super.call(this, root) || this;
+            _this.registerFields([_this.senderField, _this.receiverField, _this.productOrderField, _this.marketplaceField,
+                _this.courierField, _this.cityField, _this.offlineOrderField, _this.dropshipField, _this.offlineOrderField,
+                _this.districtField, _this.paperTypeField]);
+            _this.setRequiredField([_this.senderField, _this.receiverField, _this.courierField, _this.marketplaceField, _this.productOrderField,
+                _this.cityField, _this.districtField, _this.paperTypeField]);
+            return _this;
         }
         Object.defineProperty(CreateOrderForm, "TRIGGER_USER_FORM_EVENT", {
             get: function () { return "CO_FORM_TRIGGER_USER_FORM_EVENT"; },
@@ -1406,6 +1443,7 @@ define("project/create-order-form", ["require", "exports", "common/form", "commo
             _super.prototype.decorate.call(this);
             this.addUserBtn = new button_6.Button(document.getElementById(this.id + "-add-user-1"), this.triggerUserFormEvent.bind(this));
             this.receiverField = new search_field_3.SearchField(document.getElementById(this.id + "-receiver-field"));
+            this.paperTypeField = new radio_field_1.RadioField(document.getElementById(this.id + "-paper-size"));
             this.senderField = new search_field_3.SearchField(document.getElementById(this.id + "-sender-field"));
             this.productOrderField = new product_order_field_1.ProductOrderField(document.getElementById(this.id + "-po-field"));
             this.marketplaceField = new search_field_3.SearchField(document.getElementById(this.id + "-marketplace"));
@@ -1415,8 +1453,12 @@ define("project/create-order-form", ["require", "exports", "common/form", "commo
             this.totalPriceElement = this.root.getElementsByClassName('co-form-price')[0];
             this.totalQuantityElement = this.root.getElementsByClassName('co-form-quantity')[0];
             this.totalWeightElement = this.root.getElementsByClassName('co-form-weight')[0];
+            this.tariffElement = this.root.getElementsByClassName('co-form-tariff')[0];
             this.offlineOrderField = new checkbox_field_1.CheckboxField(document.getElementById(this.id + "-offline-order"));
             this.dropshipField = new checkbox_field_1.CheckboxField(document.getElementById(this.id + "-dropship"));
+            this.printInvoiceField = new checkbox_field_1.CheckboxField(document.getElementById(this.id + "-print-invoice"));
+            this.printLabelField = new checkbox_field_1.CheckboxField(document.getElementById(this.id + "-label"));
+            this.pickupField = new input_field_8.InputField(document.getElementById(this.id + "-pickup"));
         };
         CreateOrderForm.prototype.triggerUserFormEvent = function (e) {
             e.preventDefault();
@@ -1430,6 +1472,11 @@ define("project/create-order-form", ["require", "exports", "common/form", "commo
             this.cityField.attachEvent(search_field_3.SearchField.GET_VALUE_EVENT, this.enableDistrictField.bind(this));
             this.cityField.attachEvent(search_field_3.SearchField.LOSE_VALUE_EVENT, this.disableDistrictField.bind(this));
             this.productOrderField.attachEvent(product_order_field_1.ProductOrderField.NEW_PRODUCT_ADDED, this.updateLabel.bind(this));
+            this.districtField.attachEvent(search_field_3.SearchField.GET_VALUE_EVENT, this.updateTariff.bind(this));
+            this.districtField.attachEvent(search_field_3.SearchField.LOSE_VALUE_EVENT, this.resetTariff.bind(this));
+        };
+        CreateOrderForm.prototype.resetTariff = function () {
+            this.setTariff(0);
         };
         CreateOrderForm.prototype.setTotalPrice = function (price) {
             this.totalPriceElement.innerHTML = "" + price;
@@ -1439,6 +1486,9 @@ define("project/create-order-form", ["require", "exports", "common/form", "commo
         };
         CreateOrderForm.prototype.setTotalWeight = function (weight) {
             this.totalWeightElement.innerHTML = "" + weight;
+        };
+        CreateOrderForm.prototype.setTariff = function (tariff) {
+            this.tariffElement.innerHTML = "" + tariff;
         };
         CreateOrderForm.prototype.updateLabel = function () {
             this.setTotalQuantity(this.productOrderField.getTotalQuantity());
@@ -1463,6 +1513,7 @@ define("project/create-order-form", ["require", "exports", "common/form", "commo
             this.districtField.enable();
             var data = [];
             data['city_id'] = this.cityField.getValue();
+            data['courier_code'] = this.courierField.getValue();
             this.districtField.setAdditionalData(data);
         };
         CreateOrderForm.prototype.detach = function () {
@@ -1471,11 +1522,31 @@ define("project/create-order-form", ["require", "exports", "common/form", "commo
         CreateOrderForm.prototype.unbindEvent = function () {
             // no event to unbind
         };
+        CreateOrderForm.prototype.updateTariff = function () {
+            var data = {};
+            data["district_id"] = this.districtField.getValue();
+            data["courier_code"] = this.courierField.getValue();
+            $.ajax({
+                url: system_8.System.getBaseUrl() + "/order/get-tariff",
+                method: "get",
+                data: data,
+                dataType: "json",
+                context: this,
+                success: function (data) {
+                    if (data.status != 1) {
+                        this.setTariff(0);
+                    }
+                    else {
+                        this.setTariff(data.tariff);
+                    }
+                }
+            });
+        };
         return CreateOrderForm;
     }(form_6.Form));
     exports.CreateOrderForm = CreateOrderForm;
 });
-define("common/text-area-field", ["require", "exports", "common/Field"], function (require, exports, Field_3) {
+define("common/text-area-field", ["require", "exports", "common/Field"], function (require, exports, Field_4) {
     "use strict";
     var TextAreaField = (function (_super) {
         __extends(TextAreaField, _super);
@@ -1496,10 +1567,10 @@ define("common/text-area-field", ["require", "exports", "common/Field"], functio
             this.inputElement.innerHTML = null;
         };
         return TextAreaField;
-    }(Field_3.Field));
+    }(Field_4.Field));
     exports.TextAreaField = TextAreaField;
 });
-define("project/add-user-form", ["require", "exports", "common/form", "common/input-field", "common/text-area-field"], function (require, exports, form_7, input_field_8, text_area_field_1) {
+define("project/add-user-form", ["require", "exports", "common/form", "common/input-field", "common/text-area-field"], function (require, exports, form_7, input_field_9, text_area_field_1) {
     "use strict";
     var AddUserForm = (function (_super) {
         __extends(AddUserForm, _super);
@@ -1522,9 +1593,9 @@ define("project/add-user-form", ["require", "exports", "common/form", "common/in
         };
         AddUserForm.prototype.decorate = function () {
             _super.prototype.decorate.call(this);
-            this.firstNameField = new input_field_8.InputField(document.getElementById(this.id + "-first-name"));
-            this.lastNameField = new input_field_8.InputField(document.getElementById(this.id + "-last-name"));
-            this.telpField = new input_field_8.InputField(document.getElementById(this.id + "-telephone"));
+            this.firstNameField = new input_field_9.InputField(document.getElementById(this.id + "-first-name"));
+            this.lastNameField = new input_field_9.InputField(document.getElementById(this.id + "-last-name"));
+            this.telpField = new input_field_9.InputField(document.getElementById(this.id + "-telephone"));
             this.addrField = new text_area_field_1.TextAreaField(document.getElementById(this.id + "-address"));
         };
         AddUserForm.prototype.bindEvent = function () {
