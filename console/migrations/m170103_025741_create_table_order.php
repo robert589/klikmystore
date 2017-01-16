@@ -7,7 +7,7 @@ class m170103_025741_create_table_order extends Migration
     public function up()
     {
         $this->execute("CREATE TABLE orders("
-                . "id int not null primary key,"
+                . "id int not null primary key auto_increment,"
                 . "sender_id int not null,"
                 . "receiver_id int not null,"
                 . "marketplace_code varchar(100) not null,"
