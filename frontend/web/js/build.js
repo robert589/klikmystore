@@ -1669,7 +1669,80 @@ define("project/create-order", ["require", "exports", "common/component", "proje
     }(component_12.Component));
     exports.CreateOrder = CreateOrder;
 });
-define("project/app", ["require", "exports", "common/component", "project/login", "project/add-product", "project/add-category", "project/order-create-marketplace", "project/order-create-courier", "project/create-order"], function (require, exports, component_13, login_1, add_product_1, add_category_1, order_create_marketplace_1, order_create_courier_1, create_order_1) {
+define("project/order-list", ["require", "exports", "common/component", "common/button", "common/system"], function (require, exports, component_13, button_7, system_9) {
+    "use strict";
+    var OrderList = (function (_super) {
+        __extends(OrderList, _super);
+        function OrderList(root) {
+            return _super.call(this, root) || this;
+        }
+        OrderList.prototype.decorate = function () {
+            _super.prototype.decorate.call(this);
+            var rejects = this.root.getElementsByClassName('order-list-rej');
+            this.rejectBtns = [];
+            for (var i = 0; i < rejects.length; i++) {
+                var btn = new button_7.Button(rejects.item(i), this.clickRejectBtn.bind(this));
+                this.rejectBtns.push(btn);
+            }
+            var accepts = this.root.getElementsByClassName('order-list-acc');
+            this.acceptBtns = [];
+            for (var i = 0; i < accepts.length; i++) {
+                var btn = new button_7.Button(accepts.item(i), this.clickAcceptBtn.bind(this));
+                this.acceptBtns.push(btn);
+            }
+        };
+        OrderList.prototype.clickRejectBtn = function (e) {
+            var data = {};
+            data['order_id'] = e.currentTarget.getAttribute('data-order-id');
+            data = system_9.System.addCsrf(data);
+            $.ajax({
+                url: system_9.System.getBaseUrl() + "/order/reject",
+                method: "post",
+                data: data,
+                dataType: "json",
+                context: this,
+                success: function (data) {
+                    if (data.status == 1) {
+                        window.location.reload();
+                    }
+                },
+                error: function (data) {
+                }
+            });
+        };
+        OrderList.prototype.clickAcceptBtn = function (e) {
+            var data = {};
+            data['order_id'] = e.currentTarget.getAttribute('data-order-id');
+            data = system_9.System.addCsrf(data);
+            $.ajax({
+                url: system_9.System.getBaseUrl() + "/order/accept",
+                method: "post",
+                data: data,
+                dataType: "json",
+                context: this,
+                success: function (data) {
+                    if (data.status == 1) {
+                        window.location.reload();
+                    }
+                },
+                error: function (data) {
+                }
+            });
+        };
+        OrderList.prototype.bindEvent = function () {
+            _super.prototype.bindEvent.call(this);
+        };
+        OrderList.prototype.detach = function () {
+            _super.prototype.detach.call(this);
+        };
+        OrderList.prototype.unbindEvent = function () {
+            // no event to unbind
+        };
+        return OrderList;
+    }(component_13.Component));
+    exports.OrderList = OrderList;
+});
+define("project/app", ["require", "exports", "common/component", "project/login", "project/add-product", "project/add-category", "project/order-create-marketplace", "project/order-create-courier", "project/create-order", "project/order-list"], function (require, exports, component_14, login_1, add_product_1, add_category_1, order_create_marketplace_1, order_create_courier_1, create_order_1, order_list_1) {
     "use strict";
     var App = (function (_super) {
         __extends(App, _super);
@@ -1696,6 +1769,9 @@ define("project/app", ["require", "exports", "common/component", "project/login"
             else if (this.root.getElementsByClassName('create-order').length !== 0) {
                 this.createOrder = new create_order_1.CreateOrder(document.getElementById("oc"));
             }
+            else if (this.root.getElementsByClassName('order-list').length !== 0) {
+                this.orderList = new order_list_1.OrderList(document.getElementById("ol"));
+            }
         };
         App.prototype.bindEvent = function () {
             _super.prototype.bindEvent.call(this);
@@ -1707,7 +1783,7 @@ define("project/app", ["require", "exports", "common/component", "project/login"
             // no event to unbind
         };
         return App;
-    }(component_13.Component));
+    }(component_14.Component));
     exports.App = App;
 });
 define("project/init", ["require", "exports", "project/app"], function (require, exports, app_1) {

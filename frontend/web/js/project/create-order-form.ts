@@ -56,8 +56,12 @@ export class CreateOrderForm extends Form{
 
     constructor(root: HTMLElement) {
         super(root);
+        this.successCb = function(data) {
+            window.location.href = System.getBaseUrl() + "/order/list";
+        }
+
         this.registerFields([this.senderField, this.receiverField, this.productOrderField, this.marketplaceField,
-                                this.courierField, this.cityField, this.dropshipField, this.offlineOrderField, this.pickupField
+                                this.courierField, this.cityField, this.dropshipField, this.offlineOrderField, this.pickupField,
                                 this.districtField, this.paperTypeField, this.jobCodeField, this.printLabelField, this.printInvoiceField]);
         this.setRequiredField([this.senderField, this.receiverField, this.courierField, this.marketplaceField, this.productOrderField, 
                                     this.cityField, this.districtField, this.paperTypeField, this.jobCodeField]);

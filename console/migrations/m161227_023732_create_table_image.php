@@ -7,7 +7,7 @@ class m161227_023732_create_table_image extends Migration
     public function up()
     {
         $this->execute("CREATE TABLE image("
-                . "id int not null primary key,"
+                . "id int not null primary key auto_increment,"
                 . "user_id int not null,"
                 . "path varchar(100) not null, "
                 . "created_at int not null,"

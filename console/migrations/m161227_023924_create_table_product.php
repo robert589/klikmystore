@@ -7,7 +7,7 @@ class m161227_023924_create_table_product extends Migration
     public function up()
     {
         $this->execute("CREATE TABLE product("
-                . "id int not null primary key,"
+                . "id int not null primary key auto_increment,"
                 . "name varchar(100) not null,"
                 . "sku varchar(100) not null,"
                 . "weight float not null,"

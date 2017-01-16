@@ -1,6 +1,7 @@
 <?php
 namespace frontend\services;
 
+use yii\data\ArrayDataProvider;
 use frontend\daos\ProductDao;
 use common\components\RService;
 use frontend\daos\OrderDao;
@@ -97,5 +98,32 @@ class OrderService extends RService
         $this->productInfo = $this->productDao->getProductInfo($this->product_id);
         return $this->validate();
     }
-
+        
+    public function getOrderList() {
+        $vos =  $this->orderDao->orderList();
+        $models = [];
+        foreach($vos as $vo) {
+            $model = [];
+            $model['order_id'] = $vo->getId();
+            $model['total_harga'] = $vo->getTotalPrice();
+            $model['nama_pengirim'] = $vo->getSender()->getName();
+            $model['nama_pembeli'] = $vo->getReceiver()->getName();
+            $model['total_kuantitas'] = $vo->getTotalQuantity();
+            $model['status'] = $vo->getStatusText();
+            $model['status_id'] = $vo->getStatus();
+            $models[] = $model;
+        }
+        
+        $provider = new ArrayDataProvider([
+            'allModels' => $models,
+            'sort' => [
+                'attributes' => ['total_harga', 'status', 'order_id'],
+            ],
+            'pagination' => [
+                'pageSize' => 10,
+            ],
+        ]);
+        
+        return $provider;
+    }
 }

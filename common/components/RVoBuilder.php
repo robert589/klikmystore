@@ -12,6 +12,7 @@ abstract class RVoBuilder extends Model{
         if($pre !== "") {
             foreach($data as $index => $datum) {
                 if(strpos($index, $pre) !== false) {
+                    $index = str_replace($pre . "_", "", $index);
                     $newData[$index] = $datum;
                 }
             }

@@ -7,7 +7,7 @@ class m161227_024411_create_table_category extends Migration
     public function up()
     {
         $this->execute("create table category("
-                        . "id int not null primary key,"
+                        . "id int not null primary key auto_increment,"
                         . "name varchar(100) not null unique,"
                         . "created_at int not null,"
                         . "updated_at int not null,"

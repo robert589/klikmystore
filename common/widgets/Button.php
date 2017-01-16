@@ -29,12 +29,19 @@ class Button extends \yii\bootstrap\Widget
     
     public $icon;
     
+    public $options = '';
+
     public function init()
     {
+        parent::init();
         if($this->color === NULL) {
             $this->color = self::BLUE_COLOR;
         }
-        parent::init();
+        
+        if(!$this->options) {
+            $this->options = [];   
+        }
+
     }
     
     public function run() {
@@ -43,7 +50,12 @@ class Button extends \yii\bootstrap\Widget
         if($this->icon !== null) {
             $iconClass = "glyphicon glyphicon-" . $this->icon;
         }
+        
+        $optionText = "";
+        foreach($this->options as $index => $option) {
+            $optionText .= "$index=$option ";
+        }
         return $this->render('button', ['id' => $this->id, 'iconClass' => $iconClass,
-                                        'text' => $this->text, 'class' => $class]);
+                                        'text' => $this->text, 'class' => $class, 'optionText' => $optionText]);
     }
 }

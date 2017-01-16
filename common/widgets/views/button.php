@@ -2,7 +2,7 @@
 
 ?>
 
-<button id="<?= $id ?>" class="<?= $class ?>" >
+<button id="<?= $id ?>" class="<?= $class ?>" <?= $optionText ?> >
     <?php if($iconClass !== '') { ?>
         <div class="<?= $iconClass ?>"></div>
     <?php } ?>

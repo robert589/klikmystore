@@ -35,5 +35,11 @@ class Order extends ActiveRecord
         ];
     }
 
-
+    public static function getOrderStatus() {
+        return [
+            self::PENDING_STATUS => "pending",
+            self::PROCESSED_STATUS => "processed",
+            self::CANCELLED_STATUS => "cancel"
+        ];
+    }
 }

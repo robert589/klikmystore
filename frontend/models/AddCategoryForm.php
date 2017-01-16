@@ -20,7 +20,6 @@ class AddCategoryForm extends RModel
             ['name' , 'string'],
             ['name', 'required'],
             ['name', 'unique', 'targetClass' => '\common\models\Category', 'message' => 'The name has already been taken.'],
-            
             ['desc', 'string']
             
             

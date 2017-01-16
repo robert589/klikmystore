@@ -9,6 +9,8 @@ use frontend\services\OrderService;
 use frontend\models\CreateCourierForm;
 use frontend\models\CreateOrderForm;
 use common\widgets\SearchFieldDropdownItem;
+use frontend\models\AcceptOrderForm;
+use frontend\models\RejectOrderForm;
 /**
  * Order controller
  */
@@ -40,7 +42,9 @@ class OrderController extends Controller
     }
     
     public function actionList() {
+        $provider = $this->orderService->getOrderList();
         
+        return $this->render('order-list', ['provider' => $provider]);
     }
     
     public function actionMarketplace() {
@@ -144,6 +148,33 @@ class OrderController extends Controller
         }
         return json_encode($data);
 
+    }
+
+    
+    public function actionAccept() {
+        $model = new AcceptOrderForm();
+    
+        $model->loadData($_POST);
+        $model->user_id = \Yii::$app->user->getId();
+        $data = array();
+        $data['status'] = $model->accept() ? 1 : 0;
+        if($model->hasErrors()) {
+            $data['errors'] = $model->getErrors();
+        }
+        return json_encode($data);
+        
+    }
+    
+    public function actionReject() {
+        $model = new RejectOrderForm();
+        $model->loadData($_POST);
+        $model->user_id = \Yii::$app->user->getId();
+        $data = array();
+        $data['status'] = $model->reject() ? 1 : 0;
+        if($model->hasErrors()) {
+            $data['errors'] = $model->getErrors();
+        }
+        return json_encode($data);
     }
 }
 

@@ -7,7 +7,7 @@ class m161227_124207_create_table_product_wholesale extends Migration
     public function up()
     {
         $this->execute("CREATE TABLE product_wholesale("
-                . "id int not null primary key,"
+                . "id int not null primary key auto_increment,"
                 . "product_id int not null,"
                 . "min int not null,"
                 . "max int not null,"
