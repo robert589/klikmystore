@@ -8,7 +8,6 @@ class m170109_080415_create_table_tariff extends Migration
     {
         $this->execute("CREATE TABLE tariff("
                 . "id int not null primary key auto_increment,"
-                . "marketplace_code varchar(10) not null,"
                 . "destination_id int not null,"
                 . "regular_tariff float not null,"
                 . "regular_etd varchar(20) not null,"
