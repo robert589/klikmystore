@@ -14,6 +14,8 @@ class m170109_080415_create_table_tariff extends Migration
                 . "regular_etd varchar(20) not null,"
                 . "created_at int not null,"
                 . "updated_at int not null,"
+                . "courier_code varchar(10) not null, "
+                . "foreign key(courier_code) references courier(code),"
                 . "foreign key(marketplace_code) references marketplace(code),"
                 . "foreign key(destination_id) references district(id)"
                 . ");");
