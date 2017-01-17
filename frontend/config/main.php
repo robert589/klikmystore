@@ -51,5 +51,11 @@ return [
         ],
         
     ],
+    'modules' => [
+            'redactor' => [
+                'class' => 'yii\redactor\RedactorModule',
+                'imageAllowExtensions'=>['jpg','png','gif']
+            ],
+    ],
     'params' => $params,
 ];

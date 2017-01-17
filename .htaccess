@@ -11,15 +11,16 @@ RewriteCond %{REQUEST_URI} ^/klikmystore/(admin)
 RewriteRule ^.*$ backend/web/index.php [L]
 
 
-RewriteCond %{REQUEST_URI} ^/klikmystore/(assets|css|js|images|fonts|files)
+RewriteCond %{REQUEST_URI} ^/klikmystore/(assets|css|js|images|fonts|files|uploads)
 RewriteRule ^assets/(.*)$ frontend/web/assets/$1 [L]
 RewriteRule ^css/(.*)$ frontend/web/css/$1 [L]
 RewriteRule ^js/(.*)$ frontend/web/js/$1 [L]
 RewriteRule ^images/(.*)$ frontend/web/images/$1 [L]
 RewriteRule ^file/(.*)$ frontend/web/files/$1 [L]
+RewriteRule ^uploads/(.*)$ frontend/web/uploads/$1 [L]
 RewriteRule ^fonts/(.*)$ frontend/web/fonts/$1 [L]
 
-RewriteCond %{REQUEST_URI} !^/klikmystore/(frontend|backend)/web/(assets|css|js|images|fonts|files)/
+RewriteCond %{REQUEST_URI} !^/klikmystore/(frontend|backend)/web/(assets|css|uploads|js|images|fonts|files)/
 RewriteCond %{REQUEST_URI} !index.php
 RewriteCond %{REQUEST_FILENAME} !-f [OR]
 RewriteCond %{REQUEST_FILENAME} !-d

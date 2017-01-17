@@ -8,7 +8,7 @@ import {OrderCreateMarketplace} from './order-create-marketplace';
 import {OrderCreateCourier} from './order-create-courier';
 import {CreateOrder} from './create-order';
 import {OrderList} from './order-list';
-
+import {CreateNews} from './create-news';
 export class App extends Component{
 
     login : Login;
@@ -25,6 +25,7 @@ export class App extends Component{
 
     orderList : OrderList;
 
+    createNews : CreateNews;
     constructor(root: HTMLElement) {
         super(root);
     }
@@ -51,6 +52,9 @@ export class App extends Component{
         }
         else if(this.root.getElementsByClassName('order-list').length !== 0) {
             this.orderList = new OrderList(document.getElementById("ol"));
+        }
+        else if(this.root.getElementsByClassName('create-news').length !== 0) {
+            this.createNews = new CreateNews(document.getElementById("nc"));
         }
         
     }

@@ -1,9 +1,7 @@
 import {Component} from '../common/component';
-import {CreateNewsForm} from './create-news-form';
 
-export class CreateNews extends Component{
 
-    form : CreateNewsForm;
+export class DashboardIndex extends Component{
 
     constructor(root: HTMLElement) {
         super(root);
@@ -11,7 +9,7 @@ export class CreateNews extends Component{
     
     decorate() {
         super.decorate();
-        this.form = new CreateNewsForm(document.getElementById(this.id + "-form"));    
+        
     }
     
     bindEvent() {

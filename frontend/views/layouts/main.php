@@ -68,7 +68,7 @@ AppAsset::register($this);
                     <?= Sidebar::widget(['id' => 'cssmenu', 
                             'items' => [
                                 ['label' => 'Dashboard',
-                                 'href' => '#'
+                                  'href' => Yii::$app->request->baseUrl . '/dashboard/index'
                                 ],
                                 ['label' => 'Produk',
                                  'href' => '#', 
@@ -122,7 +122,14 @@ AppAsset::register($this);
                                         ['label' => 'Daftar Karyawan', 'href' => Yii::$app->request->baseUrl . "/employee/list"],
                                         ['label' => 'Tambah Karyawan', 'href' => Yii::$app->request->baseUrl . "/employee/add"]
                                     ]
-                                ]    
+                                ],
+                                [
+                                    'label' => 'Berita',
+                                    'href' => '#',
+                                    'items' => [
+                                        ['label' => 'Buat Berita', 'href' => Yii::$app->request->baseUrl . '/news/create']
+                                    ]
+                                ]
                                 
                             ]
                         ]) ?>

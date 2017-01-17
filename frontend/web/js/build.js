@@ -1414,6 +1414,9 @@ define("project/create-order-form", ["require", "exports", "common/form", "commo
         __extends(CreateOrderForm, _super);
         function CreateOrderForm(root) {
             var _this = _super.call(this, root) || this;
+            _this.successCb = function (data) {
+                window.location.href = system_8.System.getBaseUrl() + "/order/list";
+            };
             _this.registerFields([_this.senderField, _this.receiverField, _this.productOrderField, _this.marketplaceField,
                 _this.courierField, _this.cityField, _this.dropshipField, _this.offlineOrderField, _this.pickupField,
                 _this.districtField, _this.paperTypeField, _this.jobCodeField, _this.printLabelField, _this.printInvoiceField]);
@@ -1742,7 +1745,97 @@ define("project/order-list", ["require", "exports", "common/component", "common/
     }(component_13.Component));
     exports.OrderList = OrderList;
 });
-define("project/app", ["require", "exports", "common/component", "project/login", "project/add-product", "project/add-category", "project/order-create-marketplace", "project/order-create-courier", "project/create-order", "project/order-list"], function (require, exports, component_14, login_1, add_product_1, add_category_1, order_create_marketplace_1, order_create_courier_1, create_order_1, order_list_1) {
+define("common/redactor-field", ["require", "exports", "common/Field"], function (require, exports, Field_5) {
+    "use strict";
+    var RedactorField = (function (_super) {
+        __extends(RedactorField, _super);
+        function RedactorField(root) {
+            return _super.call(this, root) || this;
+        }
+        RedactorField.prototype.decorate = function () {
+            _super.prototype.decorate.call(this);
+            this.inputElement = this.root.getElementsByClassName('redactor-editor')[0];
+        };
+        RedactorField.prototype.bindEvent = function () {
+        };
+        RedactorField.prototype.detach = function () {
+            this.inputElement = null;
+        };
+        RedactorField.prototype.unbindEvent = function () {
+        };
+        RedactorField.prototype.getValue = function () {
+            if (this.inputElement.innerHTML.length === 8) {
+                return null;
+            }
+            return this.inputElement.innerHTML;
+        };
+        RedactorField.prototype.disable = function () {
+            this.inputElement.setAttribute('disabled', "true");
+        };
+        RedactorField.prototype.enable = function () {
+            this.inputElement.removeAttribute('disabled');
+        };
+        return RedactorField;
+    }(Field_5.Field));
+    exports.RedactorField = RedactorField;
+});
+define("project/create-news-form", ["require", "exports", "common/form", "common/redactor-field", "common/system"], function (require, exports, form_8, redactor_field_1, system_10) {
+    "use strict";
+    var CreateNewsForm = (function (_super) {
+        __extends(CreateNewsForm, _super);
+        function CreateNewsForm(root) {
+            var _this = _super.call(this, root) || this;
+            _this.successCb = function (data) {
+                window.location.href = system_10.System.getBaseUrl() + "/dashboard/index";
+            };
+            return _this;
+        }
+        CreateNewsForm.prototype.rules = function () {
+            this.registerFields([this.redactor]);
+            this.setRequiredField([this.redactor]);
+        };
+        CreateNewsForm.prototype.decorate = function () {
+            _super.prototype.decorate.call(this);
+            this.redactor = new redactor_field_1.RedactorField(document.getElementById(this.id + "-input"));
+        };
+        CreateNewsForm.prototype.bindEvent = function () {
+            _super.prototype.bindEvent.call(this);
+        };
+        CreateNewsForm.prototype.detach = function () {
+            _super.prototype.detach.call(this);
+        };
+        CreateNewsForm.prototype.unbindEvent = function () {
+            // no event to unbind
+        };
+        return CreateNewsForm;
+    }(form_8.Form));
+    exports.CreateNewsForm = CreateNewsForm;
+});
+define("project/create-news", ["require", "exports", "common/component", "project/create-news-form"], function (require, exports, component_14, create_news_form_1) {
+    "use strict";
+    var CreateNews = (function (_super) {
+        __extends(CreateNews, _super);
+        function CreateNews(root) {
+            return _super.call(this, root) || this;
+        }
+        CreateNews.prototype.decorate = function () {
+            _super.prototype.decorate.call(this);
+            this.form = new create_news_form_1.CreateNewsForm(document.getElementById(this.id + "-form"));
+        };
+        CreateNews.prototype.bindEvent = function () {
+            _super.prototype.bindEvent.call(this);
+        };
+        CreateNews.prototype.detach = function () {
+            _super.prototype.detach.call(this);
+        };
+        CreateNews.prototype.unbindEvent = function () {
+            // no event to unbind
+        };
+        return CreateNews;
+    }(component_14.Component));
+    exports.CreateNews = CreateNews;
+});
+define("project/app", ["require", "exports", "common/component", "project/login", "project/add-product", "project/add-category", "project/order-create-marketplace", "project/order-create-courier", "project/create-order", "project/order-list", "project/create-news"], function (require, exports, component_15, login_1, add_product_1, add_category_1, order_create_marketplace_1, order_create_courier_1, create_order_1, order_list_1, create_news_1) {
     "use strict";
     var App = (function (_super) {
         __extends(App, _super);
@@ -1772,6 +1865,9 @@ define("project/app", ["require", "exports", "common/component", "project/login"
             else if (this.root.getElementsByClassName('order-list').length !== 0) {
                 this.orderList = new order_list_1.OrderList(document.getElementById("ol"));
             }
+            else if (this.root.getElementsByClassName('create-news').length !== 0) {
+                this.createNews = new create_news_1.CreateNews(document.getElementById("nc"));
+            }
         };
         App.prototype.bindEvent = function () {
             _super.prototype.bindEvent.call(this);
@@ -1783,7 +1879,7 @@ define("project/app", ["require", "exports", "common/component", "project/login"
             // no event to unbind
         };
         return App;
-    }(component_14.Component));
+    }(component_15.Component));
     exports.App = App;
 });
 define("project/init", ["require", "exports", "project/app"], function (require, exports, app_1) {
