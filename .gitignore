@@ -40,3 +40,5 @@ phpunit.phar
 
 #file
 /frontend/web/file/*
+
+.htaccess
