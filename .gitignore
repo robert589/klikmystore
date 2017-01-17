@@ -40,5 +40,6 @@ phpunit.phar
 
 #file
 /frontend/web/file/*
+/frontend/web/uploads/*
 
 .htaccess
