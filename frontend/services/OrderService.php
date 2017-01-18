@@ -25,7 +25,9 @@ class OrderService extends RService
     
     public $quantity;
     
-    public $courier_code;
+    public $courier_code;    
+    
+    public $check_range;
     
     public $district_id;
     
@@ -56,13 +58,17 @@ class OrderService extends RService
             ['district_id', 'required', 'on' => self::GET_TARIFF],
             ['courier_code', 'string'],
             ['courier_code', 'required', 'on' => self::GET_TARIFF],
+            
+            ['check_range', 'boolean'],
         ];
     }
     
     public function isAvailable() {
-        $curQuantity = $this->productInfo->getQuantity();
-        if($curQuantity < $this->quantity) {
-            $this->addError("quantity", "Product is out of stock");
+        if($this->check_range) {
+            $curQuantity = $this->productInfo->getQuantity();
+            if($curQuantity < $this->quantity) {
+                $this->addError("quantity", "Product is out of stock");
+            }   
         }
     }
     

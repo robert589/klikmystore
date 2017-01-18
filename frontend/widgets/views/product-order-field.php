@@ -4,7 +4,7 @@
     use common\widgets\InputField;
 ?>
 
-<div id="<?= $id ?>" class="po-field" data-name="<?= $name ?>">
+<div id="<?= $id ?>" class="po-field" data-name="<?= $name ?>" data-check-range="<?= $checkRange ?>">
     
     <div class="po-field-header">
         <?= SearchField::widget(['id' => $id . '-product', 'placeholder' => 'Cari Produk',

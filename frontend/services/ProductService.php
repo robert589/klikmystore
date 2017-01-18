@@ -66,7 +66,7 @@ class ProductService extends RService
         ]);
         
         return $dataProvider;
-
+        
     }
     
     public  function searchProduct($query) {
@@ -78,5 +78,25 @@ class ProductService extends RService
         
         
         return $vos;
+    }
+    
+    public function getProducts() {
+        $vos = $this->productDao->getProductList();
+        $models = [];
+        
+        foreach($vos as $vo) {
+            $model = [];
+            $model['id'] = $vo->getId();
+            $model['name'] = $vo->getName();
+            $model['quantity'] = $vo->getQuantity();
+            $models[] = $model;
+        }
+        
+        return new \yii\data\ArrayDataProvider([
+            'allModels' => $models,
+            'pagination' => [
+                'pageSize' => 10
+            ]
+        ]);
     }
 }

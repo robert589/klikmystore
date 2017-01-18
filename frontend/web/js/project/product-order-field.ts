@@ -24,9 +24,16 @@ export class ProductOrderField extends Field{
     products : ProductOrderFieldItem[];
 
     newProductAdded : CustomEvent;
+
+    enableCheckRange : boolean;
     constructor(root: HTMLElement) {
         super(root);
         this.products = [];
+        if(System.isEmptyValue(this.root.getAttribute('data-check-range'))) {
+            this.enableCheckRange = false;
+        } else {
+            this.enableCheckRange = true;
+        }
     } 
     
     decorate() {
@@ -44,6 +51,7 @@ export class ProductOrderField extends Field{
             let data : Object = {};
             data['quantity'] = this.quantityField.getValue();
             data['product_id'] = this.productSearchField.getValue();
+            data['check_range'] = this.enableCheckRange ? 1: 0;
             data = System.addCsrf(data);
             this.addBtn.disable(true);
             $.ajax({
@@ -65,6 +73,7 @@ export class ProductOrderField extends Field{
                 }
             });
         }
+
     }
 
     addNewProductToElement(views : string) {
@@ -128,7 +137,9 @@ export class ProductOrderField extends Field{
         this.quantityField.hideError();
         let valid : boolean = true;
         valid = this.checkExistence(<string>this.productSearchField.getValue()) && valid;
-        valid = this.checkRange() && valid  ;
+        if(this.enableCheckRange) {
+            valid = this.checkRange() && valid  ;
+        }
         return valid;
     }
 

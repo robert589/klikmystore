@@ -115,10 +115,12 @@ class OrderController extends Controller
     public function actionAddProductToOrder() {
         $data = [];
         $this->orderService->loadData($_POST);
+        
         $vo = $this->orderService->getProductInfoWithQuantityCheck();
         if($vo) {
             $data['status'] = 1;
-            $data['views'] = ProductOrderFieldItem::widget(['id' => "pof-item-" . $vo->getId(), 'vo' => $vo, 'quantity' => $this->orderService->quantity]);
+            $data['views'] = ProductOrderFieldItem::widget(['id' => "pof-item-" . $vo->getId(), 
+                        'vo' => $vo, 'quantity' => $this->orderService->quantity]);
         } else {
             $data['status']  = 0;
             $data['errors'] = $this->orderService->getErrors();

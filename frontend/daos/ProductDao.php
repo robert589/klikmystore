@@ -20,6 +20,11 @@ class ProductDao implements Dao
             . " from product, product_inventory"
             . " where product.id = product_inventory.product_id and product.id = :product_id ";
     
+    const GET_PRODUCT = "select product.id, product.name, "
+            . "                 product_inventory.quantity, product.price_1, product.weight "
+                    . " from product, product_inventory"
+                    . " where product.id = product_inventory.product_id";
+    
     public function searchProduct($query) {
         $query = "%$query%";
         $results =  \Yii::$app->db
@@ -46,6 +51,23 @@ class ProductDao implements Dao
         $builder = new ProductVoBuilder();
         $builder->loadData($result);
         return $builder->build();
+    }
+    
+    public function getProductList() {
+        $results =  \Yii::$app->db
+            ->createCommand(self::GET_PRODUCT)
+            ->queryAll();
+        
+        $vos = [];
+        foreach($results as $result) {
+    
+            $builder = new ProductVoBuilder();
+            $builder->loadData($result);
+            $vos[] = $builder->build();
+        
+        }
+        
+        return $vos;
     }
 }
 

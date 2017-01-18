@@ -9,6 +9,8 @@ import {OrderCreateCourier} from './order-create-courier';
 import {CreateOrder} from './create-order';
 import {OrderList} from './order-list';
 import {CreateNews} from './create-news';
+import {Restock} from './restock';
+
 export class App extends Component{
 
     login : Login;
@@ -26,6 +28,8 @@ export class App extends Component{
     orderList : OrderList;
 
     createNews : CreateNews;
+
+    restock : Restock;
     constructor(root: HTMLElement) {
         super(root);
     }
@@ -55,6 +59,9 @@ export class App extends Component{
         }
         else if(this.root.getElementsByClassName('create-news').length !== 0) {
             this.createNews = new CreateNews(document.getElementById("nc"));
+        }
+        else if(this.root.getElementsByClassName('restock').length !== 0) {
+            this.restock = new Restock(document.getElementById("ir"));
         }
         
     }
