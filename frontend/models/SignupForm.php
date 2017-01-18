@@ -8,7 +8,7 @@ use common\libraries\UserLibrary;
 /**
  * Signup form
  */
-class SignupForm extends Model
+class SignupForm extends \common\components\RModel
 {
     
     public $first_name;
@@ -18,7 +18,10 @@ class SignupForm extends Model
     public $email;
     
     public $password;
-
+    
+    public $phone;
+    
+    public $address;
 
     /**
      * @inheritdoc
@@ -42,6 +45,9 @@ class SignupForm extends Model
 
             ['password', 'required'],
             ['password', 'string', 'min' => 6],
+            
+            ['phone', 'string'],
+            ['address', 'string']
         ];
     }
 
@@ -60,6 +66,8 @@ class SignupForm extends Model
         $user->username = $this->generateUsername();
         $user->first_name = $this->first_name;
         $user->last_name = $this->last_name;
+        $user->telephone = $this->phone;
+        $user->address = $this->address;
         $user->generateAuthKey();
 
         if(!$user->save()) {

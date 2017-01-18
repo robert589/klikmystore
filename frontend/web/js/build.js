@@ -1335,9 +1335,7 @@ define("project/product-order-field", ["require", "exports", "common/Field", "co
             this.quantityField.hideError();
             var valid = true;
             valid = this.checkExistence(this.productSearchField.getValue()) && valid;
-            if (this.enableCheckRange) {
-                valid = this.checkRange() && valid;
-            }
+            valid = this.checkRange() && valid;
             return valid;
         };
         ProductOrderField.prototype.checkRange = function () {
@@ -1893,7 +1891,96 @@ define("project/restock", ["require", "exports", "common/component", "project/re
     }(component_16.Component));
     exports.Restock = Restock;
 });
-define("project/app", ["require", "exports", "common/component", "project/login", "project/add-product", "project/add-category", "project/order-create-marketplace", "project/order-create-courier", "project/create-order", "project/order-list", "project/create-news", "project/restock"], function (require, exports, component_17, login_1, add_product_1, add_category_1, order_create_marketplace_1, order_create_courier_1, create_order_1, order_list_1, create_news_1, restock_1) {
+define("project/create-supplier-form", ["require", "exports", "common/form", "common/input-field", "common/text-area-field", "common/system"], function (require, exports, form_9, input_field_11, text_area_field_2, system_11) {
+    "use strict";
+    var CreateSupplierForm = (function (_super) {
+        __extends(CreateSupplierForm, _super);
+        function CreateSupplierForm(root) {
+            var _this = _super.call(this, root) || this;
+            _this.successCb = function (data) {
+                window.location.href = system_11.System.getBaseUrl() + "/supplier/list";
+            };
+            return _this;
+        }
+        CreateSupplierForm.prototype.decorate = function () {
+            _super.prototype.decorate.call(this);
+            this.companyName = new input_field_11.InputField(document.getElementById(this.id + "-name"));
+            this.firstName = new input_field_11.InputField(document.getElementById(this.id + "-supp-first-name"));
+            this.lastName = new input_field_11.InputField(document.getElementById(this.id + "-supp-last-name"));
+            this.email = new input_field_11.InputField(document.getElementById(this.id + "-supp-email"));
+            this.phone = new input_field_11.InputField(document.getElementById(this.id + "-phone"));
+            this.address = new text_area_field_2.TextAreaField(document.getElementById(this.id + "-address"));
+        };
+        CreateSupplierForm.prototype.rules = function () {
+            this.setRequiredField([this.companyName, this.firstName, this.lastName, this.email]);
+            this.registerFields([this.companyName, this.firstName,
+                this.lastName, this.email, this.phone, this.address]);
+        };
+        CreateSupplierForm.prototype.bindEvent = function () {
+            _super.prototype.bindEvent.call(this);
+        };
+        CreateSupplierForm.prototype.detach = function () {
+            _super.prototype.detach.call(this);
+        };
+        CreateSupplierForm.prototype.unbindEvent = function () {
+            // no event to unbind
+        };
+        return CreateSupplierForm;
+    }(form_9.Form));
+    exports.CreateSupplierForm = CreateSupplierForm;
+});
+define("project/create-supplier", ["require", "exports", "common/component", "project/create-supplier-form"], function (require, exports, component_17, create_supplier_form_1) {
+    "use strict";
+    var CreateSupplier = (function (_super) {
+        __extends(CreateSupplier, _super);
+        function CreateSupplier(root) {
+            return _super.call(this, root) || this;
+        }
+        CreateSupplier.prototype.decorate = function () {
+            _super.prototype.decorate.call(this);
+            this.form = new create_supplier_form_1.CreateSupplierForm(document.getElementById(this.id + "-form"));
+        };
+        CreateSupplier.prototype.bindEvent = function () {
+            _super.prototype.bindEvent.call(this);
+        };
+        CreateSupplier.prototype.detach = function () {
+            _super.prototype.detach.call(this);
+        };
+        CreateSupplier.prototype.unbindEvent = function () {
+            // no event to unbind
+        };
+        return CreateSupplier;
+    }(component_17.Component));
+    exports.CreateSupplier = CreateSupplier;
+});
+define("project/list-supplier", ["require", "exports", "common/component", "common/button", "common/system"], function (require, exports, component_18, button_8, system_12) {
+    "use strict";
+    var ListSupplier = (function (_super) {
+        __extends(ListSupplier, _super);
+        function ListSupplier(root) {
+            return _super.call(this, root) || this;
+        }
+        ListSupplier.prototype.decorate = function () {
+            _super.prototype.decorate.call(this);
+            this.addBtn = new button_8.Button(document.getElementById(this.id + "-add"), this.redirectToAdd.bind(this));
+        };
+        ListSupplier.prototype.redirectToAdd = function () {
+            window.location.href = system_12.System.getBaseUrl() + "/supplier/create";
+        };
+        ListSupplier.prototype.bindEvent = function () {
+            _super.prototype.bindEvent.call(this);
+        };
+        ListSupplier.prototype.detach = function () {
+            _super.prototype.detach.call(this);
+        };
+        ListSupplier.prototype.unbindEvent = function () {
+            // no event to unbind
+        };
+        return ListSupplier;
+    }(component_18.Component));
+    exports.ListSupplier = ListSupplier;
+});
+define("project/app", ["require", "exports", "common/component", "project/login", "project/add-product", "project/add-category", "project/order-create-marketplace", "project/order-create-courier", "project/create-order", "project/order-list", "project/create-news", "project/restock", "project/create-supplier", "project/list-supplier"], function (require, exports, component_19, login_1, add_product_1, add_category_1, order_create_marketplace_1, order_create_courier_1, create_order_1, order_list_1, create_news_1, restock_1, create_supplier_1, list_supplier_1) {
     "use strict";
     var App = (function (_super) {
         __extends(App, _super);
@@ -1929,6 +2016,12 @@ define("project/app", ["require", "exports", "common/component", "project/login"
             else if (this.root.getElementsByClassName('restock').length !== 0) {
                 this.restock = new restock_1.Restock(document.getElementById("ir"));
             }
+            else if (this.root.getElementsByClassName('create-supplier').length !== 0) {
+                this.createSupplier = new create_supplier_1.CreateSupplier(document.getElementById("sc"));
+            }
+            else if (this.root.getElementsByClassName('list-supplier').length !== 0) {
+                this.listSupplier = new list_supplier_1.ListSupplier(document.getElementById("sl"));
+            }
         };
         App.prototype.bindEvent = function () {
             _super.prototype.bindEvent.call(this);
@@ -1940,7 +2033,7 @@ define("project/app", ["require", "exports", "common/component", "project/login"
             // no event to unbind
         };
         return App;
-    }(component_17.Component));
+    }(component_19.Component));
     exports.App = App;
 });
 define("project/init", ["require", "exports", "project/app"], function (require, exports, app_1) {

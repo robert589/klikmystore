@@ -21,6 +21,8 @@ class UserVo implements RVo
     private $address;
 
     private $telephone;
+    
+    private $email;
 
     public function __construct(UserVoBuilder $builder) { 
         $this->id = $builder->getId(); 
@@ -28,6 +30,12 @@ class UserVo implements RVo
         $this->lastName = $builder->getLastName(); 
         $this->address = $builder->getAddress(); 
         $this->telephone = $builder->getTelephone(); 
+        $this->email = $builder->getEmail();
+            
+    }
+    
+    public function getEmail() {
+        return  $this->email;
     }
 
     //getters

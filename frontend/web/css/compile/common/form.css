@@ -1,6 +1,13 @@
 .form-submit {
   width: 120px;
   max-height: 32px;
+  margin-top: 8px;
+}
+.form-inline {
+  display: flex;
+}
+.form-field {
+  width: 100%;
 }
 .form-field-left {
   text-align: left;

@@ -10,6 +10,8 @@ import {CreateOrder} from './create-order';
 import {OrderList} from './order-list';
 import {CreateNews} from './create-news';
 import {Restock} from './restock';
+import {CreateSupplier} from './create-supplier';
+import {ListSupplier} from './list-supplier';
 
 export class App extends Component{
 
@@ -30,6 +32,11 @@ export class App extends Component{
     createNews : CreateNews;
 
     restock : Restock;
+
+    createSupplier : CreateSupplier;
+
+    listSupplier : ListSupplier;
+
     constructor(root: HTMLElement) {
         super(root);
     }
@@ -62,6 +69,12 @@ export class App extends Component{
         }
         else if(this.root.getElementsByClassName('restock').length !== 0) {
             this.restock = new Restock(document.getElementById("ir"));
+        }
+        else if(this.root.getElementsByClassName('create-supplier').length !== 0) {
+            this.createSupplier = new CreateSupplier(document.getElementById("sc"));
+        }
+        else if(this.root.getElementsByClassName('list-supplier').length !== 0) {
+            this.listSupplier = new ListSupplier(document.getElementById("sl"));
         }
         
     }

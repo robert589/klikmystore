@@ -60,3 +60,6 @@ html {
 button:hover {
   cursor: pointer;
 }
+.required {
+  color: red;
+}

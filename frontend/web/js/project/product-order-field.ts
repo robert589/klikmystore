@@ -137,9 +137,7 @@ export class ProductOrderField extends Field{
         this.quantityField.hideError();
         let valid : boolean = true;
         valid = this.checkExistence(<string>this.productSearchField.getValue()) && valid;
-        if(this.enableCheckRange) {
-            valid = this.checkRange() && valid  ;
-        }
+        valid = this.checkRange() && valid  ;
         return valid;
     }
 

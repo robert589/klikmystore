@@ -13,6 +13,8 @@ class UserVoBuilder extends RVoBuilder
     //attributes
 
     public $id;
+    
+    public $email;
 
     public $firstName;
 
@@ -29,6 +31,7 @@ class UserVoBuilder extends RVoBuilder
            ['lastName','string'],
            ['address','string'],
            ['telephone','string'],
+            ['email', 'string']
         ];
     }
 
@@ -75,4 +78,14 @@ class UserVoBuilder extends RVoBuilder
     public function setTelephone($telephone) { 
         $this->telephone = $telephone; 
     }
+    
+    function getEmail() {
+        return $this->email;
+    }
+
+    function setEmail($email) {
+        $this->email = $email;
+    }
+
+
 }

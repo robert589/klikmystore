@@ -2,10 +2,9 @@
   width: 100%;
   overflow-y: hidden;
   resize: none;
-  border-radius: 4px;
   background: white;
   border: 1px solid lightgray;
-  padding-left: 8px;
+  padding: 8px;
   height: auto;
   color: black;
   text-align: left;
@@ -17,5 +16,5 @@
   content: attr(placeholder);
   display: block;
   /* For Firefox */
-  color: gray;
+  color: #d3d3d3;
 }
