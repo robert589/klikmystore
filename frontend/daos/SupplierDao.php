@@ -27,9 +27,9 @@ class SupplierDao implements Dao
                                     user.first_name as user_first_name, 
                                     user.last_name as user_last_name
                             from user, supplier
-                            where user.first_name LIKE :query or user.last_name LIKE :query or
-                                concat(user.first_name, ' ', user.last_name) LIKE :query and
-                                user.id = supplier.id
+                            where (user.first_name LIKE :query or user.last_name LIKE :query or
+                                concat(user.first_name, ' ', user.last_name) LIKE :query) and
+                                user.id = supplier.id and user.status = :status
                                 limit 4";
     
     public function getSuppliers() {
@@ -55,9 +55,11 @@ class SupplierDao implements Dao
     
     public function searchSupplier($query) {
         $query = "%$query%";
+        $status = User::STATUS_ACTIVE;
         $results =  \Yii::$app->db
             ->createCommand(self::SEARCH_SUPPLIER)
             ->bindParam(':query', $query)
+            ->bindParam(':status',$status)
             ->queryAll();
         $vos = [];
         foreach($results as $result) {

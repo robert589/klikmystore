@@ -13,13 +13,13 @@
         ['id' => $id, 
          'method' => 'post', 
          'url' => \Yii::$app->request->baseUrl 
-                    . '/news/process-create', 
+                    . '/inventory/p-restock', 
         'widget_class' => 'restock-form' , 'enable_button' => false
         ]) ?>
         
     <?= SearchField::widget(['id' => $id . '-supplier', 
                     'url' => \Yii::$app->request->baseUrl . '/supplier/search',
-                    'name' => 'supplier', 'placeholder' => 'Cari Supplier']) ?> 
+                    'name' => 'supplier_id', 'placeholder' => 'Cari Supplier']) ?> 
     
     <div class="restock-form-header">
         Daftar Produk yang dibeli

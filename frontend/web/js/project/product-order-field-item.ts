@@ -48,7 +48,7 @@ export class ProductOrderFieldItem extends Component{
 
     bindEvent() {
         super.bindEvent();
-        this.newQtyField.attachEvent("keypress", function(e) {
+        this.newQtyField.attachEvent("keydown", function(e) {
             if(e.keyCode === 13) {
                 e.preventDefault();
                 this.submitNewQty();

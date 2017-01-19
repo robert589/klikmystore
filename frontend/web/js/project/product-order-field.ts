@@ -88,7 +88,7 @@ export class ProductOrderField extends Field{
 
         this.productSearchField.resetValue();
         this.productSearchField.emptyText();
-        this.quantityField.setValue(null);
+        this.quantityField.setValue(null);  
     }
 
     dispatchProductAddedEvent() {
@@ -152,6 +152,7 @@ export class ProductOrderField extends Field{
         this.productSearchField.showError("Quantity should be larger than 0");  
         return false;
     }
+    
     checkExistence(id : string) : boolean {
         for(let i = 0 ; i < this.products.length; i++) {
             if(this.products[i].getId() == id) {

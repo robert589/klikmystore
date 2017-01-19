@@ -1,8 +1,8 @@
-import {Component} from '../common/component';
+import {Form} from '../common/form';
 import {SearchField} from './../common/search-field';
 import {ProductOrderField} from './product-order-field';
 
-export class RestockForm extends Component{
+export class RestockForm extends Form{
 
     supplierField : SearchField;
 
@@ -12,6 +12,10 @@ export class RestockForm extends Component{
         super(root);
     }
     
+    rules() {
+        this.setRequiredField([this.supplierField]);
+        this.registerFields([this.productOrderField, this.supplierField]);
+    }
     decorate() {
         super.decorate();
         this.supplierField = new SearchField(document.getElementById(this.id + "-supplier"));

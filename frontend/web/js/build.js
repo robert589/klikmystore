@@ -1151,7 +1151,7 @@ define("project/product-order-field-item", ["require", "exports", "common/compon
         };
         ProductOrderFieldItem.prototype.bindEvent = function () {
             _super.prototype.bindEvent.call(this);
-            this.newQtyField.attachEvent("keypress", function (e) {
+            this.newQtyField.attachEvent("keydown", function (e) {
                 if (e.keyCode === 13) {
                     e.preventDefault();
                     this.submitNewQty();
@@ -1291,6 +1291,9 @@ define("project/product-order-field", ["require", "exports", "common/Field", "co
             var item = new product_order_field_item_1.ProductOrderFieldItem(rawElements.item(0));
             this.products.push(item);
             this.dispatchProductAddedEvent();
+            this.productSearchField.resetValue();
+            this.productSearchField.emptyText();
+            this.quantityField.setValue(null);
         };
         ProductOrderField.prototype.dispatchProductAddedEvent = function () {
             this.root.dispatchEvent(this.newProductAdded);
@@ -1842,13 +1845,17 @@ define("project/create-news", ["require", "exports", "common/component", "projec
     }(component_14.Component));
     exports.CreateNews = CreateNews;
 });
-define("project/restock-form", ["require", "exports", "common/component", "common/search-field", "project/product-order-field"], function (require, exports, component_15, search_field_4, product_order_field_2) {
+define("project/restock-form", ["require", "exports", "common/form", "common/search-field", "project/product-order-field"], function (require, exports, form_9, search_field_4, product_order_field_2) {
     "use strict";
     var RestockForm = (function (_super) {
         __extends(RestockForm, _super);
         function RestockForm(root) {
             return _super.call(this, root) || this;
         }
+        RestockForm.prototype.rules = function () {
+            this.setRequiredField([this.supplierField]);
+            this.registerFields([this.productOrderField, this.supplierField]);
+        };
         RestockForm.prototype.decorate = function () {
             _super.prototype.decorate.call(this);
             this.supplierField = new search_field_4.SearchField(document.getElementById(this.id + "-supplier"));
@@ -1864,10 +1871,10 @@ define("project/restock-form", ["require", "exports", "common/component", "commo
             // no event to unbind
         };
         return RestockForm;
-    }(component_15.Component));
+    }(form_9.Form));
     exports.RestockForm = RestockForm;
 });
-define("project/restock", ["require", "exports", "common/component", "project/restock-form"], function (require, exports, component_16, restock_form_1) {
+define("project/restock", ["require", "exports", "common/component", "project/restock-form"], function (require, exports, component_15, restock_form_1) {
     "use strict";
     var Restock = (function (_super) {
         __extends(Restock, _super);
@@ -1888,10 +1895,10 @@ define("project/restock", ["require", "exports", "common/component", "project/re
             // no event to unbind
         };
         return Restock;
-    }(component_16.Component));
+    }(component_15.Component));
     exports.Restock = Restock;
 });
-define("project/create-supplier-form", ["require", "exports", "common/form", "common/input-field", "common/text-area-field", "common/system"], function (require, exports, form_9, input_field_10, text_area_field_2, system_11) {
+define("project/create-supplier-form", ["require", "exports", "common/form", "common/input-field", "common/text-area-field", "common/system"], function (require, exports, form_10, input_field_10, text_area_field_2, system_11) {
     "use strict";
     var CreateSupplierForm = (function (_super) {
         __extends(CreateSupplierForm, _super);
@@ -1926,10 +1933,10 @@ define("project/create-supplier-form", ["require", "exports", "common/form", "co
             // no event to unbind
         };
         return CreateSupplierForm;
-    }(form_9.Form));
+    }(form_10.Form));
     exports.CreateSupplierForm = CreateSupplierForm;
 });
-define("project/create-supplier", ["require", "exports", "common/component", "project/create-supplier-form"], function (require, exports, component_17, create_supplier_form_1) {
+define("project/create-supplier", ["require", "exports", "common/component", "project/create-supplier-form"], function (require, exports, component_16, create_supplier_form_1) {
     "use strict";
     var CreateSupplier = (function (_super) {
         __extends(CreateSupplier, _super);
@@ -1950,10 +1957,10 @@ define("project/create-supplier", ["require", "exports", "common/component", "pr
             // no event to unbind
         };
         return CreateSupplier;
-    }(component_17.Component));
+    }(component_16.Component));
     exports.CreateSupplier = CreateSupplier;
 });
-define("project/list-supplier", ["require", "exports", "common/component", "common/button", "common/system"], function (require, exports, component_18, button_8, system_12) {
+define("project/list-supplier", ["require", "exports", "common/component", "common/button", "common/system"], function (require, exports, component_17, button_8, system_12) {
     "use strict";
     var ListSupplier = (function (_super) {
         __extends(ListSupplier, _super);
@@ -1977,10 +1984,10 @@ define("project/list-supplier", ["require", "exports", "common/component", "comm
             // no event to unbind
         };
         return ListSupplier;
-    }(component_18.Component));
+    }(component_17.Component));
     exports.ListSupplier = ListSupplier;
 });
-define("project/app", ["require", "exports", "common/component", "project/login", "project/add-product", "project/add-category", "project/order-create-marketplace", "project/order-create-courier", "project/create-order", "project/order-list", "project/create-news", "project/restock", "project/create-supplier", "project/list-supplier"], function (require, exports, component_19, login_1, add_product_1, add_category_1, order_create_marketplace_1, order_create_courier_1, create_order_1, order_list_1, create_news_1, restock_1, create_supplier_1, list_supplier_1) {
+define("project/app", ["require", "exports", "common/component", "project/login", "project/add-product", "project/add-category", "project/order-create-marketplace", "project/order-create-courier", "project/create-order", "project/order-list", "project/create-news", "project/restock", "project/create-supplier", "project/list-supplier"], function (require, exports, component_18, login_1, add_product_1, add_category_1, order_create_marketplace_1, order_create_courier_1, create_order_1, order_list_1, create_news_1, restock_1, create_supplier_1, list_supplier_1) {
     "use strict";
     var App = (function (_super) {
         __extends(App, _super);
@@ -2033,7 +2040,7 @@ define("project/app", ["require", "exports", "common/component", "project/login"
             // no event to unbind
         };
         return App;
-    }(component_19.Component));
+    }(component_18.Component));
     exports.App = App;
 });
 define("project/init", ["require", "exports", "project/app"], function (require, exports, app_1) {
