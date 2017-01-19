@@ -6,6 +6,7 @@ use frontend\daos\ProductDao;
 use common\components\RService;
 use frontend\daos\OrderDao;
 use frontend\daos\TariffDao;
+use common\validators\IsAdminValidator;
 /**
  * OrderService service
  *
@@ -34,6 +35,8 @@ class OrderService extends RService
     const GET_PRODUCT_INFO_WITH_QUANTITY_CHECK = "product_info_with_quantity_check";
     
     const GET_TARIFF = "gettariff";
+    
+    const SEARCH_ORDER_ID = "searchorderid";
 
     private $productInfo;
     
@@ -47,7 +50,7 @@ class OrderService extends RService
         return [
             ['user_id', 'integer'],
             ['user_id', 'required'],
-            
+            ['user_id', IsAdminValidator::className(), 'on' => self::SEARCH_ORDER_ID],
             ['product_id', 'integer'],
             ['product_id', 'required', 'on' => self::GET_PRODUCT_INFO_WITH_QUANTITY_CHECK],
             
@@ -70,6 +73,15 @@ class OrderService extends RService
                 $this->addError("quantity", "Product is out of stock");
             }   
         }
+    }
+    
+    public function searchOrderId($query) {
+        $this->setScenario(self::SEARCH_ORDER_ID);
+        if(!$this->validate()) {
+            return false;
+        }
+        
+        return $this->orderDao->searchOrderId($query);
     }
     
     public function getTariff() {
@@ -132,4 +144,5 @@ class OrderService extends RService
         
         return $provider;
     }
+    
 }

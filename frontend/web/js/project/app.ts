@@ -12,7 +12,7 @@ import {CreateNews} from './create-news';
 import {Restock} from './restock';
 import {CreateSupplier} from './create-supplier';
 import {ListSupplier} from './list-supplier';
-
+import {Retur} from './retur';
 export class App extends Component{
 
     login : Login;
@@ -36,6 +36,8 @@ export class App extends Component{
     createSupplier : CreateSupplier;
 
     listSupplier : ListSupplier;
+
+    retur : Retur;
 
     constructor(root: HTMLElement) {
         super(root);
@@ -75,6 +77,9 @@ export class App extends Component{
         }
         else if(this.root.getElementsByClassName('list-supplier').length !== 0) {
             this.listSupplier = new ListSupplier(document.getElementById("sl"));
+        }
+        else if(this.root.getElementsByClassName('retur').length !== 0) {
+            this.retur = new Retur(document.getElementById("ire"));
         }
         
     }

@@ -33,6 +33,13 @@ class InputField extends Widget {
     public $datepicker = false;
     
     public $newClass;
+    
+    public $disabled = null;
+
+    public $min = null;
+    
+    public $max = null;
+    
     public function init() {
     
     }
@@ -41,8 +48,9 @@ class InputField extends Widget {
         return $this->render('input-field', ['id' => $this->id, 
                                         'name' => $this->name, 
                                         'type' => $this->type, 'newClass' => $this->newClass,
-                                        'value' => $this->value,
+                                        'value' => $this->value, 'min' => $this->min, 'max' => $this->max,
                                         'datepicker' => $this->datepicker,
+                                        'disabled' => $this->disabled,
                                         'timepicker'=> $this->timepicker,
                                         'placeholder' => $this->placeholder]);
     }

@@ -76,4 +76,29 @@ export class InputField extends Field {
     enable() {
         this.inputElement.removeAttribute('disabled');
     }
+
+    setMax(max : number) {
+        try {
+            if(this.type !== "number" ) {
+                throw new TypeError("Input field must be a number type");
+            } else {
+                this.inputElement.max = max + "";
+            }
+        } catch(e) {
+            console.log((<Error> e).message );
+        }
+    }
+
+    setMin(min : number ) {
+        try {
+            if(this.type !== "number" ) {
+                throw new TypeError("Input field must be a number type");
+            } else {
+                this.inputElement.min = min + "";
+            }
+        } catch(e) {
+            console.log((<Error> e).message );
+        }
+
+    }
 }

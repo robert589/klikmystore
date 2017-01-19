@@ -178,5 +178,28 @@ class OrderController extends Controller
         }
         return json_encode($data);
     }
+    
+    public function actionSearchOrderId() {
+        $query = filter_var($_GET['q']);
+        $id = filter_var($_GET['id']);
+        $data['status'] = 1;
+        $views = '';
+        $ids = $this->orderService->searchOrderId($query);
+        if(!$ids) {
+            $data['status'] = 0;
+            $data['errors'] = $this->orderService->getErrors() ? $this->orderService->hasErrors() : null;
+            return json_encode($data);
+        }
+        foreach($ids as $idItem) {
+            $views .= SearchFieldDropdownItem::widget(['id' => $id . '-' . $idItem, 
+                'itemId' => $idItem, 'text' => $idItem]);
+        }
+        $data['views'] = $views;
+        return json_encode($data);
+    }
+    
+    public function actionGetOrderReturField() {
+        
+    }
 }
 

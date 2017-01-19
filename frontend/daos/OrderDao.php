@@ -10,6 +10,7 @@ use frontend\vos\UserVo;
 USE frontend\vos\OrderProductVo;
 use frontend\vos\OrderVo;
 use frontend\vos\CourierVo;
+use frontend\vos\ProductVo;
 /**
  * OrderDao class
  */
@@ -25,6 +26,11 @@ class OrderDao implements Dao
              where courier.name LIKE :query 
              limit 4";
     
+    const SEARCH_ORDER_ID = "select orders.id"
+            . " from orders"
+            . " where orders.id LIKE :query"
+            . " limit 4 ";
+    
     const ORDER_LIST = "select orders.*, sender.id as sender_id, sender.first_name as sender_first_name,
                          sender.last_name as sender_last_name, receiver.id as receiver_id, 
                          receiver.first_name as receiver_first_name, receiver.last_name as receiver_last_name,
@@ -35,10 +41,22 @@ class OrderDao implements Dao
                              sender.id = orders.sender_id and
                              receiver.id = orders.receiver_id and
                              orders.courier_code = courier.code ";
+    
     const ORDERS_PRODUCT = "select * 
                             from orders_product
                             where orders_product.order_id = :order_id ";
     
+    
+    /**
+     * 
+     * Not complete, need to include retur
+     */
+    const ORDERS_PRODUCT_WITH_RETUR = "select orders_product.*,
+                                        product.name as product_name
+                                    from orders_product, product
+                                    where orders_product.order_id = :order_id
+
+                                        and product.id = orders_product.product_id ";
     
     const ORDER_INFO = "select orders.*, sender.id as sender_id, sender.first_name as sender_first_name,
                          sender.last_name as sender_last_name, receiver.id as receiver_id, 
@@ -130,6 +148,26 @@ class OrderDao implements Dao
         return $vos;
     }
     
+    public function getOrderProductsWithRetur($orderId) {
+        $results =  \Yii::$app->db
+            ->createCommand(self::ORDERS_PRODUCT_WITH_RETUR)
+            ->bindParam(':order_id', $orderId)
+            ->queryAll();
+        
+        $vos = [];
+        foreach($results as $result) {
+            $productBuilder = ProductVo::createBuilder();
+            $productBuilder->loadData($result, "product");
+            
+            $builder = OrderProductVo::createBuilder();
+            $builder->loadData($result);
+            $builder->setProduct($productBuilder->build());
+            $vos[] = $builder->build();
+        }
+        
+        return $vos;
+    }
+    
     public function searchMarketplace($query) {
         $query = "%$query%";
         $results =  \Yii::$app->db
@@ -162,6 +200,16 @@ class OrderDao implements Dao
             $vos[] = $builder->build();
         }
         return $vos;
+    }
+    
+    public function searchOrderId($q) {
+        $query = "%$q%";
+        $results =  \Yii::$app->db
+            ->createCommand(self::SEARCH_ORDER_ID)
+            ->bindParam(':query', $query)
+            ->queryAll();
+        
+        return array_column($results, "id");
     }
 }
 

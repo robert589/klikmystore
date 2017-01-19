@@ -15,7 +15,9 @@ class OrderProductVoBuilder extends RVoBuilder
     public $orderId;
 
     public $productId;
-
+    
+    public $product;
+    
     public $price;
 
     public $weight;
@@ -66,6 +68,14 @@ class OrderProductVoBuilder extends RVoBuilder
 
     public function getUpdatedAt() { 
         return $this->updatedAt; 
+    }
+
+    function getProduct() {
+        return $this->product;
+    }
+
+    function setProduct($product) {
+        $this->product = $product;
     }
 
     //setters

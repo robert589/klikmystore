@@ -13,7 +13,13 @@ class OrderProductVo implements RVo
     //attributes
 
     private $orderId;
-
+    
+    private $product;
+    
+    /**
+     * DEPRECATED : Change with $product
+     * @var type 
+     */
     private $productId;
 
     private $price;
@@ -33,6 +39,7 @@ class OrderProductVo implements RVo
         $this->weight = $builder->getWeight(); 
         $this->quantity = $builder->getQuantity(); 
         $this->createdAt = $builder->getCreatedAt(); 
+        $this->product = $builder->getProduct();
         $this->updatedAt = $builder->getUpdatedAt(); 
     }
 
@@ -64,6 +71,10 @@ class OrderProductVo implements RVo
 
     public function getUpdatedAt() { 
         return $this->updatedAt; 
+    }
+    
+    public function getProduct() {
+        return $this->product;
     }
     
 }

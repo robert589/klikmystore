@@ -204,6 +204,32 @@ define("common/input-field", ["require", "exports", "common/Field", "common/syst
         InputField.prototype.enable = function () {
             this.inputElement.removeAttribute('disabled');
         };
+        InputField.prototype.setMax = function (max) {
+            try {
+                if (this.type !== "number") {
+                    throw new TypeError("Input field must be a number type");
+                }
+                else {
+                    this.inputElement.max = max + "";
+                }
+            }
+            catch (e) {
+                console.log(e.message);
+            }
+        };
+        InputField.prototype.setMin = function (min) {
+            try {
+                if (this.type !== "number") {
+                    throw new TypeError("Input field must be a number type");
+                }
+                else {
+                    this.inputElement.min = min + "";
+                }
+            }
+            catch (e) {
+                console.log(e.message);
+            }
+        };
         return InputField;
     }(Field_1.Field));
     exports.InputField = InputField;
@@ -1987,7 +2013,189 @@ define("project/list-supplier", ["require", "exports", "common/component", "comm
     }(component_17.Component));
     exports.ListSupplier = ListSupplier;
 });
-define("project/app", ["require", "exports", "common/component", "project/login", "project/add-product", "project/add-category", "project/order-create-marketplace", "project/order-create-courier", "project/create-order", "project/order-list", "project/create-news", "project/restock", "project/create-supplier", "project/list-supplier"], function (require, exports, component_18, login_1, add_product_1, add_category_1, order_create_marketplace_1, order_create_courier_1, create_order_1, order_list_1, create_news_1, restock_1, create_supplier_1, list_supplier_1) {
+define("project/order-retur-field", ["require", "exports", "common/Field", "common/input-field"], function (require, exports, field_5, input_field_11) {
+    "use strict";
+    var OrderReturField = (function (_super) {
+        __extends(OrderReturField, _super);
+        function OrderReturField(root) {
+            return _super.call(this, root) || this;
+        }
+        OrderReturField.prototype.validate = function () {
+            var valid = true;
+            for (var i = 0; i < this.total; i++) {
+                this.returFields[i].hideError();
+                this.effectFields[i].hideError();
+                if (this.returFields[i].getValue() > 0) {
+                    if (parseInt(this.quantityFields[i].getValue()) <
+                        parseInt(this.returFields[i].getValue())) {
+                        this.returFields[i].showError("Jumlah barang rusak tidak dapat lebih besar dari inventory");
+                        valid = valid && false;
+                    }
+                    if (parseInt(this.returFields[i].getValue()) <
+                        parseInt(this.effectFields[i].getValue())) {
+                        this.effectFields[i].showError("Jumlah barang yang effect tidak dapat lebih besar dari retur");
+                        valid = valid && false;
+                    }
+                }
+            }
+            return valid;
+        };
+        OrderReturField.prototype.getValue = function () {
+            if (!this.validate()) {
+                return null;
+            }
+            var values = [];
+            for (var i = 0; i < this.total; i++) {
+                if (this.returFields[i].getValue() > 0) {
+                    var value = {
+                        id: this.idFields[i].getValue(),
+                        retur: this.returFields[i].getValue(),
+                        remark: this.remarkFields[i].getValue(),
+                        effect: this.effectFields[i].getValue()
+                    };
+                    values.push(value);
+                }
+            }
+            return values;
+        };
+        OrderReturField.prototype.decorate = function () {
+            _super.prototype.decorate.call(this);
+            this.total = parseInt(this.root.getAttribute('data-total'));
+            this.effectFields = [];
+            this.remarkFields = [];
+            this.idFields = [];
+            this.quantityFields = [];
+            this.returFields = [];
+            for (var i = 0; i < this.total; i++) {
+                this.effectFields.push(new input_field_11.InputField(document.getElementById(this.id + "-effect-" + i)));
+                this.remarkFields.push(new input_field_11.InputField(document.getElementById(this.id + "-remark-" + i)));
+                this.quantityFields.push(new input_field_11.InputField(document.getElementById(this.id + "-quantity-" + i)));
+                this.returFields.push(new input_field_11.InputField(document.getElementById(this.id + "-retur-" + i)));
+                this.idFields.push(new input_field_11.InputField(document.getElementById(this.id + "-id-" + i)));
+            }
+        };
+        OrderReturField.prototype.bindEvent = function () {
+            _super.prototype.bindEvent.call(this);
+            for (var i = 0; i < this.returFields.length; i++) {
+                this.returFields[i].attachEvent('input', this.checkReturValue.bind(this, [i]));
+            }
+        };
+        OrderReturField.prototype.checkReturValue = function (i) {
+            if (this.returFields[i].getValue() > 0) {
+                this.enableRemarkEffectField(i);
+            }
+            else {
+                this.disableRemarkEffectField(i);
+            }
+        };
+        OrderReturField.prototype.enableRemarkEffectField = function (i) {
+            this.remarkFields[i].enable();
+            this.effectFields[i].enable();
+            this.effectFields[i].setMax((this.returFields[i].getValue()));
+            this.remarkFields[i].setValue(null);
+            this.effectFields[i].setValue(0 + "");
+        };
+        OrderReturField.prototype.disableRemarkEffectField = function (i) {
+            this.remarkFields[i].disable();
+            this.effectFields[i].disable();
+            this.remarkFields[i].setValue(null);
+            this.effectFields[i].setValue(0 + "");
+        };
+        OrderReturField.prototype.detach = function () {
+            _super.prototype.detach.call(this);
+        };
+        OrderReturField.prototype.unbindEvent = function () {
+            // no event to unbind
+        };
+        return OrderReturField;
+    }(field_5.Field));
+    exports.OrderReturField = OrderReturField;
+});
+define("project/retur-form", ["require", "exports", "common/form", "common/system", "project/order-retur-field", "common/search-field"], function (require, exports, form_11, system_13, order_retur_field_1, search_field_5) {
+    "use strict";
+    var ReturForm = (function (_super) {
+        __extends(ReturForm, _super);
+        function ReturForm(root) {
+            return _super.call(this, root) || this;
+        }
+        ReturForm.prototype.rules = function () {
+            this.setRequiredField([this.orderId]);
+            this.registerFields([this.orderId]);
+        };
+        ReturForm.prototype.decorate = function () {
+            _super.prototype.decorate.call(this);
+            this.orderId = new search_field_5.SearchField(document.getElementById(this.id + "-order"));
+            this.area = this.root.getElementsByClassName('retur-form-area')[0];
+        };
+        ReturForm.prototype.bindEvent = function () {
+            _super.prototype.bindEvent.call(this);
+            this.orderId.attachEvent(search_field_5.SearchField.GET_VALUE_EVENT, this.retrieveOrderReturField.bind(this));
+        };
+        ReturForm.prototype.retrieveOrderReturField = function () {
+            var data = {};
+            data['order_id'] = this.orderId.getValue();
+            data = system_13.System.addCsrf(data);
+            $.ajax({
+                url: system_13.System.getBaseUrl() + "/inventory/get-order-retur-field",
+                method: "post",
+                dataType: "json",
+                data: data,
+                context: this,
+                success: function (data) {
+                    if (parseInt(data.status) !== 1) {
+                        return false;
+                    }
+                    this.updateArea(data.views);
+                },
+                error: function (data) {
+                }
+            });
+        };
+        ReturForm.prototype.updateArea = function (views) {
+            this.area.innerHTML = views;
+            var wrapper = document.createElement('div');
+            wrapper.innerHTML = views;
+            var rawElements = wrapper.getElementsByClassName('or-field');
+            this.orderReturField =
+                new order_retur_field_1.OrderReturField(rawElements.item(0));
+            this.setRequiredField([this.orderReturField]);
+            this.registerFields([this.orderReturField]);
+        };
+        ReturForm.prototype.detach = function () {
+            _super.prototype.detach.call(this);
+        };
+        ReturForm.prototype.unbindEvent = function () {
+            // no event to unbind
+        };
+        return ReturForm;
+    }(form_11.Form));
+    exports.ReturForm = ReturForm;
+});
+define("project/retur", ["require", "exports", "common/component", "project/retur-form"], function (require, exports, component_18, retur_form_1) {
+    "use strict";
+    var Retur = (function (_super) {
+        __extends(Retur, _super);
+        function Retur(root) {
+            return _super.call(this, root) || this;
+        }
+        Retur.prototype.decorate = function () {
+            _super.prototype.decorate.call(this);
+            this.form = new retur_form_1.ReturForm(document.getElementById(this.id + "-form"));
+        };
+        Retur.prototype.bindEvent = function () {
+            _super.prototype.bindEvent.call(this);
+        };
+        Retur.prototype.detach = function () {
+            _super.prototype.detach.call(this);
+        };
+        Retur.prototype.unbindEvent = function () {
+            // no event to unbind
+        };
+        return Retur;
+    }(component_18.Component));
+    exports.Retur = Retur;
+});
+define("project/app", ["require", "exports", "common/component", "project/login", "project/add-product", "project/add-category", "project/order-create-marketplace", "project/order-create-courier", "project/create-order", "project/order-list", "project/create-news", "project/restock", "project/create-supplier", "project/list-supplier", "project/retur"], function (require, exports, component_19, login_1, add_product_1, add_category_1, order_create_marketplace_1, order_create_courier_1, create_order_1, order_list_1, create_news_1, restock_1, create_supplier_1, list_supplier_1, retur_1) {
     "use strict";
     var App = (function (_super) {
         __extends(App, _super);
@@ -2029,6 +2237,9 @@ define("project/app", ["require", "exports", "common/component", "project/login"
             else if (this.root.getElementsByClassName('list-supplier').length !== 0) {
                 this.listSupplier = new list_supplier_1.ListSupplier(document.getElementById("sl"));
             }
+            else if (this.root.getElementsByClassName('retur').length !== 0) {
+                this.retur = new retur_1.Retur(document.getElementById("ire"));
+            }
         };
         App.prototype.bindEvent = function () {
             _super.prototype.bindEvent.call(this);
@@ -2040,7 +2251,7 @@ define("project/app", ["require", "exports", "common/component", "project/login"
             // no event to unbind
         };
         return App;
-    }(component_18.Component));
+    }(component_19.Component));
     exports.App = App;
 });
 define("project/init", ["require", "exports", "project/app"], function (require, exports, app_1) {
