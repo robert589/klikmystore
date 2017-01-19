@@ -85,6 +85,10 @@ export class ProductOrderField extends Field{
                  new ProductOrderFieldItem(<HTMLElement>rawElements.item(0));
         this.products.push(item);
         this.dispatchProductAddedEvent();
+
+        this.productSearchField.resetValue();
+        this.productSearchField.emptyText();
+        this.quantityField.setValue(null);
     }
 
     dispatchProductAddedEvent() {

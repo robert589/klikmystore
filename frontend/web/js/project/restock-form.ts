@@ -1,10 +1,10 @@
 import {Component} from '../common/component';
-import {InputField} from './../common/input-field';
+import {SearchField} from './../common/search-field';
 import {ProductOrderField} from './product-order-field';
 
 export class RestockForm extends Component{
 
-    supplierField : InputField;
+    supplierField : SearchField;
 
     productOrderField : ProductOrderField;
 
@@ -14,7 +14,7 @@ export class RestockForm extends Component{
     
     decorate() {
         super.decorate();
-        this.supplierField = new InputField(document.getElementById(this.id + "-supplier"));
+        this.supplierField = new SearchField(document.getElementById(this.id + "-supplier"));
         this.productOrderField = new ProductOrderField(document.getElementById(this.id + "-po-field"));
     }
     

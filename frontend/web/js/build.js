@@ -1842,7 +1842,7 @@ define("project/create-news", ["require", "exports", "common/component", "projec
     }(component_14.Component));
     exports.CreateNews = CreateNews;
 });
-define("project/restock-form", ["require", "exports", "common/component", "common/input-field", "project/product-order-field"], function (require, exports, component_15, input_field_10, product_order_field_2) {
+define("project/restock-form", ["require", "exports", "common/component", "common/search-field", "project/product-order-field"], function (require, exports, component_15, search_field_4, product_order_field_2) {
     "use strict";
     var RestockForm = (function (_super) {
         __extends(RestockForm, _super);
@@ -1851,7 +1851,7 @@ define("project/restock-form", ["require", "exports", "common/component", "commo
         }
         RestockForm.prototype.decorate = function () {
             _super.prototype.decorate.call(this);
-            this.supplierField = new input_field_10.InputField(document.getElementById(this.id + "-supplier"));
+            this.supplierField = new search_field_4.SearchField(document.getElementById(this.id + "-supplier"));
             this.productOrderField = new product_order_field_2.ProductOrderField(document.getElementById(this.id + "-po-field"));
         };
         RestockForm.prototype.bindEvent = function () {
@@ -1891,7 +1891,7 @@ define("project/restock", ["require", "exports", "common/component", "project/re
     }(component_16.Component));
     exports.Restock = Restock;
 });
-define("project/create-supplier-form", ["require", "exports", "common/form", "common/input-field", "common/text-area-field", "common/system"], function (require, exports, form_9, input_field_11, text_area_field_2, system_11) {
+define("project/create-supplier-form", ["require", "exports", "common/form", "common/input-field", "common/text-area-field", "common/system"], function (require, exports, form_9, input_field_10, text_area_field_2, system_11) {
     "use strict";
     var CreateSupplierForm = (function (_super) {
         __extends(CreateSupplierForm, _super);
@@ -1904,11 +1904,11 @@ define("project/create-supplier-form", ["require", "exports", "common/form", "co
         }
         CreateSupplierForm.prototype.decorate = function () {
             _super.prototype.decorate.call(this);
-            this.companyName = new input_field_11.InputField(document.getElementById(this.id + "-name"));
-            this.firstName = new input_field_11.InputField(document.getElementById(this.id + "-supp-first-name"));
-            this.lastName = new input_field_11.InputField(document.getElementById(this.id + "-supp-last-name"));
-            this.email = new input_field_11.InputField(document.getElementById(this.id + "-supp-email"));
-            this.phone = new input_field_11.InputField(document.getElementById(this.id + "-phone"));
+            this.companyName = new input_field_10.InputField(document.getElementById(this.id + "-name"));
+            this.firstName = new input_field_10.InputField(document.getElementById(this.id + "-supp-first-name"));
+            this.lastName = new input_field_10.InputField(document.getElementById(this.id + "-supp-last-name"));
+            this.email = new input_field_10.InputField(document.getElementById(this.id + "-supp-email"));
+            this.phone = new input_field_10.InputField(document.getElementById(this.id + "-phone"));
             this.address = new text_area_field_2.TextAreaField(document.getElementById(this.id + "-address"));
         };
         CreateSupplierForm.prototype.rules = function () {

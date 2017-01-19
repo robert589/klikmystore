@@ -61,6 +61,9 @@ class UserVo implements RVo
     }
     
     public function getName() {
+        if(!$this->firstName) {
+            return null;
+        }
         return $this->firstName . ' ' . $this->lastName; 
     }
 }

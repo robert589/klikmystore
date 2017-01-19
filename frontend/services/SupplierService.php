@@ -2,6 +2,7 @@
 namespace frontend\services;
 
 use common\components\RService;
+use common\validators\IsAdminValidator;
 use frontend\daos\SupplierDao;
 /**
  * SupplierService service
@@ -9,7 +10,9 @@ use frontend\daos\SupplierDao;
  */
 class SupplierService extends RService
 {
-
+    
+    const SEARCH = "search";
+    
     //attributes
     public $user_id;
     
@@ -21,8 +24,19 @@ class SupplierService extends RService
     public function rules() {
         return [
             ['user_id', 'integer'],
-            ['user_id', 'required']
-        ];
+            ['user_id', 'required'],
+            ['user_id', IsAdminValidator::className(), 'on' => self::SEARCH]
+        ];  
+    }
+    
+    public function search($query) {
+        $this->setScenario(self::SEARCH);
+        if(!$this->validate()) {
+            return false;
+        }
+        
+        return $this->supplierDao->searchSupplier($query);
+        
     }
     
     public function getSuppliers() {
