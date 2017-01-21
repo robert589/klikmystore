@@ -2195,7 +2195,90 @@ define("project/retur", ["require", "exports", "common/component", "project/retu
     }(component_18.Component));
     exports.Retur = Retur;
 });
-define("project/app", ["require", "exports", "common/component", "project/login", "project/add-product", "project/add-category", "project/order-create-marketplace", "project/order-create-courier", "project/create-order", "project/order-list", "project/create-news", "project/restock", "project/create-supplier", "project/list-supplier", "project/retur"], function (require, exports, component_19, login_1, add_product_1, add_category_1, order_create_marketplace_1, order_create_courier_1, create_order_1, order_list_1, create_news_1, restock_1, create_supplier_1, list_supplier_1, retur_1) {
+define("project/product-adjustment-field", ["require", "exports", "common/Field", "common/search-field", "common/button"], function (require, exports, field_6, search_field_6, button_9) {
+    "use strict";
+    var ProductAdjustmentField = (function (_super) {
+        __extends(ProductAdjustmentField, _super);
+        function ProductAdjustmentField(root) {
+            var _this = _super.call(this, root) || this;
+            _this.searchProduct = new search_field_6.SearchField(document.getElementById(_this.id + "-product"));
+            _this.addBtn = new button_9.Button(document.getElementById(_this.id + "-add"), _this.addNew.bind(_this));
+            _this.list = _this.root.getElementsByClassName('pa-field-list')[0];
+            return _this;
+        }
+        ProductAdjustmentField.prototype.getValue = function () {
+            return null;
+        };
+        ProductAdjustmentField.prototype.addNew = function () {
+        };
+        ProductAdjustmentField.prototype.decorate = function () {
+            _super.prototype.decorate.call(this);
+        };
+        ProductAdjustmentField.prototype.bindEvent = function () {
+            _super.prototype.bindEvent.call(this);
+        };
+        ProductAdjustmentField.prototype.detach = function () {
+            _super.prototype.detach.call(this);
+        };
+        ProductAdjustmentField.prototype.unbindEvent = function () {
+            // no event to unbind
+        };
+        return ProductAdjustmentField;
+    }(field_6.Field));
+    exports.ProductAdjustmentField = ProductAdjustmentField;
+});
+define("project/adjustment-stock-form", ["require", "exports", "common/form", "project/product-adjustment-field", "common/text-area-field"], function (require, exports, form_12, product_adjustment_field_1, text_area_field_3) {
+    "use strict";
+    var AdjustmentStockForm = (function (_super) {
+        __extends(AdjustmentStockForm, _super);
+        function AdjustmentStockForm(root) {
+            return _super.call(this, root) || this;
+        }
+        AdjustmentStockForm.prototype.rules = function () {
+        };
+        AdjustmentStockForm.prototype.decorate = function () {
+            _super.prototype.decorate.call(this);
+            this.remarkField = new text_area_field_3.TextAreaField(document.getElementById(this.id + "-remark"));
+            this.paField = new product_adjustment_field_1.ProductAdjustmentField(document.getElementById(this.id + "adjustment"));
+        };
+        AdjustmentStockForm.prototype.bindEvent = function () {
+            _super.prototype.bindEvent.call(this);
+        };
+        AdjustmentStockForm.prototype.detach = function () {
+            _super.prototype.detach.call(this);
+        };
+        AdjustmentStockForm.prototype.unbindEvent = function () {
+            // no event to unbind
+        };
+        return AdjustmentStockForm;
+    }(form_12.Form));
+    exports.AdjustmentStockForm = AdjustmentStockForm;
+});
+define("project/adjustment-stock", ["require", "exports", "common/component", "project/adjustment-stock-form"], function (require, exports, component_19, adjustment_stock_form_1) {
+    "use strict";
+    var AdjustmentStock = (function (_super) {
+        __extends(AdjustmentStock, _super);
+        function AdjustmentStock(root) {
+            return _super.call(this, root) || this;
+        }
+        AdjustmentStock.prototype.decorate = function () {
+            _super.prototype.decorate.call(this);
+            this.form = new adjustment_stock_form_1.AdjustmentStockForm(document.getElementById(this.id + "-form"));
+        };
+        AdjustmentStock.prototype.bindEvent = function () {
+            _super.prototype.bindEvent.call(this);
+        };
+        AdjustmentStock.prototype.detach = function () {
+            _super.prototype.detach.call(this);
+        };
+        AdjustmentStock.prototype.unbindEvent = function () {
+            // no event to unbind
+        };
+        return AdjustmentStock;
+    }(component_19.Component));
+    exports.AdjustmentStock = AdjustmentStock;
+});
+define("project/app", ["require", "exports", "common/component", "project/login", "project/add-product", "project/add-category", "project/order-create-marketplace", "project/order-create-courier", "project/create-order", "project/order-list", "project/create-news", "project/restock", "project/create-supplier", "project/list-supplier", "project/retur", "project/adjustment-stock"], function (require, exports, component_20, login_1, add_product_1, add_category_1, order_create_marketplace_1, order_create_courier_1, create_order_1, order_list_1, create_news_1, restock_1, create_supplier_1, list_supplier_1, retur_1, adjustment_stock_1) {
     "use strict";
     var App = (function (_super) {
         __extends(App, _super);
@@ -2240,6 +2323,9 @@ define("project/app", ["require", "exports", "common/component", "project/login"
             else if (this.root.getElementsByClassName('retur').length !== 0) {
                 this.retur = new retur_1.Retur(document.getElementById("ire"));
             }
+            else if (this.root.getElementsByClassName('adj-stock').length !== 0) {
+                this.adjustmentStock = new adjustment_stock_1.AdjustmentStock(document.getElementById("ias"));
+            }
         };
         App.prototype.bindEvent = function () {
             _super.prototype.bindEvent.call(this);
@@ -2251,7 +2337,7 @@ define("project/app", ["require", "exports", "common/component", "project/login"
             // no event to unbind
         };
         return App;
-    }(component_19.Component));
+    }(component_20.Component));
     exports.App = App;
 });
 define("project/init", ["require", "exports", "project/app"], function (require, exports, app_1) {

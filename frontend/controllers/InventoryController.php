@@ -4,6 +4,7 @@ namespace frontend\controllers;
 use Yii;
 use frontend\models\RestockForm;
 use yii\web\Controller;
+use frontend\models\ReturForm;
 use frontend\widgets\OrderReturField;
 use frontend\services\InventoryService;
 /**
@@ -17,6 +18,11 @@ class InventoryController extends Controller
     public function init() {
         $this->inventoryService = new InventoryService();
         $this->inventoryService->user_id = Yii::$app->user->getId();
+    }
+    
+    public function actionAdjustment() {
+        return $this->render('adjustment-stock', ['id' => 'ias']);
+        
     }
     public function actionRestock() {
         return $this->render('restock', ['id' => 'ir']);
@@ -36,7 +42,12 @@ class InventoryController extends Controller
     }
     
     public function actionPRetur() {
-        
+        $returForm = new ReturForm();
+        $returForm->user_id = \Yii::$app->user->getId();
+        $returForm->loadData($_POST);
+        $data['status'] = $returForm->create() ? 1 : 0;
+        $data['errors'] = $returForm->hasErrors() ? $returForm->getErrors() : null;
+        return json_encode($data);
     }
     
     public function actionGetOrderReturField() {

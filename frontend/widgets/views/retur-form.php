@@ -1,11 +1,7 @@
 <?php
     use common\widgets\Form;
-    use yii\redactor\widgets\Redactor;
     use common\widgets\Button;
-    use common\widgets\InputField;
     use common\widgets\SearchField;
-    use common\widgets\RedactorField;
-    use frontend\widgets\ProductOrderField;
 ?>
 
 
@@ -13,7 +9,7 @@
         ['id' => $id, 
          'method' => 'post', 
          'url' => \Yii::$app->request->baseUrl 
-                    . '/inventory/p-restock', 
+                    . '/inventory/p-retur', 
         'widget_class' => 'retur-form' , 'enable_button' => false
         ]) ?>
         

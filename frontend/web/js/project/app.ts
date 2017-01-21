@@ -13,6 +13,8 @@ import {Restock} from './restock';
 import {CreateSupplier} from './create-supplier';
 import {ListSupplier} from './list-supplier';
 import {Retur} from './retur';
+import {AdjustmentStock} from './adjustment-stock';
+
 export class App extends Component{
 
     login : Login;
@@ -38,6 +40,8 @@ export class App extends Component{
     listSupplier : ListSupplier;
 
     retur : Retur;
+
+    adjustmentStock : AdjustmentStock;
 
     constructor(root: HTMLElement) {
         super(root);
@@ -81,7 +85,9 @@ export class App extends Component{
         else if(this.root.getElementsByClassName('retur').length !== 0) {
             this.retur = new Retur(document.getElementById("ire"));
         }
-        
+        else if(this.root.getElementsByClassName('adj-stock').length !== 0) {
+            this.adjustmentStock = new AdjustmentStock(document.getElementById("ias"));
+        }
     }
     
     bindEvent() {
