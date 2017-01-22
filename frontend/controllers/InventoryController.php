@@ -2,6 +2,7 @@
 namespace frontend\controllers;
 
 use Yii;
+use frontend\models\AdjustmentStockForm;
 use frontend\models\RestockForm;
 use yii\web\Controller;
 use frontend\models\ReturForm;
@@ -81,8 +82,14 @@ class InventoryController extends Controller
         return json_encode($data);
         
     }
-    public function actionAdjust() {
+    public function actionPAdjust() {
         
+        $returForm = new AdjustmentStockForm();
+        $returForm->user_id = \Yii::$app->user->getId();
+        $returForm->loadData($_POST);
+        $data['status'] = $returForm->create() ? 1 : 0;
+        $data['errors'] = $returForm->hasErrors() ? $returForm->getErrors() : null;
+        return json_encode($data);
     }
 }
 

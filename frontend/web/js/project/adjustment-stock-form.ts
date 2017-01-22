@@ -1,6 +1,7 @@
 import {Form} from '../common/form';
 import {ProductAdjustmentField} from './product-adjustment-field';
 import {TextAreaField} from './../common/text-area-field';
+import {System} from '../common/system';
 
 export class AdjustmentStockForm extends Form{
 
@@ -15,6 +16,9 @@ export class AdjustmentStockForm extends Form{
 
     constructor(root: HTMLElement) {
         super(root);
+        this.successCb = function(data) {
+            window.location.href = System.getBaseUrl() + "/inventory/list";
+        }
     }
     
     decorate() {

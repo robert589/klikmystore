@@ -24,7 +24,7 @@
         Daftar Produk yang disesuaikan
     </div>
     
-    <?= ProductAdjustmentField::widget(['id' => $id . 'adjustment']) ?>
+    <?= ProductAdjustmentField::widget(['id' => $id . 'adjustment', 'name' => 'adjustments']) ?>
 
     <?= Button::widget(['id' => $id . '-submit-btn' ,   
         'text' => 'Kirim', 'newClass' => 'form-submit']) ?> 

@@ -12,6 +12,7 @@ export class InputField extends Field {
     private valueChangeEvent : CustomEvent;
     
     private type : string;
+    
     constructor(root : HTMLElement) {
         super(root);
         this.type = this.inputElement.getAttribute("type");
@@ -41,9 +42,11 @@ export class InputField extends Field {
 
     bindEvent() {
         this.valueChangeEvent = new CustomEvent(InputField.VALUE_CHANGED);
+        this.inputElement.addEventListener('change', this.triggerValueChangedEvent.bind(this));
     }
 
     triggerValueChangedEvent() {
+        this.inputElement.setAttribute('value', this.inputElement.value);
         this.root.dispatchEvent(this.valueChangeEvent);
     }
 

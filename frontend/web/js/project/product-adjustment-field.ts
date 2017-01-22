@@ -76,10 +76,10 @@ export class ProductAdjustmentField extends Field{
     }
 
     addToList(views : string) {
-        this.list.innerHTML += views;
+        this.getListElement().innerHTML += views;
         let wrapper : HTMLElement = document.createElement('div');
         wrapper.innerHTML= views;
-        let rawElements : NodeListOf<Element> = wrapper.getElementsByClassName('pof-item');
+        let rawElements : NodeListOf<Element> = wrapper.getElementsByClassName('paf-item');
         let item : ProductAdjustmentFieldItem =
                  new ProductAdjustmentFieldItem(<HTMLElement>rawElements.item(0));
         this.items.push(item);
@@ -89,7 +89,10 @@ export class ProductAdjustmentField extends Field{
         super.decorate();
         this.searchProduct = new SearchField(document.getElementById(this.id + "-product"));
         this.addBtn = new Button(document.getElementById(this.id + "-add"), this.addNew.bind(this));
-        this.list = <HTMLElement> this.root.getElementsByClassName('pa-field-list')[0];
+    }
+
+    getListElement() : HTMLElement {
+        return <HTMLElement> this.root.getElementsByClassName('pa-field-list')[0];
     }
     
     bindEvent() {

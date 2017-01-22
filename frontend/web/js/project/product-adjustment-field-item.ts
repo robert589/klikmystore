@@ -5,15 +5,17 @@ export class ProductAdjustmentFieldItem extends Component{
 
     idElement : HTMLElement;
 
-    quantityField : InputField;
+    adjustField : InputField;
+
     constructor(root: HTMLElement) {
         super(root);
+        
     }
     
     decorate() {
         super.decorate();
         this.idElement = <HTMLElement> document.getElementById(this.id + "-id");  
-        this.quantityField = new InputField(document.getElementById(this.id + "-quantity"));  
+        this.adjustField = new InputField(document.getElementById(this.id + "-adjust"));  
     }
 
     getId() {
@@ -23,12 +25,12 @@ export class ProductAdjustmentFieldItem extends Component{
     getValue()  : ProductAdjustmentFieldItemJson{
         return {
             id: this.getId(),
-            quantity: parseInt(<string>this.quantityField.getValue());
+            adjust: parseInt(<string>this.adjustField.getValue())
         }
     }
 
     getQuantity() : number {
-        return parseInt(<string> this.quantityField.getValue());
+        return parseInt(<string> this.adjustField.getValue());
     }
     
     bindEvent() {
@@ -45,5 +47,5 @@ export class ProductAdjustmentFieldItem extends Component{
 
 export interface ProductAdjustmentFieldItemJson {
     id: string,
-    quantity : number
+    adjust : number
 }

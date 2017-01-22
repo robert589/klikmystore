@@ -177,8 +177,10 @@ define("common/input-field", ["require", "exports", "common/Field", "common/syst
         };
         InputField.prototype.bindEvent = function () {
             this.valueChangeEvent = new CustomEvent(InputField.VALUE_CHANGED);
+            this.inputElement.addEventListener('change', this.triggerValueChangedEvent.bind(this));
         };
         InputField.prototype.triggerValueChangedEvent = function () {
+            this.inputElement.setAttribute('value', this.inputElement.value);
             this.root.dispatchEvent(this.valueChangeEvent);
         };
         InputField.prototype.detach = function () {
@@ -2195,7 +2197,7 @@ define("project/retur", ["require", "exports", "common/component", "project/retu
     }(component_18.Component));
     exports.Retur = Retur;
 });
-define("project/product-adjustment-field-item", ["require", "exports", "common/component"], function (require, exports, component_19) {
+define("project/product-adjustment-field-item", ["require", "exports", "common/component", "common/input-field"], function (require, exports, component_19, input_field_12) {
     "use strict";
     var ProductAdjustmentFieldItem = (function (_super) {
         __extends(ProductAdjustmentFieldItem, _super);
@@ -2205,9 +2207,19 @@ define("project/product-adjustment-field-item", ["require", "exports", "common/c
         ProductAdjustmentFieldItem.prototype.decorate = function () {
             _super.prototype.decorate.call(this);
             this.idElement = document.getElementById(this.id + "-id");
+            this.adjustField = new input_field_12.InputField(document.getElementById(this.id + "-adjust"));
         };
         ProductAdjustmentFieldItem.prototype.getId = function () {
             return this.idElement.innerHTML;
+        };
+        ProductAdjustmentFieldItem.prototype.getValue = function () {
+            return {
+                id: this.getId(),
+                adjust: parseInt(this.adjustField.getValue())
+            };
+        };
+        ProductAdjustmentFieldItem.prototype.getQuantity = function () {
+            return parseInt(this.adjustField.getValue());
         };
         ProductAdjustmentFieldItem.prototype.bindEvent = function () {
             _super.prototype.bindEvent.call(this);
@@ -2232,7 +2244,16 @@ define("project/product-adjustment-field", ["require", "exports", "common/Field"
             return _this;
         }
         ProductAdjustmentField.prototype.getValue = function () {
-            return null;
+            var values = [];
+            for (var i = 0; i < this.items.length; i++) {
+                if (this.items[i].getQuantity() !== 0) {
+                    values.push(this.items[i].getValue());
+                }
+            }
+            if (!values || values.length === 0) {
+                return null;
+            }
+            return values;
         };
         ProductAdjustmentField.prototype.validateAddClient = function () {
             var valid = true;
@@ -2274,10 +2295,10 @@ define("project/product-adjustment-field", ["require", "exports", "common/Field"
             });
         };
         ProductAdjustmentField.prototype.addToList = function (views) {
-            this.list.innerHTML += views;
+            this.getListElement().innerHTML += views;
             var wrapper = document.createElement('div');
             wrapper.innerHTML = views;
-            var rawElements = wrapper.getElementsByClassName('pof-item');
+            var rawElements = wrapper.getElementsByClassName('paf-item');
             var item = new product_adjustment_field_item_1.ProductAdjustmentFieldItem(rawElements.item(0));
             this.items.push(item);
         };
@@ -2285,7 +2306,9 @@ define("project/product-adjustment-field", ["require", "exports", "common/Field"
             _super.prototype.decorate.call(this);
             this.searchProduct = new search_field_6.SearchField(document.getElementById(this.id + "-product"));
             this.addBtn = new button_9.Button(document.getElementById(this.id + "-add"), this.addNew.bind(this));
-            this.list = this.root.getElementsByClassName('pa-field-list')[0];
+        };
+        ProductAdjustmentField.prototype.getListElement = function () {
+            return this.root.getElementsByClassName('pa-field-list')[0];
         };
         ProductAdjustmentField.prototype.bindEvent = function () {
             _super.prototype.bindEvent.call(this);
@@ -2308,6 +2331,8 @@ define("project/adjustment-stock-form", ["require", "exports", "common/form", "p
             return _super.call(this, root) || this;
         }
         AdjustmentStockForm.prototype.rules = function () {
+            this.setRequiredField([this.remarkField, this.paField]);
+            this.registerFields([this.paField, this.remarkField]);
         };
         AdjustmentStockForm.prototype.decorate = function () {
             _super.prototype.decorate.call(this);
