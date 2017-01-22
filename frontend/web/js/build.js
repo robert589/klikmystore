@@ -2195,24 +2195,97 @@ define("project/retur", ["require", "exports", "common/component", "project/retu
     }(component_18.Component));
     exports.Retur = Retur;
 });
-define("project/product-adjustment-field", ["require", "exports", "common/Field", "common/search-field", "common/button"], function (require, exports, field_6, search_field_6, button_9) {
+define("project/product-adjustment-field-item", ["require", "exports", "common/component"], function (require, exports, component_19) {
+    "use strict";
+    var ProductAdjustmentFieldItem = (function (_super) {
+        __extends(ProductAdjustmentFieldItem, _super);
+        function ProductAdjustmentFieldItem(root) {
+            return _super.call(this, root) || this;
+        }
+        ProductAdjustmentFieldItem.prototype.decorate = function () {
+            _super.prototype.decorate.call(this);
+            this.idElement = document.getElementById(this.id + "-id");
+        };
+        ProductAdjustmentFieldItem.prototype.getId = function () {
+            return this.idElement.innerHTML;
+        };
+        ProductAdjustmentFieldItem.prototype.bindEvent = function () {
+            _super.prototype.bindEvent.call(this);
+        };
+        ProductAdjustmentFieldItem.prototype.detach = function () {
+            _super.prototype.detach.call(this);
+        };
+        ProductAdjustmentFieldItem.prototype.unbindEvent = function () {
+            // no event to unbind
+        };
+        return ProductAdjustmentFieldItem;
+    }(component_19.Component));
+    exports.ProductAdjustmentFieldItem = ProductAdjustmentFieldItem;
+});
+define("project/product-adjustment-field", ["require", "exports", "common/Field", "common/search-field", "common/button", "common/system", "project/product-adjustment-field-item"], function (require, exports, field_6, search_field_6, button_9, system_14, product_adjustment_field_item_1) {
     "use strict";
     var ProductAdjustmentField = (function (_super) {
         __extends(ProductAdjustmentField, _super);
         function ProductAdjustmentField(root) {
             var _this = _super.call(this, root) || this;
-            _this.searchProduct = new search_field_6.SearchField(document.getElementById(_this.id + "-product"));
-            _this.addBtn = new button_9.Button(document.getElementById(_this.id + "-add"), _this.addNew.bind(_this));
-            _this.list = _this.root.getElementsByClassName('pa-field-list')[0];
+            _this.items = [];
             return _this;
         }
         ProductAdjustmentField.prototype.getValue = function () {
             return null;
         };
+        ProductAdjustmentField.prototype.validateAddClient = function () {
+            var valid = true;
+            this.searchProduct.hideError();
+            if (system_14.System.isEmptyValue(this.searchProduct.getValue())) {
+                valid = false;
+            }
+            for (var i = 0; i < this.items.length; i++) {
+                if (this.searchProduct.getValue() === this.items[i].getId()) {
+                    valid = false;
+                    this.searchProduct.showError("Product has ben added");
+                }
+            }
+            return valid;
+        };
         ProductAdjustmentField.prototype.addNew = function () {
+            if (!this.validateAddClient()) {
+                return false;
+            }
+            this.addBtn.disable(true);
+            var data = {};
+            data['product_id'] = this.searchProduct.getValue();
+            data = system_14.System.addCsrf(data);
+            $.ajax({
+                url: system_14.System.getBaseUrl() + "/inventory/get-adjustment-item",
+                method: "post",
+                data: data,
+                context: this,
+                dataType: "json",
+                success: function (data) {
+                    this.addBtn.disable(false);
+                    if (data.status) {
+                        this.addToList(data.views);
+                    }
+                },
+                error: function (data) {
+                    this.addBtn.disable(false);
+                }
+            });
+        };
+        ProductAdjustmentField.prototype.addToList = function (views) {
+            this.list.innerHTML += views;
+            var wrapper = document.createElement('div');
+            wrapper.innerHTML = views;
+            var rawElements = wrapper.getElementsByClassName('pof-item');
+            var item = new product_adjustment_field_item_1.ProductAdjustmentFieldItem(rawElements.item(0));
+            this.items.push(item);
         };
         ProductAdjustmentField.prototype.decorate = function () {
             _super.prototype.decorate.call(this);
+            this.searchProduct = new search_field_6.SearchField(document.getElementById(this.id + "-product"));
+            this.addBtn = new button_9.Button(document.getElementById(this.id + "-add"), this.addNew.bind(this));
+            this.list = this.root.getElementsByClassName('pa-field-list')[0];
         };
         ProductAdjustmentField.prototype.bindEvent = function () {
             _super.prototype.bindEvent.call(this);
@@ -2254,7 +2327,7 @@ define("project/adjustment-stock-form", ["require", "exports", "common/form", "p
     }(form_12.Form));
     exports.AdjustmentStockForm = AdjustmentStockForm;
 });
-define("project/adjustment-stock", ["require", "exports", "common/component", "project/adjustment-stock-form"], function (require, exports, component_19, adjustment_stock_form_1) {
+define("project/adjustment-stock", ["require", "exports", "common/component", "project/adjustment-stock-form"], function (require, exports, component_20, adjustment_stock_form_1) {
     "use strict";
     var AdjustmentStock = (function (_super) {
         __extends(AdjustmentStock, _super);
@@ -2275,10 +2348,10 @@ define("project/adjustment-stock", ["require", "exports", "common/component", "p
             // no event to unbind
         };
         return AdjustmentStock;
-    }(component_19.Component));
+    }(component_20.Component));
     exports.AdjustmentStock = AdjustmentStock;
 });
-define("project/app", ["require", "exports", "common/component", "project/login", "project/add-product", "project/add-category", "project/order-create-marketplace", "project/order-create-courier", "project/create-order", "project/order-list", "project/create-news", "project/restock", "project/create-supplier", "project/list-supplier", "project/retur", "project/adjustment-stock"], function (require, exports, component_20, login_1, add_product_1, add_category_1, order_create_marketplace_1, order_create_courier_1, create_order_1, order_list_1, create_news_1, restock_1, create_supplier_1, list_supplier_1, retur_1, adjustment_stock_1) {
+define("project/app", ["require", "exports", "common/component", "project/login", "project/add-product", "project/add-category", "project/order-create-marketplace", "project/order-create-courier", "project/create-order", "project/order-list", "project/create-news", "project/restock", "project/create-supplier", "project/list-supplier", "project/retur", "project/adjustment-stock"], function (require, exports, component_21, login_1, add_product_1, add_category_1, order_create_marketplace_1, order_create_courier_1, create_order_1, order_list_1, create_news_1, restock_1, create_supplier_1, list_supplier_1, retur_1, adjustment_stock_1) {
     "use strict";
     var App = (function (_super) {
         __extends(App, _super);
@@ -2337,7 +2410,7 @@ define("project/app", ["require", "exports", "common/component", "project/login"
             // no event to unbind
         };
         return App;
-    }(component_20.Component));
+    }(component_21.Component));
     exports.App = App;
 });
 define("project/init", ["require", "exports", "project/app"], function (require, exports, app_1) {

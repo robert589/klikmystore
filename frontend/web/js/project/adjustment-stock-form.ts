@@ -9,7 +9,8 @@ export class AdjustmentStockForm extends Form{
     remarkField : TextAreaField;
 
     rules() {
-
+        this.setRequiredField([this.remarkField, this.paField]);
+        this.registerFields([this.paField, this.remarkField]);
     }
 
     constructor(root: HTMLElement) {

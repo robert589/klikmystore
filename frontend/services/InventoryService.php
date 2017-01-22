@@ -3,6 +3,7 @@ namespace frontend\services;
 
 use common\components\RService;
 use frontend\daos\OrderDao;
+use frontend\daos\ProductDao;
 /**
  * InventoryService service
  *
@@ -11,17 +12,26 @@ class InventoryService extends RService
 {
     
     const GET_ORDER_WITH_RETURN = "getorderwithretur";
+    
+    const GET_PRODUCT_INFO = "getproductinfo";
+    
     //attributes
     public $user_id;
 
     public $order_id;
     
+    public $product_id;
+    
     private $inventoryDao;
     
     private $orderDao;
     
+    private $productDao;
+    
     public function init() {
         $this->orderDao = new OrderDao;
+        $this->productDao = new ProductDao;
+        
     }
     
     public function rules() {
@@ -30,7 +40,10 @@ class InventoryService extends RService
             ['user_id', 'required'],
             
             ['order_id', 'integer'],
-            ['order_id', 'required', 'on' => self::GET_ORDER_WITH_RETURN]
+            ['order_id', 'required', 'on' => self::GET_ORDER_WITH_RETURN],
+                
+            ['product_id', 'integer'],
+            ['product_id', 'required', 'on' => self::GET_PRODUCT_INFO]
         ];
     }
     
@@ -41,6 +54,15 @@ class InventoryService extends RService
         }
         
         return $this->orderDao->getOrderProductsWithRetur($this->order_id);
+    }
+    
+    public function getProductInfo() {
+        $this->setScenario(self::GET_PRODUCT_INFO);
+        if(!$this->validate()) {
+            return false;
+        }
+        
+        return $this->productDao->getProductInfo($this->product_id);
     }
 
 }

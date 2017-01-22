@@ -12,7 +12,7 @@ class m170119_101438_create_table_retur extends Migration
                 . "product_id int not null,"
                 . "remark text null,"
                 . "quantity int not null,"
-                . "foreign key(order_id,product_id) references order_product(order_id,product_id) "
+                . "foreign key(order_id,product_id) references orders_product(order_id,product_id) "
                 . ");");
     }
 

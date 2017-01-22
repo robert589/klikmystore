@@ -7,6 +7,7 @@ use yii\web\Controller;
 use frontend\models\ReturForm;
 use frontend\widgets\OrderReturField;
 use frontend\services\InventoryService;
+use frontend\widgets\ProductAdjustmentFieldItem;
 /**
  * Inventory controller
  */
@@ -63,6 +64,22 @@ class InventoryController extends Controller
         $data['status'] = 1;
         $data['views'] = OrderReturField::widget(['id' => 'orf', 'vos' => $vos, 'name' => 'returs']);
         return json_encode($data);
+    }
+    
+    public function actionGetAdjustmentItem() {
+        $data = [];
+        $this->inventoryService->loadData($_POST);
+        $vo = $this->inventoryService->getProductInfo();
+        if(!$vo) {
+            $data['status'] = 0;
+            $data['errors'] = $this->inventoryService->hasErrors() ? $this->inventoryService->getErrors() : null;
+            return json_encode($data);
+        }
+        
+        $data['status'] = 1;
+        $data['views'] = ProductAdjustmentFieldItem::widget(['id' => 'paf-item-' . $vo->getId(), 'vo' => $vo]);
+        return json_encode($data);
+        
     }
     public function actionAdjust() {
         

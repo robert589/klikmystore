@@ -3,8 +3,11 @@
     use common\widgets\Button;
 ?>
     
-<div id="<?= $id ?>" class="pof-item" data-quantity="<?= $quantity ?>" data-price="<?= $vo->getPrice1() ?>"
+<div id="<?= $id ?>" class="pof-item" 
+     data-quantity="<?= $quantity ?>" 
+     data-price="<?= $vo->getPrice1() ?>"
      data-weight="<?= $vo->getWeight() ?>">
+    
     <div class="pof-item-id"><?= $vo->getId() ?></div>
     <div class="pof-item-name">
         <?= $vo->getName() ?>
