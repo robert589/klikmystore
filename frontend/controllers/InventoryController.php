@@ -27,11 +27,17 @@ class InventoryController extends Controller
         
     }
     
+    public function actionAdjustmentList() {
+        $provider = $this->inventoryService->getAdjustmentList();
+        return $this->render('adjustment-list', ['id' => 'ial', 'provider' => $provider]);
+        
+    }
+    
     public function actionRestockList() {
         $provider = $this->inventoryService->getRestockList();
-
         return $this->render('restock-list', ['id' => 'irl', 'provider' => $provider]);
     }
+    
     public function actionRestock() {
         return $this->render('restock', ['id' => 'ir']);
     }

@@ -4,6 +4,7 @@
 
 <div id="<?= $id ?>" class="restock-list-lvi">
     
+    
     <div class="restock-list-lvi-name">
         Supplier Name: <?= $vo->getSupplier()->getName() ?>
     </div>

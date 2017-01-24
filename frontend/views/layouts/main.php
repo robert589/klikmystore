@@ -95,9 +95,9 @@ AppAsset::register($this);
                                 [   'label' => 'Inventory',
                                     'href' => '#',
                                     'items' => [
-                                        ['label' => 'Restock barang', 'href' => Yii::$app->request->baseUrl . "/inventory/restock"],
+                                        ['label' => 'Restock barang', 'href' => Yii::$app->request->baseUrl . "/inventory/restock-list"],
                                         ['label' => 'Supplier', 'href' => Yii::$app->request->baseUrl . "/supplier/list"],
-                                        ['label' => 'Penyesuaian Stok', 'href' => Yii::$app->request->baseUrl . "/inventory/adjustment"],
+                                        ['label' => 'Penyesuaian Stok', 'href' => Yii::$app->request->baseUrl . "/inventory/adjustment-list"],
              
                                     ]
                                 ],

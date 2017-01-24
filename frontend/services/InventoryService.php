@@ -1,6 +1,7 @@
 <?php
 namespace frontend\services;
 
+use frontend\daos\AdjustmentDao;
 use common\components\RService;
 use frontend\daos\OrderDao;
 use frontend\daos\ProductDao;
@@ -25,6 +26,8 @@ class InventoryService extends RService
     
     private $inventoryDao;
     
+    private $adjustmentDao;
+    
     private $orderDao;
     
     private $restockDao;
@@ -35,7 +38,7 @@ class InventoryService extends RService
         $this->orderDao = new OrderDao;
         $this->productDao = new ProductDao;
         $this->restockDao = new RestockDao;
-        
+        $this->adjustmentDao = new AdjustmentDao();
     }
     
     public function rules() {
@@ -81,5 +84,18 @@ class InventoryService extends RService
         
         return $dataProvider;
     }
-
+    
+    
+    public function getAdjustmentList() {
+        $vos = $this->adjustmentDao->adjustmentList();
+        $dataProvider = new \yii\data\ArrayDataProvider([
+            'allModels' => $vos,
+            'pagination' => [
+                'pageSize' => 5,
+            ],
+            
+        ]);
+        
+        return $dataProvider;
+    }
 }
