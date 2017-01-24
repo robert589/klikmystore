@@ -85,8 +85,7 @@ AppAsset::register($this);
                                     'items' => [
                                         ['label' => 'Daftar Order', 'href' => Yii::$app->request->baseUrl . "/order/list"],
                                         ['label' => 'Tambah Order', 'href' => Yii::$app->request->baseUrl . "/order/create"],
-                                        ['label' => 'Marketplace', 'href' => Yii::$app->request->baseUrl . '/order/marketplace'],
-                                        ['label' => 'Tambah Marketplace', 'href' => Yii::$app->request->baseUrl . '/order/create-marketplace'],
+                                        ['label' => 'Marketplace', 'href' => Yii::$app->request->baseUrl . '/order/marketplace-list'],
                                         ['label' => 'Courier', 'href' => Yii::$app->request->baseUrl . '/order/courier'],
                                         ['label' => 'Tambah Courier', 'href' => Yii::$app->request->baseUrl . '/order/create-courier'],
 

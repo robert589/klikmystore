@@ -16,9 +16,15 @@ class CourierVo implements RVo
 
     private $name;
 
+    private $createdAt;
+
+    private $updatedAt;
+
     public function __construct(CourierVoBuilder $builder) { 
         $this->code = $builder->getCode(); 
         $this->name = $builder->getName(); 
+        $this->createdAt = $builder->getCreatedAt(); 
+        $this->updatedAt = $builder->getUpdatedAt(); 
     }
 
     //getters
@@ -29,5 +35,13 @@ class CourierVo implements RVo
 
     public function getName() { 
         return $this->name; 
+    }
+
+    public function getCreatedAt() { 
+        return $this->createdAt; 
+    }
+
+    public function getUpdatedAt() { 
+        return $this->updatedAt; 
     }
 }

@@ -3,6 +3,7 @@ namespace frontend\services;
 
 use yii\data\ArrayDataProvider;
 use frontend\daos\ProductDao;
+use frontend\daos\MarketplaceDao;
 use common\components\RService;
 use frontend\daos\OrderDao;
 use frontend\daos\TariffDao;
@@ -18,6 +19,8 @@ class OrderService extends RService
     private $orderDao;
     
     private $tariffDao;
+    
+    private $marketplaceDao;
     
     //attributes
     public $user_id;
@@ -44,6 +47,7 @@ class OrderService extends RService
         $this->tariffDao = new TariffDao();
         $this->productDao = new ProductDao();
         $this->orderDao = new OrderDao();
+        $this->marketplaceDao = new MarketplaceDao();
     }
     
     public function rules() {
@@ -116,7 +120,33 @@ class OrderService extends RService
         $this->productInfo = $this->productDao->getProductInfo($this->product_id);
         return $this->validate();
     }
+    
+    
+    public function getMarketplace() {
+        if(!$this->validate()) {
+            return false;
+        }
+        $vos = $this->marketplaceDao->getMarketplaceList();
+        $models = [];
+        foreach($vos as $vo) {
+            $model = [];
+            $model['code'] = $vo->getCode();
+            $model['name'] = $vo->getName();
+            $models[] = $model;
+        }
         
+        $provider = new ArrayDataProvider([
+            'allModels' => $models,
+            'sort' => [
+                'attributes' => ['total_harga', 'status', 'order_id'],
+            ],
+            'pagination' => [
+                'pageSize' => 10,
+            ],
+        ]);
+        return $provider;
+    }
+    
     public function getOrderList() {
         $vos =  $this->orderDao->orderList();
         $models = [];

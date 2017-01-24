@@ -68,6 +68,11 @@ class OrderController extends Controller
         return json_encode($data);
     }
     
+    public function actionMarketplaceList() {
+        $provider = $this->orderService->getMarketplace();
+        return $this->render('marketplace-list', ['id' => 'oml', 'provider' => $provider]);
+    }
+    
     public function actionCreateCourier() {
         return $this->render('order-create-courier', ['id' => 'occ']);
     }
