@@ -2535,7 +2535,34 @@ define("project/courier-list", ["require", "exports", "common/component", "commo
     }(component_26.Component));
     exports.CourierList = CourierList;
 });
-define("project/app", ["require", "exports", "common/component", "project/login", "project/add-product", "project/add-category", "project/order-create-marketplace", "project/order-create-courier", "project/create-order", "project/order-list", "project/create-news", "project/restock", "project/create-supplier", "project/list-supplier", "project/retur", "project/adjustment-stock", "project/restock-list", "project/marketplace-list", "project/adjustment-list", "project/courier-list"], function (require, exports, component_27, login_1, add_product_1, add_category_1, order_create_marketplace_1, order_create_courier_1, create_order_1, order_list_1, create_news_1, restock_1, create_supplier_1, list_supplier_1, retur_1, adjustment_stock_1, restock_list_1, marketplace_list_1, adjustment_list_1, courier_list_1) {
+define("project/category-list", ["require", "exports", "common/component", "common/button", "common/system"], function (require, exports, component_27, button_14, system_20) {
+    "use strict";
+    var CategoryList = (function (_super) {
+        __extends(CategoryList, _super);
+        function CategoryList(root) {
+            return _super.call(this, root) || this;
+        }
+        CategoryList.prototype.redirectToAddCat = function () {
+            window.location.href = system_20.System.getBaseUrl() + "/product/add-category";
+        };
+        CategoryList.prototype.decorate = function () {
+            _super.prototype.decorate.call(this);
+            this.addCategory = new button_14.Button(document.getElementById(this.id + "-add"), this.redirectToAddCat.bind(this));
+        };
+        CategoryList.prototype.bindEvent = function () {
+            _super.prototype.bindEvent.call(this);
+        };
+        CategoryList.prototype.detach = function () {
+            _super.prototype.detach.call(this);
+        };
+        CategoryList.prototype.unbindEvent = function () {
+            // no event to unbind
+        };
+        return CategoryList;
+    }(component_27.Component));
+    exports.CategoryList = CategoryList;
+});
+define("project/app", ["require", "exports", "common/component", "project/login", "project/add-product", "project/add-category", "project/order-create-marketplace", "project/order-create-courier", "project/create-order", "project/order-list", "project/create-news", "project/restock", "project/create-supplier", "project/list-supplier", "project/retur", "project/adjustment-stock", "project/restock-list", "project/marketplace-list", "project/adjustment-list", "project/courier-list", "project/category-list"], function (require, exports, component_28, login_1, add_product_1, add_category_1, order_create_marketplace_1, order_create_courier_1, create_order_1, order_list_1, create_news_1, restock_1, create_supplier_1, list_supplier_1, retur_1, adjustment_stock_1, restock_list_1, marketplace_list_1, adjustment_list_1, courier_list_1, category_list_1) {
     "use strict";
     var App = (function (_super) {
         __extends(App, _super);
@@ -2595,6 +2622,9 @@ define("project/app", ["require", "exports", "common/component", "project/login"
             else if (this.root.getElementsByClassName('courier-list').length !== 0) {
                 this.courierList = new courier_list_1.CourierList(document.getElementById("ocl"));
             }
+            else if (this.root.getElementsByClassName('cat-list').length !== 0) {
+                this.categoryList = new category_list_1.CategoryList(document.getElementById("pcl"));
+            }
         };
         App.prototype.bindEvent = function () {
             _super.prototype.bindEvent.call(this);
@@ -2606,7 +2636,7 @@ define("project/app", ["require", "exports", "common/component", "project/login"
             // no event to unbind
         };
         return App;
-    }(component_27.Component));
+    }(component_28.Component));
     exports.App = App;
 });
 define("project/init", ["require", "exports", "project/app"], function (require, exports, app_1) {

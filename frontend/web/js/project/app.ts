@@ -18,6 +18,7 @@ import {RestockList} from './restock-list';
 import {MarketplaceList} from './marketplace-list';
 import {AdjustmentList} from './adjustment-list';
 import {CourierList} from './courier-list';
+import {CategoryList} from './category-list';
 
 export class App extends Component{
 
@@ -54,6 +55,8 @@ export class App extends Component{
     marketplaceList : MarketplaceList;
 
     courierList : CourierList;
+
+    categoryList : CategoryList;
 
     constructor(root: HTMLElement) {
         super(root);
@@ -111,6 +114,9 @@ export class App extends Component{
         }
         else if(this.root.getElementsByClassName('courier-list').length !== 0) {
             this.courierList = new CourierList(document.getElementById("ocl"));
+        }
+        else if(this.root.getElementsByClassName('cat-list').length !== 0) {
+            this.categoryList = new CategoryList(document.getElementById("pcl"));
         }
     }
     

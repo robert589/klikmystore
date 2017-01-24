@@ -73,10 +73,8 @@ AppAsset::register($this);
                                 ['label' => 'Produk',
                                  'href' => '#', 
                                  'items' => [
-                                     ['label' => 'Daftar Produk', 'href' => Yii::$app->request->baseUrl . "/product/list"],
-                                     ['label' => 'Tambah Produk', 'href' => Yii::$app->request->baseUrl . "/product/add"],
-                                     ['label' => 'Daftar Kategori' , 'href' => Yii::$app->request->baseUrl . "/product/category-list"],
-                                     ['label' => 'Tambah Kategori' , 'href' => Yii::$app->request->baseUrl . "/product/add-category"],
+                                     ['label' => 'Produk', 'href' => Yii::$app->request->baseUrl . "/product/list"],
+                                     ['label' => 'Kategori' , 'href' => Yii::$app->request->baseUrl . "/product/category-list"],
                                      
                                    ],
                                 ],
@@ -86,8 +84,7 @@ AppAsset::register($this);
                                         ['label' => 'Daftar Order', 'href' => Yii::$app->request->baseUrl . "/order/list"],
                                         ['label' => 'Tambah Order', 'href' => Yii::$app->request->baseUrl . "/order/create"],
                                         ['label' => 'Marketplace', 'href' => Yii::$app->request->baseUrl . '/order/marketplace-list'],
-                                        ['label' => 'Courier', 'href' => Yii::$app->request->baseUrl . '/order/courier-list'],
-                                        ['label' => 'Tambah Courier', 'href' => Yii::$app->request->baseUrl . '/order/create-courier'],
+                                        ['label' => 'Courier', 'href' => Yii::$app->request->baseUrl . '/order/courier-list']
 
                                     ]
                                 ],
