@@ -4,6 +4,7 @@ namespace frontend\services;
 use common\components\RService;
 use frontend\daos\OrderDao;
 use frontend\daos\ProductDao;
+use frontend\daos\RestockDao;
 /**
  * InventoryService service
  *
@@ -26,11 +27,14 @@ class InventoryService extends RService
     
     private $orderDao;
     
+    private $restockDao;
+    
     private $productDao;
     
     public function init() {
         $this->orderDao = new OrderDao;
         $this->productDao = new ProductDao;
+        $this->restockDao = new RestockDao;
         
     }
     
@@ -63,6 +67,19 @@ class InventoryService extends RService
         }
         
         return $this->productDao->getProductInfo($this->product_id);
+    }
+    
+    public function getRestockList() {
+        $vos = $this->restockDao->restockList();
+        $dataProvider = new \yii\data\ArrayDataProvider([
+            'allModels' => $vos,
+            'pagination' => [
+                'pageSize' => 5,
+            ],
+            
+        ]);
+        
+        return $dataProvider;
     }
 
 }

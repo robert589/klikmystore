@@ -36,7 +36,6 @@ html {
 	min-width: 230px; /*should match the above value*/
 	position: absolute;
 	top: 0;
-	height: 100%;
 	padding-top: 0;
 	background: #455160;
 	display: block;

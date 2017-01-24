@@ -18,7 +18,7 @@
 .tab-container-header{background:#add8e6;display:-ms-flexbox;display:flex;color:#fff;font-weight:700}.tab-container-header-item{width:100%;padding:4px}.tab-container-header-item.active,.tab-container-header-item:hover{background:#fff;color:#add8e6;border:1px solid #add8e6;cursor:pointer}
 .text-area-field-edit{width:100%;overflow-y:hidden;resize:none;background:#fff;border:1px solid #d3d3d3;padding:8px;height:auto;color:#000;text-align:left;font-size:14px;cursor:text;line-height:24px}.text-area-field-edit:empty:before{content:attr(placeholder);display:block;color:#d3d3d3}
 
-.view{background:#fff;padding:16px}.view-header{padding:8px 0;font-weight:700;font-size:22px}
+.view{background:#fff;padding:16px}.view-header{padding:8px 0;font-weight:700;font-size:22px}.view-header-btn{max-width:230px;width:auto;padding:4px;float:right}
 
 
 
@@ -55,6 +55,7 @@
 .pof-item-id,.pof-item-name,.pof-item-qty{text-align:center;padding:4px;border:1px solid #d3d3d3}.pof-item,.pof-item-qty-view{display:-ms-flexbox;display:flex}.pof-item-id{width:15%}.pof-item-name{width:45%}.pof-item-qty{width:40%}.pof-item-qty-value{width:100%}.pof-item-qty-view>.button{background:0 0;border:0;padding:0;color:#000}
 .po-field-table-id,.po-field-table-name,.po-field-table-qty{text-align:center;padding:4px;border:1px solid #d3d3d3}.po-field-table-header{display:-ms-flexbox;display:flex;margin-top:4px}.po-field-table-id{width:15%}.po-field-table-name{width:45%}.po-field-table-qty{width:40%}.po-field-header{display:-ms-flexbox;display:flex}.po-field-header>.search-field{display:inline-block;width:100%}.po-field-header>.input-field{display:inline-block;width:60px;margin:0 4px}.po-field-header>.input-field>.input-field-input{height:auto}.po-field-header>.button{width:32px;padding:6px 10px}
 .restock-form{max-width:500px}.restock-form>.po-field{margin-bottom:16px}
+
 
 
 

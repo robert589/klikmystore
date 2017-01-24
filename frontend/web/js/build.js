@@ -2323,12 +2323,16 @@ define("project/product-adjustment-field", ["require", "exports", "common/Field"
     }(field_6.Field));
     exports.ProductAdjustmentField = ProductAdjustmentField;
 });
-define("project/adjustment-stock-form", ["require", "exports", "common/form", "project/product-adjustment-field", "common/text-area-field"], function (require, exports, form_12, product_adjustment_field_1, text_area_field_3) {
+define("project/adjustment-stock-form", ["require", "exports", "common/form", "project/product-adjustment-field", "common/text-area-field", "common/system"], function (require, exports, form_12, product_adjustment_field_1, text_area_field_3, system_15) {
     "use strict";
     var AdjustmentStockForm = (function (_super) {
         __extends(AdjustmentStockForm, _super);
         function AdjustmentStockForm(root) {
-            return _super.call(this, root) || this;
+            var _this = _super.call(this, root) || this;
+            _this.successCb = function (data) {
+                window.location.href = system_15.System.getBaseUrl() + "/inventory/list";
+            };
+            return _this;
         }
         AdjustmentStockForm.prototype.rules = function () {
             this.setRequiredField([this.remarkField, this.paField]);
@@ -2376,7 +2380,58 @@ define("project/adjustment-stock", ["require", "exports", "common/component", "p
     }(component_20.Component));
     exports.AdjustmentStock = AdjustmentStock;
 });
-define("project/app", ["require", "exports", "common/component", "project/login", "project/add-product", "project/add-category", "project/order-create-marketplace", "project/order-create-courier", "project/create-order", "project/order-list", "project/create-news", "project/restock", "project/create-supplier", "project/list-supplier", "project/retur", "project/adjustment-stock"], function (require, exports, component_21, login_1, add_product_1, add_category_1, order_create_marketplace_1, order_create_courier_1, create_order_1, order_list_1, create_news_1, restock_1, create_supplier_1, list_supplier_1, retur_1, adjustment_stock_1) {
+define("project/restock-list-lvi", ["require", "exports", "common/component"], function (require, exports, component_21) {
+    "use strict";
+    var RestockListLVI = (function (_super) {
+        __extends(RestockListLVI, _super);
+        function RestockListLVI(root) {
+            return _super.call(this, root) || this;
+        }
+        RestockListLVI.prototype.decorate = function () {
+            _super.prototype.decorate.call(this);
+        };
+        RestockListLVI.prototype.bindEvent = function () {
+            _super.prototype.bindEvent.call(this);
+        };
+        RestockListLVI.prototype.detach = function () {
+            _super.prototype.detach.call(this);
+        };
+        RestockListLVI.prototype.unbindEvent = function () {
+            // no event to unbind
+        };
+        return RestockListLVI;
+    }(component_21.Component));
+    exports.RestockListLVI = RestockListLVI;
+});
+define("project/restock-list", ["require", "exports", "common/component", "common/button", "common/system"], function (require, exports, component_22, button_10, system_16) {
+    "use strict";
+    var RestockList = (function (_super) {
+        __extends(RestockList, _super);
+        function RestockList(root) {
+            return _super.call(this, root) || this;
+        }
+        RestockList.prototype.decorate = function () {
+            _super.prototype.decorate.call(this);
+            this.items = [];
+            this.addRestockRedirect = new button_10.Button(document.getElementById(this.id + "-add"), this.redirectToAddRestock.bind(this));
+        };
+        RestockList.prototype.redirectToAddRestock = function () {
+            window.location.href = system_16.System.getBaseUrl() + "/inventory/restock";
+        };
+        RestockList.prototype.bindEvent = function () {
+            _super.prototype.bindEvent.call(this);
+        };
+        RestockList.prototype.detach = function () {
+            _super.prototype.detach.call(this);
+        };
+        RestockList.prototype.unbindEvent = function () {
+            // no event to unbind
+        };
+        return RestockList;
+    }(component_22.Component));
+    exports.RestockList = RestockList;
+});
+define("project/app", ["require", "exports", "common/component", "project/login", "project/add-product", "project/add-category", "project/order-create-marketplace", "project/order-create-courier", "project/create-order", "project/order-list", "project/create-news", "project/restock", "project/create-supplier", "project/list-supplier", "project/retur", "project/adjustment-stock", "project/restock-list"], function (require, exports, component_23, login_1, add_product_1, add_category_1, order_create_marketplace_1, order_create_courier_1, create_order_1, order_list_1, create_news_1, restock_1, create_supplier_1, list_supplier_1, retur_1, adjustment_stock_1, restock_list_1) {
     "use strict";
     var App = (function (_super) {
         __extends(App, _super);
@@ -2424,6 +2479,9 @@ define("project/app", ["require", "exports", "common/component", "project/login"
             else if (this.root.getElementsByClassName('adj-stock').length !== 0) {
                 this.adjustmentStock = new adjustment_stock_1.AdjustmentStock(document.getElementById("ias"));
             }
+            else if (this.root.getElementsByClassName('restock-list').length !== 0) {
+                this.restockList = new restock_list_1.RestockList(document.getElementById("irl"));
+            }
         };
         App.prototype.bindEvent = function () {
             _super.prototype.bindEvent.call(this);
@@ -2435,7 +2493,7 @@ define("project/app", ["require", "exports", "common/component", "project/login"
             // no event to unbind
         };
         return App;
-    }(component_21.Component));
+    }(component_23.Component));
     exports.App = App;
 });
 define("project/init", ["require", "exports", "project/app"], function (require, exports, app_1) {
