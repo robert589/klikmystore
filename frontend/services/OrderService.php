@@ -7,6 +7,7 @@ use frontend\daos\MarketplaceDao;
 use common\components\RService;
 use frontend\daos\OrderDao;
 use frontend\daos\TariffDao;
+use frontend\daos\CourierDao;
 use common\validators\IsAdminValidator;
 /**
  * OrderService service
@@ -21,6 +22,8 @@ class OrderService extends RService
     private $tariffDao;
     
     private $marketplaceDao;
+    
+    private $courierDao;
     
     //attributes
     public $user_id;
@@ -48,6 +51,7 @@ class OrderService extends RService
         $this->productDao = new ProductDao();
         $this->orderDao = new OrderDao();
         $this->marketplaceDao = new MarketplaceDao();
+        $this->courierDao = new CourierDao();
     }
     
     public function rules() {
@@ -137,9 +141,28 @@ class OrderService extends RService
         
         $provider = new ArrayDataProvider([
             'allModels' => $models,
-            'sort' => [
-                'attributes' => ['total_harga', 'status', 'order_id'],
+            'pagination' => [
+                'pageSize' => 10,
             ],
+        ]);
+        return $provider;
+    }
+    
+    public function getCourier() {
+        if(!$this->validate()) {
+            return false;
+        }
+        $vos = $this->courierDao->getCourier();
+        $models = [];
+        foreach($vos as $vo) {
+            $model = [];
+            $model['code'] = $vo->getCode();
+            $model['name'] = $vo->getName();
+            $models[] = $model;
+        }
+        
+        $provider = new ArrayDataProvider([
+            'allModels' => $models,
             'pagination' => [
                 'pageSize' => 10,
             ],

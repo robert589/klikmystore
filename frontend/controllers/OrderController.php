@@ -73,6 +73,12 @@ class OrderController extends Controller
         return $this->render('marketplace-list', ['id' => 'oml', 'provider' => $provider]);
     }
     
+    
+    public function actionCourierList() {
+        $provider = $this->orderService->getCourier();
+        return $this->render('courier-list', ['id' => 'ocl', 'provider' => $provider]);
+    }
+    
     public function actionCreateCourier() {
         return $this->render('order-create-courier', ['id' => 'occ']);
     }

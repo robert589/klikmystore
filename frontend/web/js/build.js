@@ -2431,7 +2431,7 @@ define("project/restock-list", ["require", "exports", "common/component", "commo
     }(component_22.Component));
     exports.RestockList = RestockList;
 });
-define("project/marketplace-list", ["require", "exports", "common/component"], function (require, exports, component_23) {
+define("project/marketplace-list", ["require", "exports", "common/component", "common/button", "common/system"], function (require, exports, component_23, button_11, system_17) {
     "use strict";
     var MarketplaceList = (function (_super) {
         __extends(MarketplaceList, _super);
@@ -2440,6 +2440,10 @@ define("project/marketplace-list", ["require", "exports", "common/component"], f
         }
         MarketplaceList.prototype.decorate = function () {
             _super.prototype.decorate.call(this);
+            this.addMp = new button_11.Button(document.getElementById(this.id + "-add"), this.redirectToAddMp.bind(this));
+        };
+        MarketplaceList.prototype.redirectToAddMp = function () {
+            window.location.href = system_17.System.getBaseUrl() + "/order/create-marketplace";
         };
         MarketplaceList.prototype.bindEvent = function () {
             _super.prototype.bindEvent.call(this);
@@ -2477,7 +2481,7 @@ define("project/adjustment-list-lvi", ["require", "exports", "common/component"]
     }(component_24.Component));
     exports.AdjustmentListLVI = AdjustmentListLVI;
 });
-define("project/adjustment-list", ["require", "exports", "common/component", "common/button", "common/system"], function (require, exports, component_25, button_11, system_17) {
+define("project/adjustment-list", ["require", "exports", "common/component", "common/button", "common/system"], function (require, exports, component_25, button_12, system_18) {
     "use strict";
     var AdjustmentList = (function (_super) {
         __extends(AdjustmentList, _super);
@@ -2485,11 +2489,11 @@ define("project/adjustment-list", ["require", "exports", "common/component", "co
             return _super.call(this, root) || this;
         }
         AdjustmentList.prototype.redirectToAddButton = function () {
-            window.location.href = system_17.System.getBaseUrl() + "/inventory/adjustment";
+            window.location.href = system_18.System.getBaseUrl() + "/inventory/adjustment";
         };
         AdjustmentList.prototype.decorate = function () {
             _super.prototype.decorate.call(this);
-            this.redirectToAdd = new button_11.Button(document.getElementById(this.id + "-add"), this.redirectToAddButton.bind(this));
+            this.redirectToAdd = new button_12.Button(document.getElementById(this.id + "-add"), this.redirectToAddButton.bind(this));
         };
         AdjustmentList.prototype.bindEvent = function () {
             _super.prototype.bindEvent.call(this);
@@ -2504,7 +2508,34 @@ define("project/adjustment-list", ["require", "exports", "common/component", "co
     }(component_25.Component));
     exports.AdjustmentList = AdjustmentList;
 });
-define("project/app", ["require", "exports", "common/component", "project/login", "project/add-product", "project/add-category", "project/order-create-marketplace", "project/order-create-courier", "project/create-order", "project/order-list", "project/create-news", "project/restock", "project/create-supplier", "project/list-supplier", "project/retur", "project/adjustment-stock", "project/restock-list", "project/marketplace-list", "project/adjustment-list"], function (require, exports, component_26, login_1, add_product_1, add_category_1, order_create_marketplace_1, order_create_courier_1, create_order_1, order_list_1, create_news_1, restock_1, create_supplier_1, list_supplier_1, retur_1, adjustment_stock_1, restock_list_1, marketplace_list_1, adjustment_list_1) {
+define("project/courier-list", ["require", "exports", "common/component", "common/button", "common/system"], function (require, exports, component_26, button_13, system_19) {
+    "use strict";
+    var CourierList = (function (_super) {
+        __extends(CourierList, _super);
+        function CourierList(root) {
+            return _super.call(this, root) || this;
+        }
+        CourierList.prototype.redirectToAddCourier = function () {
+            window.location.href = system_19.System.getBaseUrl() + "/order/create-courier";
+        };
+        CourierList.prototype.decorate = function () {
+            _super.prototype.decorate.call(this);
+            this.addCourier = new button_13.Button(document.getElementById(this.id + "-add"), this.redirectToAddCourier.bind(this));
+        };
+        CourierList.prototype.bindEvent = function () {
+            _super.prototype.bindEvent.call(this);
+        };
+        CourierList.prototype.detach = function () {
+            _super.prototype.detach.call(this);
+        };
+        CourierList.prototype.unbindEvent = function () {
+            // no event to unbind
+        };
+        return CourierList;
+    }(component_26.Component));
+    exports.CourierList = CourierList;
+});
+define("project/app", ["require", "exports", "common/component", "project/login", "project/add-product", "project/add-category", "project/order-create-marketplace", "project/order-create-courier", "project/create-order", "project/order-list", "project/create-news", "project/restock", "project/create-supplier", "project/list-supplier", "project/retur", "project/adjustment-stock", "project/restock-list", "project/marketplace-list", "project/adjustment-list", "project/courier-list"], function (require, exports, component_27, login_1, add_product_1, add_category_1, order_create_marketplace_1, order_create_courier_1, create_order_1, order_list_1, create_news_1, restock_1, create_supplier_1, list_supplier_1, retur_1, adjustment_stock_1, restock_list_1, marketplace_list_1, adjustment_list_1, courier_list_1) {
     "use strict";
     var App = (function (_super) {
         __extends(App, _super);
@@ -2561,6 +2592,9 @@ define("project/app", ["require", "exports", "common/component", "project/login"
             else if (this.root.getElementsByClassName('mp-list').length !== 0) {
                 this.marketplaceList = new marketplace_list_1.MarketplaceList(document.getElementById("oml"));
             }
+            else if (this.root.getElementsByClassName('courier-list').length !== 0) {
+                this.courierList = new courier_list_1.CourierList(document.getElementById("ocl"));
+            }
         };
         App.prototype.bindEvent = function () {
             _super.prototype.bindEvent.call(this);
@@ -2572,7 +2606,7 @@ define("project/app", ["require", "exports", "common/component", "project/login"
             // no event to unbind
         };
         return App;
-    }(component_26.Component));
+    }(component_27.Component));
     exports.App = App;
 });
 define("project/init", ["require", "exports", "project/app"], function (require, exports, app_1) {
