@@ -7,13 +7,21 @@ export class OrderList extends Component{
     acceptBtns : Button[];
 
     rejectBtns : Button[];
+
+    redirectAdd : Button;
+
     constructor(root: HTMLElement) {
         super(root);
     }
     
+    redirectToAddOrder() {
+        window.location.href = System.getBaseUrl() + "/order/create";
+    }
+    
     decorate() {
         super.decorate();
-        
+        this.redirectAdd = new Button(document.getElementById(this.id + "-add"), 
+                    this.redirectToAddOrder.bind(this));
         let rejects : NodeListOf<Element> = this.root.getElementsByClassName('order-list-rej');
         this.rejectBtns = [];
         for(let i = 0 ; i  < rejects.length; i++) {

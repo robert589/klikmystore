@@ -5,9 +5,10 @@
 <div id="ol" class="order-list row main-area">
     <div class="col-md-9 col-sm-9 content-box">
         <div class="full-width-section clearfix">
-            <div class="main-heading clearfix">Order List</div>
-            <hr class="hr">
-            <div class="clear"></div>
+            <div class="view-header">
+                Daftar Order
+                <?= Button::widget(['id' => 'ol'. '-add', 'text' => 'Tambah Order', 'newClass' => 'view-header-btn']) ?>
+            </div>
             <?=  GridView::widget(
                     ['dataProvider' => $provider,
                     'columns' => [

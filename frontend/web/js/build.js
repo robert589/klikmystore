@@ -1717,8 +1717,12 @@ define("project/order-list", ["require", "exports", "common/component", "common/
         function OrderList(root) {
             return _super.call(this, root) || this;
         }
+        OrderList.prototype.redirectToAddOrder = function () {
+            window.location.href = system_9.System.getBaseUrl() + "/order/create";
+        };
         OrderList.prototype.decorate = function () {
             _super.prototype.decorate.call(this);
+            this.redirectAdd = new button_7.Button(document.getElementById(this.id + "-add"), this.redirectToAddOrder.bind(this));
             var rejects = this.root.getElementsByClassName('order-list-rej');
             this.rejectBtns = [];
             for (var i = 0; i < rejects.length; i++) {
