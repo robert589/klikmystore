@@ -19,6 +19,8 @@ import {MarketplaceList} from './marketplace-list';
 import {AdjustmentList} from './adjustment-list';
 import {CourierList} from './courier-list';
 import {CategoryList} from './category-list';
+import {ProductList} from './product-list';
+
 
 export class App extends Component{
 
@@ -57,6 +59,8 @@ export class App extends Component{
     courierList : CourierList;
 
     categoryList : CategoryList;
+
+    productList : ProductList;
 
     constructor(root: HTMLElement) {
         super(root);
@@ -117,6 +121,9 @@ export class App extends Component{
         }
         else if(this.root.getElementsByClassName('cat-list').length !== 0) {
             this.categoryList = new CategoryList(document.getElementById("pcl"));
+        }
+        else if(this.root.getElementsByClassName('product-list').length !== 0) {
+            this.productList = new ProductList(document.getElementById("pl"));
         }
     }
     
