@@ -3,6 +3,7 @@ import {CreateOrderForm} from './create-order-form';
 import {AddUserFormModal} from './add-user-form-modal';
 
 export class CreateOrder extends Component{
+
     form  :CreateOrderForm;
 
     addUserFormModal : AddUserFormModal;

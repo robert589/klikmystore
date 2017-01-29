@@ -41,8 +41,13 @@ export class InputField extends Field {
     }
 
     bindEvent() {
+        super.bindEvent();
         this.valueChangeEvent = new CustomEvent(InputField.VALUE_CHANGED);
         this.inputElement.addEventListener('change', this.triggerValueChangedEvent.bind(this));
+        if(this.type === "file") {
+            this.inputElement.addEventListener('change click',
+                        this.triggerValueChangedEvent.bind(this));
+        }
     }
 
     triggerValueChangedEvent() {

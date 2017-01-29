@@ -58,7 +58,6 @@ class ProductController extends Controller
     public function actionCategoryList() {
         $provider = $this->productService->getCategory();
         return $this->render('category-list', ['provider' => $provider, 'id' => 'pcl']);
-        
     }
     
     public function actionList() {

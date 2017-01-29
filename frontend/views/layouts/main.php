@@ -29,8 +29,8 @@ AppAsset::register($this);
 <?php $this->beginBody() ?>
     <?php if(!Yii::$app->user->isGuest) { ?>
     <header class="header clearfix">
-        <div class="logo-section"><a href="index.php">
-            
+        <div class="logo-section">
+            <img class="login-logo" src="<?= \Yii::$app->request->baseUrl . "/images/logo.jpeg" ?>" >
         </div>
         <div class="top-right-section">
             <a class="fullview menu-link app-hamburger"></a>
@@ -39,6 +39,7 @@ AppAsset::register($this);
                 </div>
                 <div class="profile-dropdown">
                     <a href="#" class="account">
+                        <img src=<?= Yii::$app->request->baseUrl  . "/images/profile-pic'.jpg" ?> class="profile-circle"/>
                     </a>
                     <div class="submenu" style="display: none;">
                         <ul class="root">

@@ -4,6 +4,7 @@ namespace frontend\models;
 use common\models\ProductInventory;
 use common\models\ProductCategory;
 use common\models\ProductWholesale;
+use common\models\ProductImage;
 use common\models\Product;
 use common\components\RModel;
 use common\libraries\UserLibrary;
@@ -27,7 +28,7 @@ class AddProductForm extends RModel
 
     public $category;
 
-    public $quantity;
+    public $image_id;
 
     public $min_quantity;
     
@@ -59,9 +60,8 @@ class AddProductForm extends RModel
             ['weight', 'double'],
             ['weight', 'required'],
             
-            
-            ['quantity', 'integer'], 
-            ['quantity', 'required'],
+            ['image_id', 'integer'], 
+            ['image_id', 'required'],
             
             ['min_quantity', 'integer'],
             ['min_quantity', 'required'],
@@ -122,16 +122,9 @@ class AddProductForm extends RModel
         $model->price_2 = $this->price_2;
         $model->price_3 = $this->price_3;
         $model->price_4 = $this->price_4;
-        $model->init_quantity = $this->quantity;
+        $model->init_quantity = 0;
         $model->min_quantity = $this->min_quantity;
         if(!$model->save()) {
-            return false;
-        }
-        
-        $inventoryModel = new ProductInventory();
-        $inventoryModel->product_id = $model->id;
-        $inventoryModel->quantity = $this->quantity;
-        if(!$inventoryModel->save()) {
             return false;
         }
         
@@ -139,6 +132,13 @@ class AddProductForm extends RModel
         $categoryModel->product_id = $model->id;
         $categoryModel->category_id = $this->category;
         if(!$categoryModel->save()) {
+            return false;
+        }
+        
+        $imageProduct = new ProductImage();
+        $imageProduct->image_id = $this->image_id;
+        $imageProduct->product_id = $model->id;
+        if(!$imageProduct->save()) {
             return false;
         }
         

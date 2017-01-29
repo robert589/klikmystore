@@ -2,7 +2,7 @@
 .dynamic-field{margin-bottom:16px}.dynamic-field-add,.dynamic-field-remove{border-radius:50%;color:#fff}.dynamic-field-add{background:red;border:2px solid red}.dynamic-field-remove{background:#00f;border:2px solid #00f}.dynamic-field-new{display:-ms-flexbox;display:flex}
 .field-error{font-size:10px;color:red}
 .file-field,.file-field-lbl{text-align:center}.file-field-img,.file-field-lbl{width:240px;height:120px;border:1px solid #d3d3d3}.file-field-img{padding:8px}.file-field-lbl{margin:auto;display:table}.file-field-lbl-span{display:table-cell;vertical-align:middle}.file-field-lbl:hover{cursor:pointer;opacity:.6}
-.form-submit{width:120px;max-height:32px;margin-top:8px}.form-inline{display:-ms-flexbox;display:flex}.form-field{width:100%}.form-field-left{text-align:left;font-weight:700}.form-field-right{min-width:300px;display:inline-block}.form-label{color:#2f4f4f;font-weight:700;padding:8px 0;font-size:16px;border-bottom:1px solid #d3d3d3;margin-bottom:8px}
+.form-flex{display:-ms-flexbox;display:flex}.form-flex-item{margin-right:4px}.form-subform{display:inline-block;width:280px;margin-right:30px;vertical-align:top}.form-submit{width:120px;max-height:32px;margin-top:8px}.form-inline{display:-ms-flexbox;display:flex}.form-field{width:100%}.form-field-left{text-align:left;font-weight:700}.form-field-right{width:100%;display:inline-block}.form-label{color:#2f4f4f;font-weight:700;padding:8px 0;font-size:16px;border-bottom:1px solid #d3d3d3;margin-bottom:8px}
 .image-button{width:100%;border:3px solid #d3d3d3}.image-button:hover{cursor:pointer;opacity:.8}.image-button:click{opacity:.6}
 .image-view-modal-img{width:100%}
 .image-view-img{width:100%}.image-view-img:hover{cursor:zoom-in;opacity:.8}
@@ -25,9 +25,12 @@
 
 
 .au-form>.text-area-field{margin-bottom:8px}
+
+
 .astock-form{max-width:500px}
 
 .app-container,.app-menu{padding-left:8px;width:100%}.app-fullwidth,.app-menu,.container{width:100%}.app-menu{height:40px;position:fixed;top:0;border-bottom:1px solid #d3d3d3;z-index:1}.app-container{margin-top:40px}.app-hide{display:none!important}.app-row{display:-ms-flexbox;display:flex}.container{max-width:1200px;margin:auto}body{font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;font-size:14px;line-height:1.42857143;color:#333;margin:0}html{font-size:10px;-webkit-tap-highlight-color:transparent;font-family:sans-serif;-webkit-text-size-adjust:100%;-ms-text-size-adjust:100%}:after,:before{box-sizing:border-box}*{box-sizing:border-box}button:hover{cursor:pointer}.required{color:red}
+
 
 
 
@@ -42,6 +45,7 @@
 
 .supplier-list-add{width:180px;float:right}
 .login{display:table;position:absolute;left:0;bottom:0;top:0;right:0;max-width:300px;height:300px;margin:auto;background:#fff;padding:8px}.login-heading{margin-top:4px;text-align:center;background:#0b83c8;color:#fff;padding-top:10px;padding-bottom:10px;-webkit-border-top-left-radius:4px;-webkit-border-top-right-radius:4px;-moz-border-radius-topleft:4px;-moz-border-radius-topright:4px;border-top-left-radius:4px;border-top-right-radius:4px}
+
 .news-item{margin-bottom:16px}.news-item-item{margin-left:8px}.news-item-footer{font-weight:700}
 .news-list{max-width:400px}
 
@@ -55,6 +59,7 @@
 .pof-item-id,.pof-item-name,.pof-item-qty{text-align:center;padding:4px;border:1px solid #d3d3d3}.pof-item,.pof-item-qty-view{display:-ms-flexbox;display:flex}.pof-item-id{width:15%}.pof-item-name{width:45%}.pof-item-qty{width:40%}.pof-item-qty-value{width:100%}.pof-item-qty-view>.button{background:0 0;border:0;padding:0;color:#000}
 .po-field-table-id,.po-field-table-name,.po-field-table-qty{text-align:center;padding:4px;border:1px solid #d3d3d3}.po-field-table-header{display:-ms-flexbox;display:flex;margin-top:4px}.po-field-table-id{width:15%}.po-field-table-name{width:45%}.po-field-table-qty{width:40%}.po-field-header{display:-ms-flexbox;display:flex}.po-field-header>.search-field{display:inline-block;width:100%}.po-field-header>.input-field{display:inline-block;width:60px;margin:0 4px}.po-field-header>.input-field>.input-field-input{height:auto}.po-field-header>.button{width:32px;padding:6px 10px}
 .restock-form{max-width:500px}.restock-form>.po-field{margin-bottom:16px}
+
 
 
 

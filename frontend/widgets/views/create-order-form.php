@@ -20,7 +20,7 @@
         'widget_class' => 'form co-form' , 'enable_button' => false
         ]) ?>   
     
-    <div class="co-form-left">
+    <div class="form-subform">
         
         <div class="co-form-cluster">
             <div class="app-row">
@@ -61,7 +61,7 @@
         </div>
     </div>
 
-    <div class="co-form-right">
+    <div class="form-subform">
         <div class="co-form-cluster">
             <div class="form-field">
                 <div class="form-field-left">
@@ -126,7 +126,7 @@
             </div>
         </div>
     </div>
-    <div class="co-form-right">
+    <div class="form-subform">
         <div class="co-form-row">
             Total Kuantitas: 
             <div class="co-form-value co-form-quantity">

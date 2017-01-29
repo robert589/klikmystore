@@ -176,8 +176,12 @@ define("common/input-field", ["require", "exports", "common/Field", "common/syst
             }
         };
         InputField.prototype.bindEvent = function () {
+            _super.prototype.bindEvent.call(this);
             this.valueChangeEvent = new CustomEvent(InputField.VALUE_CHANGED);
             this.inputElement.addEventListener('change', this.triggerValueChangedEvent.bind(this));
+            if (this.type === "file") {
+                this.inputElement.addEventListener('change click', this.triggerValueChangedEvent.bind(this));
+            }
         };
         InputField.prototype.triggerValueChangedEvent = function () {
             this.inputElement.setAttribute('value', this.inputElement.value);
@@ -359,6 +363,7 @@ define("common/form", ["require", "exports", "common/component", "common/system"
         __extends(Form, _super);
         function Form(root) {
             var _this = _super.call(this, root) || this;
+            _this.enableSubmit = 0;
             _this.rules();
             return _this;
         }
@@ -456,6 +461,9 @@ define("common/form", ["require", "exports", "common/component", "common/system"
         };
         Form.prototype.submit = function (e) {
             e.preventDefault();
+            if (this.enableSubmit !== 0) {
+                return false;
+            }
             var valid = this.validate();
             if (valid) {
                 this.sendToServerSide();
@@ -913,27 +921,75 @@ define("project/add-product-form", ["require", "exports", "common/form", "projec
             this.wholeSaleField =
                 new dynamic_wholesale_field_1.DynamicWholesaleField(document.getElementById(this.id + "-dynamic-wholesale"));
             this.categoryField = new search_field_1.SearchField(document.getElementById(this.id + "-category-field"));
-            this.imageField = new input_field_2.InputField(document.getElementById(this.id + "-picture-field"));
+            this.imageField = new input_field_2.InputField(document.getElementById(this.id + "-image-field"));
+            this.imageIdField = new input_field_2.InputField(document.getElementById(this.id + "-image-id-field"));
             this.nameField = new input_field_2.InputField(document.getElementById(this.id + "-name-field"));
             this.skuField = new input_field_2.InputField(document.getElementById(this.id + "-sku-field"));
             this.weightField = new input_field_2.InputField(document.getElementById(this.id + "-weight-field"));
             this.linkField = new input_field_2.InputField(document.getElementById(this.id + "-link-field"));
-            this.quantityField = new input_field_2.InputField(document.getElementById(this.id + "-quantity-field"));
             this.minQuantityField = new input_field_2.InputField(document.getElementById(this.id + "-min-quantity-field"));
             this.price1Field = new input_field_2.InputField(document.getElementById(this.id + "-price1-field"));
             this.price2Field = new input_field_2.InputField(document.getElementById(this.id + "-price2-field"));
             this.price3Field = new input_field_2.InputField(document.getElementById(this.id + "-price3-field"));
+            this.previewImage = document.getElementsByClassName('ap-form-preview')[0];
             this.price4Field = new input_field_2.InputField(document.getElementById(this.id + "-price4-field"));
         };
         AddProductForm.prototype.bindEvent = function () {
             _super.prototype.bindEvent.call(this);
+            this.imageField.attachEvent(input_field_2.InputField.VALUE_CHANGED, this.uploadImage.bind(this));
+        };
+        AddProductForm.prototype.validateUploadImage = function () {
+            if (!this.imageField.getValue()) {
+                return false;
+            }
+            return true;
+        };
+        AddProductForm.prototype.uploadImage = function () {
+            this.submitButton.disable(true);
+            if (!this.validateUploadImage()) {
+                return false;
+            }
+            var formData = new FormData();
+            formData.append("files[]", this.imageField.getValue());
+            formData.append(system_5.System.getCsrfParam(), system_5.System.getCsrfValue());
+            var ajaxSettings = {
+                url: system_5.System.getBaseUrl() + "/image/upload",
+                type: this.method,
+                context: this,
+                data: formData,
+                processData: false,
+                cache: false,
+                contentType: false,
+                success: function (data) {
+                    var parsed = JSON.parse(data);
+                    this.submitButton.disable(false);
+                    if (parsed['status'] === 1) {
+                        this.appendPreviewImage(parsed.image_id, parsed.image_path);
+                    }
+                    else {
+                        if (!system_5.System.isEmptyValue(parsed['errors'])) {
+                            this.handleErrors(parsed['errors']);
+                        }
+                    }
+                },
+                error: function () {
+                    this.submitButton.disable(false);
+                }
+            };
+            $.ajax(ajaxSettings);
+        };
+        AddProductForm.prototype.appendPreviewImage = function (id, path) {
+            this.previewImage.src = path;
+            this.previewImage.classList.remove('app-hide');
+            this.imageIdField.setValue(id);
         };
         AddProductForm.prototype.rules = function () {
             this.registerFields([this.wholeSaleField, this.categoryField, this.nameField, this.skuField, this.weightField,
-                this.linkField, this.quantityField, this.minQuantityField, this.price1Field, this.price2Field,
+                this.linkField, this.minQuantityField, this.price1Field, this.price2Field,
+                this.imageIdField,
                 this.price3Field, this.price4Field]);
             this.setRequiredField([this.categoryField, this.nameField, this.skuField, this.weightField,
-                this.linkField, this.quantityField, this.minQuantityField, this.price1Field, this.price2Field,
+                this.linkField, this.minQuantityField, this.price1Field, this.price2Field,
                 this.price3Field, this.price4Field]);
         };
         AddProductForm.prototype.detach = function () {

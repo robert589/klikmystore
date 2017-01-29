@@ -21,7 +21,6 @@ import {CourierList} from './courier-list';
 import {CategoryList} from './category-list';
 import {ProductList} from './product-list';
 
-
 export class App extends Component{
 
     login : Login;

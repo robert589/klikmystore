@@ -29,6 +29,8 @@ export abstract class Form extends Component {
 
     protected submitButton : Button;
 
+    enableSubmit : number = 0;
+
     constructor(root : HTMLElement) {
         super(root);
         this.rules();
@@ -146,6 +148,11 @@ export abstract class Form extends Component {
 
     submit(e) {
         e.preventDefault();
+        
+        if(this.enableSubmit !== 0) {
+            return false;
+        }
+
         var valid = this.validate();
         if(valid) {
             this.sendToServerSide();
