@@ -142,6 +142,13 @@ class AddProductForm extends RModel
             return false;
         }
         
+        $productInventory = new ProductInventory();
+        $productInventory->product_id = $model->id;
+        $productInventory->quantity = 0;
+        if(!$productInventory->save()) {
+            return false;
+        }
+        
         if($this->wholesale !== null && count($this->wholesale) > 0 && $this->wholesale !== "" )  {
             foreach($this->wholesale as $item) {
                 $wholesaleModel = new ProductWholesale();

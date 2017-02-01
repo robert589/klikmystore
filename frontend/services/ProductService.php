@@ -82,18 +82,10 @@ class ProductService extends RService
     
     public function getProducts() {
         $vos = $this->productDao->getProductList();
-        $models = [];
-        
-        foreach($vos as $vo) {
-            $model = [];
-            $model['id'] = $vo->getId();
-            $model['name'] = $vo->getName();
-            $model['quantity'] = $vo->getQuantity();
-            $models[] = $model;
-        }
+       
         
         return new \yii\data\ArrayDataProvider([
-            'allModels' => $models,
+            'allModels' => $vos,
             'pagination' => [
                 'pageSize' => 10
             ]

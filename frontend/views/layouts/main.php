@@ -102,24 +102,22 @@ AppAsset::register($this);
                                     'label' => 'Laporan',
                                     'href' => '#',
                                     'items' => [
-                                        ['label' => 'Daftar Karyawan', 'href' => Yii::$app->request->baseUrl . "/employee/list"],
-                                        ['label' => 'Tambah Karyawan', 'href' => Yii::$app->request->baseUrl . "/employee/add"]
+                                        ['label' => 'Laporan Umum', 'href' => Yii::$app->request->baseUrl . "/report/index"]
                                     ]
                                 ],    
                                 [   
                                     'label' => 'Pengaturan',
                                     'href' => '#',
                                     'items' => [
-                                        ['label' => 'Daftar Karyawan', 'href' => Yii::$app->request->baseUrl . "/employee/list"],
-                                        ['label' => 'Tambah Karyawan', 'href' => Yii::$app->request->baseUrl . "/employee/add"]
                                     ]
                                 ],    
                                 [   
-                                    'label' => 'Karyawan',
+                                    'label' => 'Pengguna',
                                     'href' => '#',
                                     'items' => [
-                                        ['label' => 'Daftar Karyawan', 'href' => Yii::$app->request->baseUrl . "/employee/list"],
-                                        ['label' => 'Tambah Karyawan', 'href' => Yii::$app->request->baseUrl . "/employee/add"]
+                                        ['label' => 'Access Control', 'href' => Yii::$app->request->baseUrl . '/ac/index'],
+                                        ['label' => 'Karyawan', 'href' => Yii::$app->request->baseUrl . "/employee/list"],
+                                        ['label' => 'Reseller', 'href' => Yii::$app->request->baseUrl . "/reseller/list"]
                                     ]
                                 ],
                                 [

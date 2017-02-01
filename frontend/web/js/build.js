@@ -2649,7 +2649,92 @@ define("project/product-list", ["require", "exports", "common/component", "commo
     }(component_28.Component));
     exports.ProductList = ProductList;
 });
-define("project/app", ["require", "exports", "common/component", "project/login", "project/add-product", "project/add-category", "project/order-create-marketplace", "project/order-create-courier", "project/create-order", "project/order-list", "project/create-news", "project/restock", "project/create-supplier", "project/list-supplier", "project/retur", "project/adjustment-stock", "project/restock-list", "project/marketplace-list", "project/adjustment-list", "project/courier-list", "project/category-list", "project/product-list"], function (require, exports, component_29, login_1, add_product_1, add_category_1, order_create_marketplace_1, order_create_courier_1, create_order_1, order_list_1, create_news_1, restock_1, create_supplier_1, list_supplier_1, retur_1, adjustment_stock_1, restock_list_1, marketplace_list_1, adjustment_list_1, courier_list_1, category_list_1, product_list_1) {
+define("project/employee-list", ["require", "exports", "common/component"], function (require, exports, component_29) {
+    "use strict";
+    var EmployeeList = (function (_super) {
+        __extends(EmployeeList, _super);
+        function EmployeeList(root) {
+            return _super.call(this, root) || this;
+        }
+        EmployeeList.prototype.decorate = function () {
+            _super.prototype.decorate.call(this);
+        };
+        EmployeeList.prototype.bindEvent = function () {
+            _super.prototype.bindEvent.call(this);
+        };
+        EmployeeList.prototype.detach = function () {
+            _super.prototype.detach.call(this);
+        };
+        EmployeeList.prototype.unbindEvent = function () {
+            // no event to unbind
+        };
+        return EmployeeList;
+    }(component_29.Component));
+    exports.EmployeeList = EmployeeList;
+});
+define("project/add-employee-form", ["require", "exports", "common/form", "common/input-field", "common/text-area-field", "common/system"], function (require, exports, form_13, input_field_13, text_area_field_4, system_22) {
+    "use strict";
+    var AddEmployeeForm = (function (_super) {
+        __extends(AddEmployeeForm, _super);
+        function AddEmployeeForm(root) {
+            var _this = _super.call(this, root) || this;
+            _this.successCb = function (data) {
+                window.location.href = system_22.System.getBaseUrl() + "/employee/list";
+            }.bind(_this);
+            return _this;
+        }
+        AddEmployeeForm.prototype.rules = function () {
+            this.setRequiredField([this.firstNameField, this.emailField, this.passwordField]);
+            this.registerFields([this.firstNameField, this.lastNameField,
+                this.telpField, this.addrField, this.emailField, this.passwordField]);
+        };
+        AddEmployeeForm.prototype.decorate = function () {
+            _super.prototype.decorate.call(this);
+            this.firstNameField = new input_field_13.InputField(document.getElementById(this.id + "-first-name"));
+            this.lastNameField = new input_field_13.InputField(document.getElementById(this.id + "-last-name"));
+            this.telpField = new input_field_13.InputField(document.getElementById(this.id + "-telephone"));
+            this.addrField = new text_area_field_4.TextAreaField(document.getElementById(this.id + "-address"));
+            this.emailField = new input_field_13.InputField(document.getElementById(this.id + "-email"));
+            this.passwordField = new input_field_13.InputField(document.getElementById(this.id + "-password"));
+        };
+        AddEmployeeForm.prototype.bindEvent = function () {
+            _super.prototype.bindEvent.call(this);
+        };
+        AddEmployeeForm.prototype.detach = function () {
+            _super.prototype.detach.call(this);
+        };
+        AddEmployeeForm.prototype.unbindEvent = function () {
+            // no event to unbind
+        };
+        return AddEmployeeForm;
+    }(form_13.Form));
+    exports.AddEmployeeForm = AddEmployeeForm;
+});
+define("project/add-employee", ["require", "exports", "common/component", "project/add-employee-form"], function (require, exports, component_30, add_employee_form_1) {
+    "use strict";
+    var AddEmployee = (function (_super) {
+        __extends(AddEmployee, _super);
+        function AddEmployee(root) {
+            return _super.call(this, root) || this;
+        }
+        AddEmployee.prototype.decorate = function () {
+            _super.prototype.decorate.call(this);
+            this.form = new add_employee_form_1.AddEmployeeForm(document.getElementById(this.id + "-form"));
+        };
+        AddEmployee.prototype.bindEvent = function () {
+            _super.prototype.bindEvent.call(this);
+        };
+        AddEmployee.prototype.detach = function () {
+            _super.prototype.detach.call(this);
+        };
+        AddEmployee.prototype.unbindEvent = function () {
+            // no event to unbind
+        };
+        return AddEmployee;
+    }(component_30.Component));
+    exports.AddEmployee = AddEmployee;
+});
+define("project/app", ["require", "exports", "common/component", "project/login", "project/add-product", "project/add-category", "project/order-create-marketplace", "project/order-create-courier", "project/create-order", "project/order-list", "project/create-news", "project/restock", "project/create-supplier", "project/list-supplier", "project/retur", "project/adjustment-stock", "project/restock-list", "project/marketplace-list", "project/adjustment-list", "project/courier-list", "project/category-list", "project/product-list", "project/add-employee"], function (require, exports, component_31, login_1, add_product_1, add_category_1, order_create_marketplace_1, order_create_courier_1, create_order_1, order_list_1, create_news_1, restock_1, create_supplier_1, list_supplier_1, retur_1, adjustment_stock_1, restock_list_1, marketplace_list_1, adjustment_list_1, courier_list_1, category_list_1, product_list_1, add_employee_1) {
     "use strict";
     var App = (function (_super) {
         __extends(App, _super);
@@ -2715,6 +2800,9 @@ define("project/app", ["require", "exports", "common/component", "project/login"
             else if (this.root.getElementsByClassName('product-list').length !== 0) {
                 this.productList = new product_list_1.ProductList(document.getElementById("pl"));
             }
+            else if (this.root.getElementsByClassName('add-emp').length !== 0) {
+                this.addEmployee = new add_employee_1.AddEmployee(document.getElementById("eae"));
+            }
         };
         App.prototype.bindEvent = function () {
             _super.prototype.bindEvent.call(this);
@@ -2726,7 +2814,7 @@ define("project/app", ["require", "exports", "common/component", "project/login"
             // no event to unbind
         };
         return App;
-    }(component_29.Component));
+    }(component_31.Component));
     exports.App = App;
 });
 define("project/init", ["require", "exports", "project/app"], function (require, exports, app_1) {

@@ -20,6 +20,8 @@ import {AdjustmentList} from './adjustment-list';
 import {CourierList} from './courier-list';
 import {CategoryList} from './category-list';
 import {ProductList} from './product-list';
+import {EmployeeList} from './employee-list';
+import {AddEmployee} from './add-employee';
 
 export class App extends Component{
 
@@ -60,6 +62,10 @@ export class App extends Component{
     categoryList : CategoryList;
 
     productList : ProductList;
+
+    employeeList : EmployeeList;
+
+    addEmployee : AddEmployee;
 
     constructor(root: HTMLElement) {
         super(root);
@@ -123,6 +129,10 @@ export class App extends Component{
         }
         else if(this.root.getElementsByClassName('product-list').length !== 0) {
             this.productList = new ProductList(document.getElementById("pl"));
+        }
+
+        else if(this.root.getElementsByClassName('add-emp').length !== 0) {
+            this.addEmployee = new AddEmployee(document.getElementById("eae"));
         }
     }
     

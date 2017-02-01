@@ -21,6 +21,10 @@
 .app-row {
   display: flex;
 }
+.list-item {
+  display: inline-block;
+  vertical-align: top;
+}
 .container {
   max-width: 1200px;
   margin: auto;

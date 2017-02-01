@@ -15,4 +15,5 @@ class RbacController extends Controller {
         $auth->assign($admin, $adminId);
     }
     
+    
 }
