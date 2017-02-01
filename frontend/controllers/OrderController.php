@@ -3,6 +3,7 @@ namespace frontend\controllers;
 
 use Yii;
 use yii\web\Controller;
+use frontend\widgets\PrintOrderView;
 use frontend\widgets\ProductOrderFieldItem;
 use frontend\models\CreateMarketplaceForm;
 use frontend\services\OrderService;
@@ -45,7 +46,7 @@ class OrderController extends Controller
     public function actionList() {
         $provider = $this->orderService->getOrderList();
         
-        return $this->render('order-list', ['provider' => $provider]);
+        return $this->render('order-list', ['provider' => $provider, 'id' => 'ol']);
     }
     
     public function actionMarketplace() {
@@ -224,6 +225,20 @@ class OrderController extends Controller
         
     }
     
+    public function actionGetPrintView() {
+        $this->orderService->loadData($_POST);
+        $vo  = $this->orderService->getOrderInfo();
+        
+        if(!$vo) {
+            $data['status'] = 0;
+            $data['errors'] = $this->orderService->hasErrors() ? $this->orderService->getErrors() : null;
+            return json_encode($data);
+        }
+        
+        $data['status'] = 1;
+        $data['views'] = PrintOrderView::widget(['id' => 'pov' . $vo->getId(), 'vo' => $vo]);
+        return json_encode($data);
+    }
     public function actionGetOrderReturField() {
         
     }

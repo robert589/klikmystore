@@ -2,6 +2,7 @@ import {Component} from '../common/component';
 import {Button} from './../common/button';
 import {System} from './../common/system';
 import {DropdownField} from './../common/dropdown-field';
+import {PrintOrderModal} from './print-order-modal';
 
 export class OrderList extends Component{
 
@@ -12,6 +13,8 @@ export class OrderList extends Component{
     redirectAdd : Button;
 
     actions  : DropdownField[];
+
+    printOrderModal : PrintOrderModal;
 
     constructor(root: HTMLElement) {
         super(root);
@@ -46,6 +49,7 @@ export class OrderList extends Component{
             let dropdown : DropdownField = new DropdownField(<HTMLElement> rawActions.item(i));
             this.actions.push(dropdown);
         }
+        this.printOrderModal = new PrintOrderModal(document.getElementById(this.id + "-modal"));
     }
 
 
@@ -95,18 +99,20 @@ export class OrderList extends Component{
         super.bindEvent();
         for(let i = 0; i < this.actions.length; i++) {
             this.actions[i].attachEvent(DropdownField.CHANGE_VALUE, 
-                    this.changeActionEvent.bind(null, this.actions[i]));
+                    this.changeActionEvent.bind(this, this.actions[i]));
         }
     }
 
     changeActionEvent(df : DropdownField) {  
         let value : string = <string>df.getValue();
-        if(value === 'print') {
+        let data = {};
+        data['new_status'] = value;
+        data['order_id'] = df.getRoot().getAttribute('data-order-id');
 
+        if(value === 'print') {
+            this.printOrderModal.show();
+            this.printOrderModal.setOrderId(data['order_id']);
         } else {
-            let data = {};
-            data['new_status'] = value;
-            data['order_id'] = df.getRoot().getAttribute('data-order-id');
             data = System.addCsrf(data);
             df.disable();
             $.ajax({

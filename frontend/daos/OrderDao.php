@@ -2,6 +2,7 @@
 namespace frontend\daos;
 
 use Yii;
+
 use frontend\vos\MarketplaceVoBuilder;
 use frontend\vos\CourierVoBuilder;
 use common\components\Dao;
@@ -42,9 +43,10 @@ class OrderDao implements Dao
                              receiver.id = orders.receiver_id and
                              orders.courier_code = courier.code ";
     
-    const ORDERS_PRODUCT = "select * 
-                            from orders_product
-                            where orders_product.order_id = :order_id ";
+    const ORDERS_PRODUCT = "select orders_product.* , product.name as product_name
+                            from orders_product, product
+                            where orders_product.order_id = :order_id
+                                and product.id = orders_product.product_id";
     
     
     /**
@@ -68,6 +70,7 @@ class OrderDao implements Dao
                              sender.id = orders.sender_id and
                              receiver.id = orders.receiver_id and
                              orders.courier_code = courier.code and orders.id = :order_id";
+    
     public function getOrderInfo($orderId) {
         $result =  \Yii::$app->db
             ->createCommand(self::ORDER_INFO)
@@ -142,6 +145,10 @@ class OrderDao implements Dao
         foreach($results as $result) {
             $builder = OrderProductVo::createBuilder();
             $builder->loadData($result);
+            $product = ProductVo::createBuilder();
+            $product->loadData($result, "product");
+            $builder->setProduct($product->build());
+            
             $vos[] = $builder->build();
         }
         

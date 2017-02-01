@@ -1,6 +1,7 @@
 export class System  {
     public static getUserId() {
     }
+
     public static getBaseUrl() : string {
         return (<HTMLInputElement>document.getElementById('base-url')).value;
     }

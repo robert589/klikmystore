@@ -128,4 +128,9 @@ class ProductVo implements RVo
     public function getWholesale() { 
         return $this->wholesale; 
     }
+    
+    public function getBarcode() {
+        $generator = new \Picqer\Barcode\BarcodeGeneratorHTML();
+        return $generator->getBarcode($this->id, $generator::TYPE_CODE_128);
+    }
 }

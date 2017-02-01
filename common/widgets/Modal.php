@@ -16,7 +16,8 @@ class Modal extends Widget {
     
     public $size;
     
-
+    public $newClass;
+    
     public function init() {
         parent::init();
         ob_start();
@@ -27,6 +28,7 @@ class Modal extends Widget {
         if($this->size === null) {
             $this->size = self::SIZE_SMALL;
         }
-        return $this->render('modal', ['id' => $this->id, 'title' => $this->title, 'content' => $content, 'size' => $this->size]);
+        return $this->render('modal', ['id' => $this->id, 'newClass' => $this->newClass,
+            'title' => $this->title, 'content' => $content, 'size' => $this->size]);
     }
 }

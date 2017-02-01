@@ -13,4 +13,7 @@
     <div class="product-list-lvi-quantity">
         Current Quantity : <?= $vo->getQuantity() ?>
     </div>
+    <div class="product-list-lvi-barcode">
+        <?= $vo->getBarcode() ?>
+    </div>
 </div>

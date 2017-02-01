@@ -1868,7 +1868,52 @@ define("common/dropdown-field", ["require", "exports", "common/Field", "common/i
     }(field_5.Field));
     exports.DropdownField = DropdownField;
 });
-define("project/order-list", ["require", "exports", "common/component", "common/button", "common/system", "common/dropdown-field"], function (require, exports, component_13, button_7, system_10, dropdown_field_1) {
+define("project/print-order-modal", ["require", "exports", "common/modal", "common/system"], function (require, exports, modal_2, system_10) {
+    "use strict";
+    var PrintOrderModal = (function (_super) {
+        __extends(PrintOrderModal, _super);
+        function PrintOrderModal(root) {
+            return _super.call(this, root) || this;
+        }
+        PrintOrderModal.prototype.decorate = function () {
+            _super.prototype.decorate.call(this);
+            this.loading = this.root.getElementsByClassName('po-modal-loading')[0];
+            this.view = this.root.getElementsByClassName('po-modal-view')[0];
+        };
+        PrintOrderModal.prototype.setOrderId = function (id) {
+            var data = {};
+            data['order_id'] = id;
+            data = system_10.System.addCsrf(data);
+            $.ajax({
+                url: system_10.System.getBaseUrl() + "/order/get-print-view",
+                data: data,
+                context: this,
+                method: "POST",
+                dataType: "json",
+                success: function (data) {
+                    if (data.status) {
+                        this.loading.classList.add('app-hide');
+                        this.view.innerHTML = data.views;
+                    }
+                },
+                error: function (data) {
+                }
+            });
+        };
+        PrintOrderModal.prototype.bindEvent = function () {
+            _super.prototype.bindEvent.call(this);
+        };
+        PrintOrderModal.prototype.detach = function () {
+            _super.prototype.detach.call(this);
+        };
+        PrintOrderModal.prototype.unbindEvent = function () {
+            // no event to unbind
+        };
+        return PrintOrderModal;
+    }(modal_2.Modal));
+    exports.PrintOrderModal = PrintOrderModal;
+});
+define("project/order-list", ["require", "exports", "common/component", "common/button", "common/system", "common/dropdown-field", "project/print-order-modal"], function (require, exports, component_13, button_7, system_11, dropdown_field_1, print_order_modal_1) {
     "use strict";
     var OrderList = (function (_super) {
         __extends(OrderList, _super);
@@ -1876,7 +1921,7 @@ define("project/order-list", ["require", "exports", "common/component", "common/
             return _super.call(this, root) || this;
         }
         OrderList.prototype.redirectToAddOrder = function () {
-            window.location.href = system_10.System.getBaseUrl() + "/order/create";
+            window.location.href = system_11.System.getBaseUrl() + "/order/create";
         };
         OrderList.prototype.decorate = function () {
             _super.prototype.decorate.call(this);
@@ -1899,13 +1944,14 @@ define("project/order-list", ["require", "exports", "common/component", "common/
                 var dropdown = new dropdown_field_1.DropdownField(rawActions.item(i));
                 this.actions.push(dropdown);
             }
+            this.printOrderModal = new print_order_modal_1.PrintOrderModal(document.getElementById(this.id + "-modal"));
         };
         OrderList.prototype.clickRejectBtn = function (e) {
             var data = {};
             data['order_id'] = e.currentTarget.getAttribute('data-order-id');
-            data = system_10.System.addCsrf(data);
+            data = system_11.System.addCsrf(data);
             $.ajax({
-                url: system_10.System.getBaseUrl() + "/order/reject",
+                url: system_11.System.getBaseUrl() + "/order/reject",
                 method: "post",
                 data: data,
                 dataType: "json",
@@ -1922,9 +1968,9 @@ define("project/order-list", ["require", "exports", "common/component", "common/
         OrderList.prototype.clickAcceptBtn = function (e) {
             var data = {};
             data['order_id'] = e.currentTarget.getAttribute('data-order-id');
-            data = system_10.System.addCsrf(data);
+            data = system_11.System.addCsrf(data);
             $.ajax({
-                url: system_10.System.getBaseUrl() + "/order/accept",
+                url: system_11.System.getBaseUrl() + "/order/accept",
                 method: "post",
                 data: data,
                 dataType: "json",
@@ -1941,21 +1987,23 @@ define("project/order-list", ["require", "exports", "common/component", "common/
         OrderList.prototype.bindEvent = function () {
             _super.prototype.bindEvent.call(this);
             for (var i = 0; i < this.actions.length; i++) {
-                this.actions[i].attachEvent(dropdown_field_1.DropdownField.CHANGE_VALUE, this.changeActionEvent.bind(null, this.actions[i]));
+                this.actions[i].attachEvent(dropdown_field_1.DropdownField.CHANGE_VALUE, this.changeActionEvent.bind(this, this.actions[i]));
             }
         };
         OrderList.prototype.changeActionEvent = function (df) {
             var value = df.getValue();
+            var data = {};
+            data['new_status'] = value;
+            data['order_id'] = df.getRoot().getAttribute('data-order-id');
             if (value === 'print') {
+                this.printOrderModal.show();
+                this.printOrderModal.setOrderId(data['order_id']);
             }
             else {
-                var data = {};
-                data['new_status'] = value;
-                data['order_id'] = df.getRoot().getAttribute('data-order-id');
-                data = system_10.System.addCsrf(data);
+                data = system_11.System.addCsrf(data);
                 df.disable();
                 $.ajax({
-                    url: system_10.System.getBaseUrl() + "/order/change-status",
+                    url: system_11.System.getBaseUrl() + "/order/change-status",
                     method: "post",
                     data: data,
                     dataType: "json",
@@ -2016,14 +2064,14 @@ define("common/redactor-field", ["require", "exports", "common/Field"], function
     }(Field_5.Field));
     exports.RedactorField = RedactorField;
 });
-define("project/create-news-form", ["require", "exports", "common/form", "common/redactor-field", "common/system"], function (require, exports, form_8, redactor_field_1, system_11) {
+define("project/create-news-form", ["require", "exports", "common/form", "common/redactor-field", "common/system"], function (require, exports, form_8, redactor_field_1, system_12) {
     "use strict";
     var CreateNewsForm = (function (_super) {
         __extends(CreateNewsForm, _super);
         function CreateNewsForm(root) {
             var _this = _super.call(this, root) || this;
             _this.successCb = function (data) {
-                window.location.href = system_11.System.getBaseUrl() + "/dashboard/index";
+                window.location.href = system_12.System.getBaseUrl() + "/dashboard/index";
             };
             return _this;
         }
@@ -2125,14 +2173,14 @@ define("project/restock", ["require", "exports", "common/component", "project/re
     }(component_15.Component));
     exports.Restock = Restock;
 });
-define("project/create-supplier-form", ["require", "exports", "common/form", "common/input-field", "common/text-area-field", "common/system"], function (require, exports, form_10, input_field_11, text_area_field_2, system_12) {
+define("project/create-supplier-form", ["require", "exports", "common/form", "common/input-field", "common/text-area-field", "common/system"], function (require, exports, form_10, input_field_11, text_area_field_2, system_13) {
     "use strict";
     var CreateSupplierForm = (function (_super) {
         __extends(CreateSupplierForm, _super);
         function CreateSupplierForm(root) {
             var _this = _super.call(this, root) || this;
             _this.successCb = function (data) {
-                window.location.href = system_12.System.getBaseUrl() + "/supplier/list";
+                window.location.href = system_13.System.getBaseUrl() + "/supplier/list";
             };
             return _this;
         }
@@ -2187,7 +2235,7 @@ define("project/create-supplier", ["require", "exports", "common/component", "pr
     }(component_16.Component));
     exports.CreateSupplier = CreateSupplier;
 });
-define("project/list-supplier", ["require", "exports", "common/component", "common/button", "common/system"], function (require, exports, component_17, button_8, system_13) {
+define("project/list-supplier", ["require", "exports", "common/component", "common/button", "common/system"], function (require, exports, component_17, button_8, system_14) {
     "use strict";
     var ListSupplier = (function (_super) {
         __extends(ListSupplier, _super);
@@ -2199,7 +2247,7 @@ define("project/list-supplier", ["require", "exports", "common/component", "comm
             this.addBtn = new button_8.Button(document.getElementById(this.id + "-add"), this.redirectToAdd.bind(this));
         };
         ListSupplier.prototype.redirectToAdd = function () {
-            window.location.href = system_13.System.getBaseUrl() + "/supplier/create";
+            window.location.href = system_14.System.getBaseUrl() + "/supplier/create";
         };
         ListSupplier.prototype.bindEvent = function () {
             _super.prototype.bindEvent.call(this);
@@ -2312,7 +2360,7 @@ define("project/order-retur-field", ["require", "exports", "common/Field", "comm
     }(field_6.Field));
     exports.OrderReturField = OrderReturField;
 });
-define("project/retur-form", ["require", "exports", "common/form", "common/system", "project/order-retur-field", "common/search-field"], function (require, exports, form_11, system_14, order_retur_field_1, search_field_5) {
+define("project/retur-form", ["require", "exports", "common/form", "common/system", "project/order-retur-field", "common/search-field"], function (require, exports, form_11, system_15, order_retur_field_1, search_field_5) {
     "use strict";
     var ReturForm = (function (_super) {
         __extends(ReturForm, _super);
@@ -2335,9 +2383,9 @@ define("project/retur-form", ["require", "exports", "common/form", "common/syste
         ReturForm.prototype.retrieveOrderReturField = function () {
             var data = {};
             data['order_id'] = this.orderId.getValue();
-            data = system_14.System.addCsrf(data);
+            data = system_15.System.addCsrf(data);
             $.ajax({
-                url: system_14.System.getBaseUrl() + "/inventory/get-order-retur-field",
+                url: system_15.System.getBaseUrl() + "/inventory/get-order-retur-field",
                 method: "post",
                 dataType: "json",
                 data: data,
@@ -2433,7 +2481,7 @@ define("project/product-adjustment-field-item", ["require", "exports", "common/c
     }(component_19.Component));
     exports.ProductAdjustmentFieldItem = ProductAdjustmentFieldItem;
 });
-define("project/product-adjustment-field", ["require", "exports", "common/Field", "common/search-field", "common/button", "common/system", "project/product-adjustment-field-item"], function (require, exports, field_7, search_field_6, button_9, system_15, product_adjustment_field_item_1) {
+define("project/product-adjustment-field", ["require", "exports", "common/Field", "common/search-field", "common/button", "common/system", "project/product-adjustment-field-item"], function (require, exports, field_7, search_field_6, button_9, system_16, product_adjustment_field_item_1) {
     "use strict";
     var ProductAdjustmentField = (function (_super) {
         __extends(ProductAdjustmentField, _super);
@@ -2457,7 +2505,7 @@ define("project/product-adjustment-field", ["require", "exports", "common/Field"
         ProductAdjustmentField.prototype.validateAddClient = function () {
             var valid = true;
             this.searchProduct.hideError();
-            if (system_15.System.isEmptyValue(this.searchProduct.getValue())) {
+            if (system_16.System.isEmptyValue(this.searchProduct.getValue())) {
                 valid = false;
             }
             for (var i = 0; i < this.items.length; i++) {
@@ -2475,9 +2523,9 @@ define("project/product-adjustment-field", ["require", "exports", "common/Field"
             this.addBtn.disable(true);
             var data = {};
             data['product_id'] = this.searchProduct.getValue();
-            data = system_15.System.addCsrf(data);
+            data = system_16.System.addCsrf(data);
             $.ajax({
-                url: system_15.System.getBaseUrl() + "/inventory/get-adjustment-item",
+                url: system_16.System.getBaseUrl() + "/inventory/get-adjustment-item",
                 method: "post",
                 data: data,
                 context: this,
@@ -2522,14 +2570,14 @@ define("project/product-adjustment-field", ["require", "exports", "common/Field"
     }(field_7.Field));
     exports.ProductAdjustmentField = ProductAdjustmentField;
 });
-define("project/adjustment-stock-form", ["require", "exports", "common/form", "project/product-adjustment-field", "common/text-area-field", "common/system"], function (require, exports, form_12, product_adjustment_field_1, text_area_field_3, system_16) {
+define("project/adjustment-stock-form", ["require", "exports", "common/form", "project/product-adjustment-field", "common/text-area-field", "common/system"], function (require, exports, form_12, product_adjustment_field_1, text_area_field_3, system_17) {
     "use strict";
     var AdjustmentStockForm = (function (_super) {
         __extends(AdjustmentStockForm, _super);
         function AdjustmentStockForm(root) {
             var _this = _super.call(this, root) || this;
             _this.successCb = function (data) {
-                window.location.href = system_16.System.getBaseUrl() + "/inventory/list";
+                window.location.href = system_17.System.getBaseUrl() + "/inventory/list";
             };
             return _this;
         }
@@ -2602,7 +2650,7 @@ define("project/restock-list-lvi", ["require", "exports", "common/component"], f
     }(component_21.Component));
     exports.RestockListLVI = RestockListLVI;
 });
-define("project/restock-list", ["require", "exports", "common/component", "common/button", "common/system"], function (require, exports, component_22, button_10, system_17) {
+define("project/restock-list", ["require", "exports", "common/component", "common/button", "common/system"], function (require, exports, component_22, button_10, system_18) {
     "use strict";
     var RestockList = (function (_super) {
         __extends(RestockList, _super);
@@ -2615,7 +2663,7 @@ define("project/restock-list", ["require", "exports", "common/component", "commo
             this.addRestockRedirect = new button_10.Button(document.getElementById(this.id + "-add"), this.redirectToAddRestock.bind(this));
         };
         RestockList.prototype.redirectToAddRestock = function () {
-            window.location.href = system_17.System.getBaseUrl() + "/inventory/restock";
+            window.location.href = system_18.System.getBaseUrl() + "/inventory/restock";
         };
         RestockList.prototype.bindEvent = function () {
             _super.prototype.bindEvent.call(this);
@@ -2630,7 +2678,7 @@ define("project/restock-list", ["require", "exports", "common/component", "commo
     }(component_22.Component));
     exports.RestockList = RestockList;
 });
-define("project/marketplace-list", ["require", "exports", "common/component", "common/button", "common/system"], function (require, exports, component_23, button_11, system_18) {
+define("project/marketplace-list", ["require", "exports", "common/component", "common/button", "common/system"], function (require, exports, component_23, button_11, system_19) {
     "use strict";
     var MarketplaceList = (function (_super) {
         __extends(MarketplaceList, _super);
@@ -2642,7 +2690,7 @@ define("project/marketplace-list", ["require", "exports", "common/component", "c
             this.addMp = new button_11.Button(document.getElementById(this.id + "-add"), this.redirectToAddMp.bind(this));
         };
         MarketplaceList.prototype.redirectToAddMp = function () {
-            window.location.href = system_18.System.getBaseUrl() + "/order/create-marketplace";
+            window.location.href = system_19.System.getBaseUrl() + "/order/create-marketplace";
         };
         MarketplaceList.prototype.bindEvent = function () {
             _super.prototype.bindEvent.call(this);
@@ -2680,7 +2728,7 @@ define("project/adjustment-list-lvi", ["require", "exports", "common/component"]
     }(component_24.Component));
     exports.AdjustmentListLVI = AdjustmentListLVI;
 });
-define("project/adjustment-list", ["require", "exports", "common/component", "common/button", "common/system"], function (require, exports, component_25, button_12, system_19) {
+define("project/adjustment-list", ["require", "exports", "common/component", "common/button", "common/system"], function (require, exports, component_25, button_12, system_20) {
     "use strict";
     var AdjustmentList = (function (_super) {
         __extends(AdjustmentList, _super);
@@ -2688,7 +2736,7 @@ define("project/adjustment-list", ["require", "exports", "common/component", "co
             return _super.call(this, root) || this;
         }
         AdjustmentList.prototype.redirectToAddButton = function () {
-            window.location.href = system_19.System.getBaseUrl() + "/inventory/adjustment";
+            window.location.href = system_20.System.getBaseUrl() + "/inventory/adjustment";
         };
         AdjustmentList.prototype.decorate = function () {
             _super.prototype.decorate.call(this);
@@ -2707,7 +2755,7 @@ define("project/adjustment-list", ["require", "exports", "common/component", "co
     }(component_25.Component));
     exports.AdjustmentList = AdjustmentList;
 });
-define("project/courier-list", ["require", "exports", "common/component", "common/button", "common/system"], function (require, exports, component_26, button_13, system_20) {
+define("project/courier-list", ["require", "exports", "common/component", "common/button", "common/system"], function (require, exports, component_26, button_13, system_21) {
     "use strict";
     var CourierList = (function (_super) {
         __extends(CourierList, _super);
@@ -2715,7 +2763,7 @@ define("project/courier-list", ["require", "exports", "common/component", "commo
             return _super.call(this, root) || this;
         }
         CourierList.prototype.redirectToAddCourier = function () {
-            window.location.href = system_20.System.getBaseUrl() + "/order/create-courier";
+            window.location.href = system_21.System.getBaseUrl() + "/order/create-courier";
         };
         CourierList.prototype.decorate = function () {
             _super.prototype.decorate.call(this);
@@ -2734,7 +2782,7 @@ define("project/courier-list", ["require", "exports", "common/component", "commo
     }(component_26.Component));
     exports.CourierList = CourierList;
 });
-define("project/category-list", ["require", "exports", "common/component", "common/button", "common/system"], function (require, exports, component_27, button_14, system_21) {
+define("project/category-list", ["require", "exports", "common/component", "common/button", "common/system"], function (require, exports, component_27, button_14, system_22) {
     "use strict";
     var CategoryList = (function (_super) {
         __extends(CategoryList, _super);
@@ -2742,7 +2790,7 @@ define("project/category-list", ["require", "exports", "common/component", "comm
             return _super.call(this, root) || this;
         }
         CategoryList.prototype.redirectToAddCat = function () {
-            window.location.href = system_21.System.getBaseUrl() + "/product/add-category";
+            window.location.href = system_22.System.getBaseUrl() + "/product/add-category";
         };
         CategoryList.prototype.decorate = function () {
             _super.prototype.decorate.call(this);
@@ -2761,7 +2809,7 @@ define("project/category-list", ["require", "exports", "common/component", "comm
     }(component_27.Component));
     exports.CategoryList = CategoryList;
 });
-define("project/product-list", ["require", "exports", "common/component", "common/button", "common/system"], function (require, exports, component_28, button_15, system_22) {
+define("project/product-list", ["require", "exports", "common/component", "common/button", "common/system"], function (require, exports, component_28, button_15, system_23) {
     "use strict";
     var ProductList = (function (_super) {
         __extends(ProductList, _super);
@@ -2769,7 +2817,7 @@ define("project/product-list", ["require", "exports", "common/component", "commo
             return _super.call(this, root) || this;
         }
         ProductList.prototype.redirectToAddProduct = function () {
-            window.location.href = system_22.System.getBaseUrl() + "/product/add";
+            window.location.href = system_23.System.getBaseUrl() + "/product/add";
         };
         ProductList.prototype.decorate = function () {
             _super.prototype.decorate.call(this);
@@ -2788,7 +2836,7 @@ define("project/product-list", ["require", "exports", "common/component", "commo
     }(component_28.Component));
     exports.ProductList = ProductList;
 });
-define("project/employee-list", ["require", "exports", "common/component", "common/button", "common/system"], function (require, exports, component_29, button_16, system_23) {
+define("project/employee-list", ["require", "exports", "common/component", "common/button", "common/system"], function (require, exports, component_29, button_16, system_24) {
     "use strict";
     var EmployeeList = (function (_super) {
         __extends(EmployeeList, _super);
@@ -2800,7 +2848,7 @@ define("project/employee-list", ["require", "exports", "common/component", "comm
             this.addBtn = new button_16.Button(document.getElementById(this.id + "-add"), this.redirectToAdd.bind(this));
         };
         EmployeeList.prototype.redirectToAdd = function () {
-            window.location.href = system_23.System.getBaseUrl() + "/employee/add";
+            window.location.href = system_24.System.getBaseUrl() + "/employee/add";
         };
         EmployeeList.prototype.bindEvent = function () {
             _super.prototype.bindEvent.call(this);
@@ -2815,14 +2863,14 @@ define("project/employee-list", ["require", "exports", "common/component", "comm
     }(component_29.Component));
     exports.EmployeeList = EmployeeList;
 });
-define("project/add-employee-form", ["require", "exports", "common/form", "common/input-field", "common/text-area-field", "common/system"], function (require, exports, form_13, input_field_14, text_area_field_4, system_24) {
+define("project/add-employee-form", ["require", "exports", "common/form", "common/input-field", "common/text-area-field", "common/system"], function (require, exports, form_13, input_field_14, text_area_field_4, system_25) {
     "use strict";
     var AddEmployeeForm = (function (_super) {
         __extends(AddEmployeeForm, _super);
         function AddEmployeeForm(root) {
             var _this = _super.call(this, root) || this;
             _this.successCb = function (data) {
-                window.location.href = system_24.System.getBaseUrl() + "/employee/list";
+                window.location.href = system_25.System.getBaseUrl() + "/employee/list";
             }.bind(_this);
             return _this;
         }

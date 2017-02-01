@@ -1,11 +1,13 @@
 <?php
+    use frontend\widgets\PrintOrderModal;
+    use common\widgets\Modal;
     use common\models\Order;
     use common\widgets\DropdownField;
     use yii\bootstrap\Dropdown;
     use yii\grid\GridView;
     use common\widgets\Button;
 ?>
-<div id="ol" class="order-list row main-area">
+<div id="<?= $id ?>" class="order-list row main-area">
     <div class="col-md-9 col-sm-9 content-box">
         <div class="full-width-section clearfix">
             <div class="view-header">
@@ -47,6 +49,9 @@
 
         </div>
     </div>
-</div>
+    
+    <?= PrintOrderModal::widget(['id' => $id . '-modal']) ?>
+    
+</div>  
 
 

@@ -26,6 +26,8 @@ class OrderService extends RService
     private $courierDao;
     
     //attributes
+    public $order_id;
+    
     public $user_id;
     
     public $product_id;
@@ -44,6 +46,8 @@ class OrderService extends RService
     
     const SEARCH_ORDER_ID = "searchorderid";
 
+    const GET_ORDER_INFO = "getorderinfo";
+    
     private $productInfo;
     
     public function init() {
@@ -71,6 +75,9 @@ class OrderService extends RService
             ['courier_code', 'required', 'on' => self::GET_TARIFF],
             
             ['check_range', 'boolean'],
+            
+            ['order_id', 'required', 'on' => self::GET_ORDER_INFO],
+            ['order_id', 'integer']
         ];
     }
     
@@ -81,6 +88,15 @@ class OrderService extends RService
                 $this->addError("quantity", "Product is out of stock");
             }   
         }
+    }
+    
+    public function getOrderInfo() {
+        $this->setScenario(self::GET_ORDER_INFO);
+        if(!$this->validate()) {
+            return false;
+        }
+        
+        return $this->orderDao->getOrderInfo($this->order_id);
     }
     
     public function searchOrderId($query) {
