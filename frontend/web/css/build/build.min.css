@@ -1,4 +1,5 @@
 .button{margin:0;border-radius:4px;padding:6px 16px;color:#fff;font-size:14px;font-weight:700;border:1px;width:100%}.button-link{border:0;color:#d3d3d3;font-size:12px}.button-link:hover{text-decoration:underline}.button-blue{background:#00F}.button-orange{background:orange}.button-red{background:red}.button-gray{background:#d3d3d3}.button-none{background:0 0}.button:hover{opacity:.6;cursor:pointer}.button:disabled{cursor:not-allowed;background:#d3d3d3}
+.dropdown-field{position:relative}.dropdown-field-input{display:-ms-flexbox;display:flex;border:1px solid #d3d3d3;padding:8px}.dropdown-field-input:hover{cursor:pointer}.dropdown-field-input>.glyphicon{line-height:inherit;color:#d3d3d3}.dropdown-field-dropdown{position:absolute;z-index:1;border:solid #d3d3d3;border-width:0 1px 1px;width:100%}.dropdown-field-item{padding:8px;background:#fff;min-height:32px}.dropdown-field-item:hover{cursor:pointer;background:#f5f5f5}.dropdown-field-text{width:100%}.dropdown-field-placeholder{width:100%;color:#d3d3d3}
 .dynamic-field{margin-bottom:16px}.dynamic-field-add,.dynamic-field-remove{border-radius:50%;color:#fff}.dynamic-field-add{background:red;border:2px solid red}.dynamic-field-remove{background:#00f;border:2px solid #00f}.dynamic-field-new{display:-ms-flexbox;display:flex}
 .field-error{font-size:10px;color:red}
 .file-field,.file-field-lbl{text-align:center}.file-field-img,.file-field-lbl{width:240px;height:120px;border:1px solid #d3d3d3}.file-field-img{padding:8px}.file-field-lbl{margin:auto;display:table}.file-field-lbl-span{display:table-cell;vertical-align:middle}.file-field-lbl:hover{cursor:pointer;opacity:.6}
@@ -24,6 +25,7 @@
 
 
 
+
 .au-form>.text-area-field{margin-bottom:8px}
 
 
@@ -42,6 +44,7 @@
 
 
 .dynamic-wfield{max-width:500px}
+
 
 .supplier-list-add{width:180px;float:right}
 .login{display:table;position:absolute;left:0;bottom:0;top:0;right:0;max-width:300px;height:300px;margin:auto;background:#fff;padding:8px}.login-heading{margin-top:4px;text-align:center;background:#0b83c8;color:#fff;padding-top:10px;padding-bottom:10px;-webkit-border-top-left-radius:4px;-webkit-border-top-right-radius:4px;-moz-border-radius-topleft:4px;-moz-border-radius-topright:4px;border-top-left-radius:4px;border-top-right-radius:4px}

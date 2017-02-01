@@ -11,6 +11,7 @@ use frontend\models\CreateOrderForm;
 use common\widgets\SearchFieldDropdownItem;
 use frontend\models\AcceptOrderForm;
 use frontend\models\RejectOrderForm;
+use frontend\models\ChangeStatusOrderForm;
 /**
  * Order controller
  */
@@ -207,6 +208,20 @@ class OrderController extends Controller
         }
         $data['views'] = $views;
         return json_encode($data);
+    }
+    
+    public function actionChangeStatus() {
+        $model = new ChangeStatusOrderForm();
+        $model->loadData($_POST);
+        $model->user_id = \Yii::$app->user->getId();
+        $data = array();
+        $data['status'] = $model->change() ? 1 : 0;
+        if($model->hasErrors()) {
+            $data['errors'] = $model->getErrors();
+        }
+        
+        return json_encode($data);
+        
     }
     
     public function actionGetOrderReturField() {

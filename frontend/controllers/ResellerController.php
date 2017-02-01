@@ -9,12 +9,5 @@ use yii\web\Controller;
 class ResellerController extends Controller
 {
     
-    public function actionAdd() {
-        
-    }
-    
-    public function actionList() {
-        
-    }
 }
 

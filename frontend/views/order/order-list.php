@@ -1,4 +1,7 @@
 <?php
+    use common\models\Order;
+    use common\widgets\DropdownField;
+    use yii\bootstrap\Dropdown;
     use yii\grid\GridView;
     use common\widgets\Button;
 ?>
@@ -20,27 +23,21 @@
                         'status',
                         [
                             'class' => 'yii\grid\ActionColumn',
-                            'template' => '{terima},{tolak}',
+                            'template' => '{act},{tolak}',
                             'buttons' => [
-                                'terima' => function($url, $model, $key) {
-                                    if($model['status_id'] == common\models\Order::PENDING_STATUS) {
-                                        return Button::widget(['id' => 'olacc' . $model['order_id'], 
-                                                            'text' => 'Terima', 'newClass' => 'order-list-acc',
-                                                            'options' => [
-                                                                'data-order-id' => $model['order_id']
-                                                            ]
-                                                        ]); 
-                                    }
-                                },
-                                'tolak' => function($url,$model, $key) {
-                                    if($model['status_id'] == common\models\Order::PENDING_STATUS) {
-                                        return Button::widget(['id' => 'olrej' . $model['order_id'], 
-                                                            'text' => 'Tolak', 'newClass' => 'order-list-rej',
-                                                            'color' => Button::RED_COLOR, 
-                                                            'options' => [
-                                                                'data-order-id' => $model['order_id']
-                                                            ]]); 
-                                    }
+                                'act' => function($url, $model, $key) {
+                                    $items = Order::getOrderStatus();
+                                    unset($items[$model['status_id']]);
+                                    $items['print'] = 'Print';
+                                    return DropdownField::widget(['id' => 'df-' . $model['order_id'], 
+                                        'newClass' => 'order-list-action',
+                                        'placeholder' => 'Pilih Aksi',
+                                        'items' => $items,
+                                        'options' => [
+                                            'data-order-id' => $model['order_id']
+                                        ]
+                                    ]);
+                                    
                                 }
                             ]
                         ]
