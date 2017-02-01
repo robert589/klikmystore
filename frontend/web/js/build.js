@@ -2649,7 +2649,7 @@ define("project/product-list", ["require", "exports", "common/component", "commo
     }(component_28.Component));
     exports.ProductList = ProductList;
 });
-define("project/employee-list", ["require", "exports", "common/component"], function (require, exports, component_29) {
+define("project/employee-list", ["require", "exports", "common/component", "common/button", "common/system"], function (require, exports, component_29, button_16, system_22) {
     "use strict";
     var EmployeeList = (function (_super) {
         __extends(EmployeeList, _super);
@@ -2658,6 +2658,10 @@ define("project/employee-list", ["require", "exports", "common/component"], func
         }
         EmployeeList.prototype.decorate = function () {
             _super.prototype.decorate.call(this);
+            this.addBtn = new button_16.Button(document.getElementById(this.id + "-add"), this.redirectToAdd.bind(this));
+        };
+        EmployeeList.prototype.redirectToAdd = function () {
+            window.location.href = system_22.System.getBaseUrl() + "/employee/add";
         };
         EmployeeList.prototype.bindEvent = function () {
             _super.prototype.bindEvent.call(this);
@@ -2672,14 +2676,14 @@ define("project/employee-list", ["require", "exports", "common/component"], func
     }(component_29.Component));
     exports.EmployeeList = EmployeeList;
 });
-define("project/add-employee-form", ["require", "exports", "common/form", "common/input-field", "common/text-area-field", "common/system"], function (require, exports, form_13, input_field_13, text_area_field_4, system_22) {
+define("project/add-employee-form", ["require", "exports", "common/form", "common/input-field", "common/text-area-field", "common/system"], function (require, exports, form_13, input_field_13, text_area_field_4, system_23) {
     "use strict";
     var AddEmployeeForm = (function (_super) {
         __extends(AddEmployeeForm, _super);
         function AddEmployeeForm(root) {
             var _this = _super.call(this, root) || this;
             _this.successCb = function (data) {
-                window.location.href = system_22.System.getBaseUrl() + "/employee/list";
+                window.location.href = system_23.System.getBaseUrl() + "/employee/list";
             }.bind(_this);
             return _this;
         }
@@ -2734,7 +2738,7 @@ define("project/add-employee", ["require", "exports", "common/component", "proje
     }(component_30.Component));
     exports.AddEmployee = AddEmployee;
 });
-define("project/app", ["require", "exports", "common/component", "project/login", "project/add-product", "project/add-category", "project/order-create-marketplace", "project/order-create-courier", "project/create-order", "project/order-list", "project/create-news", "project/restock", "project/create-supplier", "project/list-supplier", "project/retur", "project/adjustment-stock", "project/restock-list", "project/marketplace-list", "project/adjustment-list", "project/courier-list", "project/category-list", "project/product-list", "project/add-employee"], function (require, exports, component_31, login_1, add_product_1, add_category_1, order_create_marketplace_1, order_create_courier_1, create_order_1, order_list_1, create_news_1, restock_1, create_supplier_1, list_supplier_1, retur_1, adjustment_stock_1, restock_list_1, marketplace_list_1, adjustment_list_1, courier_list_1, category_list_1, product_list_1, add_employee_1) {
+define("project/app", ["require", "exports", "common/component", "project/login", "project/add-product", "project/add-category", "project/order-create-marketplace", "project/order-create-courier", "project/create-order", "project/order-list", "project/create-news", "project/restock", "project/create-supplier", "project/list-supplier", "project/retur", "project/adjustment-stock", "project/restock-list", "project/marketplace-list", "project/adjustment-list", "project/courier-list", "project/category-list", "project/product-list", "project/employee-list", "project/add-employee"], function (require, exports, component_31, login_1, add_product_1, add_category_1, order_create_marketplace_1, order_create_courier_1, create_order_1, order_list_1, create_news_1, restock_1, create_supplier_1, list_supplier_1, retur_1, adjustment_stock_1, restock_list_1, marketplace_list_1, adjustment_list_1, courier_list_1, category_list_1, product_list_1, employee_list_1, add_employee_1) {
     "use strict";
     var App = (function (_super) {
         __extends(App, _super);
@@ -2802,6 +2806,9 @@ define("project/app", ["require", "exports", "common/component", "project/login"
             }
             else if (this.root.getElementsByClassName('add-emp').length !== 0) {
                 this.addEmployee = new add_employee_1.AddEmployee(document.getElementById("eae"));
+            }
+            else if (this.root.getElementsByClassName('emp-list').length !== 0) {
+                this.employeeList = new employee_list_1.EmployeeList(document.getElementById("ele"));
             }
         };
         App.prototype.bindEvent = function () {

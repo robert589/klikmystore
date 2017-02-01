@@ -14,7 +14,7 @@
         'widget_class' => 'form ae-form' , 'enable_button' => false
         ]) ?>   
 
-    <div class="form-row">
+    <div class="form-flex">
         <?=  InputField::widget(['id' => $id . '-first-name', 'placeholder' => 'Nama Depan', 'name' => 'first_name']) ?>
         <?=  InputField::widget(['id' => $id . '-last-name', 'placeholder' => 'Nama Belakang', 'name' => 'last_name']) ?>
     </div>

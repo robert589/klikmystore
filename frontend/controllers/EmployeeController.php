@@ -1,6 +1,7 @@
 <?php
 namespace frontend\controllers;
 
+use frontend\services\EmployeeService;
 use Yii;
 use frontend\models\AddEmployeeForm;
 use yii\web\Controller;
@@ -9,6 +10,13 @@ use yii\web\Controller;
  */
 class EmployeeController extends Controller
 {
+    
+    private $service;
+    
+    public function init() {
+        $this->service = new EmployeeService();
+        $this->service->user_id = Yii::$app->user->getId();
+    }
     
     public function actionAdd() {
         return $this->render('add-employee', ['id' => 'eae']);
@@ -24,7 +32,11 @@ class EmployeeController extends Controller
     }
     
     public function actionList() {
-        return $this->render('employee-list', ['id' => 'ele']);
+        $provider = $this->service->getEmployeeList();
+        if(!$provider) {
+            return $this->redirect(['site/error']);
+        }
+        return $this->render('employee-list', ['id' => 'ele', 'provider' => $provider]);
     }
 }
 

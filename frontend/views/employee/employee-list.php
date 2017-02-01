@@ -1,6 +1,6 @@
 <?php
-    use yii\grid\GridView;
     use common\widgets\Button;
+    use yii\grid\GridView;
 ?>
 <div id="<?= $id ?>" class="emp-list view">
     <div class="view-header">
@@ -10,10 +10,12 @@
 
     <?=  GridView::widget(
             ['dataProvider' => $provider,
-            'columns' => [
+             'columns' => [
                 'id',
                 'name',
-                'description',
+                'address',
+                'email',
+                'telephone'
             ]
         ]) ?>
 

@@ -130,9 +130,11 @@ export class App extends Component{
         else if(this.root.getElementsByClassName('product-list').length !== 0) {
             this.productList = new ProductList(document.getElementById("pl"));
         }
-
         else if(this.root.getElementsByClassName('add-emp').length !== 0) {
             this.addEmployee = new AddEmployee(document.getElementById("eae"));
+        }
+        else if(this.root.getElementsByClassName('emp-list').length !== 0) {
+            this.employeeList = new EmployeeList(document.getElementById("ele"));
         }
     }
     

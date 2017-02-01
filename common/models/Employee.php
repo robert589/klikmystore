@@ -14,5 +14,5 @@ class Employee extends ActiveRecord
         return '{{%employee}}';
     }
     
-
+        
 }
