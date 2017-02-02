@@ -20,6 +20,11 @@
 .text-area-field-edit{width:100%;overflow-y:hidden;resize:none;background:#fff;border:1px solid #d3d3d3;padding:8px;height:auto;color:#000;text-align:left;font-size:14px;cursor:text;line-height:24px}.text-area-field-edit:empty:before{content:attr(placeholder);display:block;color:#d3d3d3}
 
 .view{background:#fff;padding:16px}.view-header{padding:8px 0;font-weight:700;font-size:22px}.view-header-btn{max-width:230px;width:auto;padding:4px;float:right}
+.ac-index-header{display:-ms-flexbox;display:flex;margin-bottom:16px;font-size:16px;font-weight:700}.ac-index-header>.button{width:120px;margin-right:8px}
+
+.ac-role-header{margin-bottom:16px;font-size:16px;font-weight:700}
+
+
 
 
 
@@ -40,10 +45,12 @@
 
 .co-form-left,.co-form-right{width:320px;vertical-align:top;display:inline-block}.co-form-row{display:-ms-flexbox;display:flex}.co-form>.form-submit{display:block;margin-top:8px}
 
+.crole-form{display:-ms-flexbox;display:flex}.crole-form>.input-field{width:200%;margin:0 8px 0 0}.crole-form>.input-field>.input-field-input{border:2px solid initial}.crole-form>.button{width:30%;margin-top:0;max-height:38px}
 .cs-form{max-width:320px}
 
 
 .dynamic-wfield{max-width:500px}
+
 
 
 .supplier-list-add{width:180px;float:right}
@@ -56,6 +63,8 @@
 
 
 .or-field-header{font-weight:700;display:-ms-flexbox;display:flex}.or-field-row{display:-ms-flexbox;display:flex}.or-field-item{width:100%;display:-ms-flexbox;display:flex;padding:8px;border:1px solid #d3d3d3}.or-field-item>.input-field[data-type=number]{width:60px}.or-field-margin{margin-top:10px}
+
+
 .paf-item{display:-ms-flexbox;display:flex}.paf-item-cell{width:100%;padding:8px;text-align:center;border:1px solid #000}.paf-item-cell>.input-field{margin:0}
 .pa-field-header,.pa-field-table-header{display:-ms-flexbox;display:flex}.pa-field-header>.search-field{width:100%;margin-right:8px}.pa-field-header>.button{width:60px}.pa-field-cell{width:100%;padding:8px;text-align:center;border:1px solid #000}.pa-field-list{margin-top:8px}.pa-field-footer{margin-top:24px}
 .product-list-lvi{display:inline-block;width:240px;margin-bottom:16px}.product-list-lvi-item{text-align:center;font-weight:700;font-size:24px}.product-list-lvi-img{width:100%}.product-list-lvi-img-wrap{width:100%;height:300px;overflow:hidden}

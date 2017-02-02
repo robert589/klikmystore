@@ -14,7 +14,9 @@ class EmployeeDao implements Dao
                                 FROM employee,user, user_email_authentication
                                 where employee.id = user.id and user_email_authentication.user_id = user.id";
     
-    
+    const SEARCH = "SELECT user.*, user_email_authentication.email
+                    FROM employee,user, user_email_authentication
+                    where employee.id = user.id and user_email_authentication.user_id = user.id";
     public function getAllEmployees() {
         $results =  \Yii::$app->db
             ->createCommand(self::GET_ALL_EMPLOYEES)

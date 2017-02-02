@@ -3014,7 +3014,91 @@ define("project/add-reseller", ["require", "exports", "common/component", "proje
     }(component_32.Component));
     exports.AddReseller = AddReseller;
 });
-define("project/app", ["require", "exports", "common/component", "project/login", "project/add-product", "project/add-category", "project/order-create-marketplace", "project/order-create-courier", "project/create-order", "project/order-list", "project/create-news", "project/restock", "project/create-supplier", "project/list-supplier", "project/retur", "project/adjustment-stock", "project/restock-list", "project/marketplace-list", "project/adjustment-list", "project/courier-list", "project/category-list", "project/product-list", "project/employee-list", "project/list-reseller", "project/add-employee", "project/add-reseller"], function (require, exports, component_33, login_1, add_product_1, add_category_1, order_create_marketplace_1, order_create_courier_1, create_order_1, order_list_1, create_news_1, restock_1, create_supplier_1, list_supplier_1, retur_1, adjustment_stock_1, restock_list_1, marketplace_list_1, adjustment_list_1, courier_list_1, category_list_1, product_list_1, employee_list_1, list_reseller_1, add_employee_1, add_reseller_1) {
+define("project/ac-index", ["require", "exports", "common/component", "common/button", "common/system"], function (require, exports, component_33, button_18, system_28) {
+    "use strict";
+    var AcIndex = (function (_super) {
+        __extends(AcIndex, _super);
+        function AcIndex(root) {
+            return _super.call(this, root) || this;
+        }
+        AcIndex.prototype.decorate = function () {
+            _super.prototype.decorate.call(this);
+            this.role = new button_18.Button(document.getElementById(this.id + "-role"), this.redirectToRole.bind(this));
+            this.permission = new button_18.Button(document.getElementById(this.id + "-permission"), this.redirectToRole.bind(this));
+        };
+        AcIndex.prototype.redirectToRole = function () {
+            window.location.href = system_28.System.getBaseUrl() + "/ac/role";
+        };
+        AcIndex.prototype.redirectToPermission = function () {
+            window.location.href = system_28.System.getBaseUrl() + "/ac/permission";
+        };
+        AcIndex.prototype.bindEvent = function () {
+            _super.prototype.bindEvent.call(this);
+        };
+        AcIndex.prototype.detach = function () {
+            _super.prototype.detach.call(this);
+        };
+        AcIndex.prototype.unbindEvent = function () {
+            // no event to unbind
+        };
+        return AcIndex;
+    }(component_33.Component));
+    exports.AcIndex = AcIndex;
+});
+define("project/create-role-form", ["require", "exports", "common/form", "common/input-field"], function (require, exports, form_15, input_field_16) {
+    "use strict";
+    var CreateRoleForm = (function (_super) {
+        __extends(CreateRoleForm, _super);
+        function CreateRoleForm(root) {
+            return _super.call(this, root) || this;
+        }
+        CreateRoleForm.prototype.rules = function () {
+            this.registerFields([this.title, this.description]);
+            this.setRequiredField([this.title]);
+        };
+        CreateRoleForm.prototype.decorate = function () {
+            _super.prototype.decorate.call(this);
+            this.title = new input_field_16.InputField(document.getElementById(this.id + "-title"));
+            this.description = new input_field_16.InputField(document.getElementById(this.id + "-desc"));
+        };
+        CreateRoleForm.prototype.bindEvent = function () {
+            _super.prototype.bindEvent.call(this);
+        };
+        CreateRoleForm.prototype.detach = function () {
+            _super.prototype.detach.call(this);
+        };
+        CreateRoleForm.prototype.unbindEvent = function () {
+            // no event to unbind
+        };
+        return CreateRoleForm;
+    }(form_15.Form));
+    exports.CreateRoleForm = CreateRoleForm;
+});
+define("project/ac-role", ["require", "exports", "common/component", "project/create-role-form"], function (require, exports, component_34, create_role_form_1) {
+    "use strict";
+    var AcRole = (function (_super) {
+        __extends(AcRole, _super);
+        function AcRole(root) {
+            return _super.call(this, root) || this;
+        }
+        AcRole.prototype.decorate = function () {
+            _super.prototype.decorate.call(this);
+            this.form = new create_role_form_1.CreateRoleForm(document.getElementById(this.id + "-create"));
+        };
+        AcRole.prototype.bindEvent = function () {
+            _super.prototype.bindEvent.call(this);
+        };
+        AcRole.prototype.detach = function () {
+            _super.prototype.detach.call(this);
+        };
+        AcRole.prototype.unbindEvent = function () {
+            // no event to unbind
+        };
+        return AcRole;
+    }(component_34.Component));
+    exports.AcRole = AcRole;
+});
+define("project/app", ["require", "exports", "common/component", "project/login", "project/add-product", "project/add-category", "project/order-create-marketplace", "project/order-create-courier", "project/create-order", "project/order-list", "project/create-news", "project/restock", "project/create-supplier", "project/list-supplier", "project/retur", "project/adjustment-stock", "project/restock-list", "project/marketplace-list", "project/adjustment-list", "project/courier-list", "project/category-list", "project/product-list", "project/employee-list", "project/list-reseller", "project/add-employee", "project/add-reseller", "project/ac-index", "project/ac-role"], function (require, exports, component_35, login_1, add_product_1, add_category_1, order_create_marketplace_1, order_create_courier_1, create_order_1, order_list_1, create_news_1, restock_1, create_supplier_1, list_supplier_1, retur_1, adjustment_stock_1, restock_list_1, marketplace_list_1, adjustment_list_1, courier_list_1, category_list_1, product_list_1, employee_list_1, list_reseller_1, add_employee_1, add_reseller_1, ac_index_1, ac_role_1) {
     "use strict";
     var App = (function (_super) {
         __extends(App, _super);
@@ -3092,6 +3176,12 @@ define("project/app", ["require", "exports", "common/component", "project/login"
             else if (this.root.getElementsByClassName('res-list').length !== 0) {
                 this.listReseller = new list_reseller_1.ListReseller(document.getElementById("rlr"));
             }
+            else if (this.root.getElementsByClassName('ac-index').length !== 0) {
+                this.acIndex = new ac_index_1.AcIndex(document.getElementById("aci"));
+            }
+            else if (this.root.getElementsByClassName('ac-role').length !== 0) {
+                this.acRole = new ac_role_1.AcRole(document.getElementById("acr"));
+            }
         };
         App.prototype.bindEvent = function () {
             _super.prototype.bindEvent.call(this);
@@ -3103,7 +3193,7 @@ define("project/app", ["require", "exports", "common/component", "project/login"
             // no event to unbind
         };
         return App;
-    }(component_33.Component));
+    }(component_35.Component));
     exports.App = App;
 });
 define("project/init", ["require", "exports", "project/app"], function (require, exports, app_1) {

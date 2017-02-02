@@ -1,6 +1,7 @@
 <?php
 namespace frontend\controllers;
 
+use common\widgets\SearchFieldDropdownItem;
 use frontend\services\EmployeeService;
 use Yii;
 use frontend\models\AddEmployeeForm;
@@ -20,6 +21,10 @@ class EmployeeController extends Controller
     
     public function actionAdd() {
         return $this->render('add-employee', ['id' => 'eae']);
+    }
+    
+    public function actionSearch() {
+        
     }
 
     public function actionPAdd() {

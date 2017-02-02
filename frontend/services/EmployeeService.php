@@ -28,6 +28,12 @@ class EmployeeService extends RService
         ];
     }
     
+    public function search() {
+        if(!$this->validate()) {
+            return false;
+        }
+    }
+    
     public function getEmployeeList() {
         if(!$this->validate()) {
             return false;

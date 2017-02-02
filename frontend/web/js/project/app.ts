@@ -24,6 +24,8 @@ import {EmployeeList} from './employee-list';
 import {ListReseller} from './list-reseller';
 import {AddEmployee} from './add-employee';
 import {AddReseller} from './add-reseller';
+import {AcIndex} from './ac-index';
+import {AcRole} from './ac-role';
 
 export class App extends Component{
 
@@ -72,6 +74,10 @@ export class App extends Component{
     addReseller : AddReseller;
 
     listReseller : ListReseller;
+
+    acIndex : AcIndex;
+
+    acRole : AcRole;
 
     constructor(root: HTMLElement) {
         super(root);
@@ -147,6 +153,12 @@ export class App extends Component{
         }
         else if(this.root.getElementsByClassName('res-list').length !== 0) {
             this.listReseller = new ListReseller(document.getElementById("rlr"));
+        }
+        else if(this.root.getElementsByClassName('ac-index').length !== 0) {
+            this.acIndex = new AcIndex(document.getElementById("aci"));
+        }
+        else if(this.root.getElementsByClassName('ac-role').length !== 0) {
+            this.acRole = new AcRole(document.getElementById("acr"));
         }
     
     }
