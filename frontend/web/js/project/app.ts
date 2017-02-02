@@ -21,7 +21,9 @@ import {CourierList} from './courier-list';
 import {CategoryList} from './category-list';
 import {ProductList} from './product-list';
 import {EmployeeList} from './employee-list';
+import {ListReseller} from './list-reseller';
 import {AddEmployee} from './add-employee';
+import {AddReseller} from './add-reseller';
 
 export class App extends Component{
 
@@ -66,6 +68,10 @@ export class App extends Component{
     employeeList : EmployeeList;
 
     addEmployee : AddEmployee;
+
+    addReseller : AddReseller;
+
+    listReseller : ListReseller;
 
     constructor(root: HTMLElement) {
         super(root);
@@ -133,9 +139,16 @@ export class App extends Component{
         else if(this.root.getElementsByClassName('add-emp').length !== 0) {
             this.addEmployee = new AddEmployee(document.getElementById("eae"));
         }
+        else if(this.root.getElementsByClassName('add-res').length !== 0) {
+            this.addReseller = new AddReseller(document.getElementById("rar"));
+        }
         else if(this.root.getElementsByClassName('emp-list').length !== 0) {
             this.employeeList = new EmployeeList(document.getElementById("ele"));
         }
+        else if(this.root.getElementsByClassName('res-list').length !== 0) {
+            this.listReseller = new ListReseller(document.getElementById("rlr"));
+        }
+    
     }
     
     bindEvent() {

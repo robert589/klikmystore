@@ -2,16 +2,19 @@
 
 use yii\db\Migration;
 
-class m170201_094912_create_table_reseller extends Migration
+class m170202_075812_create_table_reseller extends Migration
 {
     public function up()
     {
+        $this->execute("CREATE TABLE reseller(
+            id int not null primary key,
+            foreign key(id) references user(id))");
 
     }
 
     public function down()
     {
-        echo "m170201_094912_create_table_reseller cannot be reverted.\n";
+        echo "m170202_075812_create_table_reseller cannot be reverted.\n";
 
         return false;
     }

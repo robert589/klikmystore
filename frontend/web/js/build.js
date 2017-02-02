@@ -2863,14 +2863,41 @@ define("project/employee-list", ["require", "exports", "common/component", "comm
     }(component_29.Component));
     exports.EmployeeList = EmployeeList;
 });
-define("project/add-employee-form", ["require", "exports", "common/form", "common/input-field", "common/text-area-field", "common/system"], function (require, exports, form_13, input_field_14, text_area_field_4, system_25) {
+define("project/list-reseller", ["require", "exports", "common/component", "common/button", "common/system"], function (require, exports, component_30, button_17, system_25) {
+    "use strict";
+    var ListReseller = (function (_super) {
+        __extends(ListReseller, _super);
+        function ListReseller(root) {
+            return _super.call(this, root) || this;
+        }
+        ListReseller.prototype.decorate = function () {
+            _super.prototype.decorate.call(this);
+            this.addBtn = new button_17.Button(document.getElementById(this.id + "-add"), this.redirectToAdd.bind(this));
+        };
+        ListReseller.prototype.redirectToAdd = function () {
+            window.location.href = system_25.System.getBaseUrl() + "/reseller/add";
+        };
+        ListReseller.prototype.bindEvent = function () {
+            _super.prototype.bindEvent.call(this);
+        };
+        ListReseller.prototype.detach = function () {
+            _super.prototype.detach.call(this);
+        };
+        ListReseller.prototype.unbindEvent = function () {
+            // no event to unbind
+        };
+        return ListReseller;
+    }(component_30.Component));
+    exports.ListReseller = ListReseller;
+});
+define("project/add-employee-form", ["require", "exports", "common/form", "common/input-field", "common/text-area-field", "common/system"], function (require, exports, form_13, input_field_14, text_area_field_4, system_26) {
     "use strict";
     var AddEmployeeForm = (function (_super) {
         __extends(AddEmployeeForm, _super);
         function AddEmployeeForm(root) {
             var _this = _super.call(this, root) || this;
             _this.successCb = function (data) {
-                window.location.href = system_25.System.getBaseUrl() + "/employee/list";
+                window.location.href = system_26.System.getBaseUrl() + "/employee/list";
             }.bind(_this);
             return _this;
         }
@@ -2901,7 +2928,7 @@ define("project/add-employee-form", ["require", "exports", "common/form", "commo
     }(form_13.Form));
     exports.AddEmployeeForm = AddEmployeeForm;
 });
-define("project/add-employee", ["require", "exports", "common/component", "project/add-employee-form"], function (require, exports, component_30, add_employee_form_1) {
+define("project/add-employee", ["require", "exports", "common/component", "project/add-employee-form"], function (require, exports, component_31, add_employee_form_1) {
     "use strict";
     var AddEmployee = (function (_super) {
         __extends(AddEmployee, _super);
@@ -2922,10 +2949,72 @@ define("project/add-employee", ["require", "exports", "common/component", "proje
             // no event to unbind
         };
         return AddEmployee;
-    }(component_30.Component));
+    }(component_31.Component));
     exports.AddEmployee = AddEmployee;
 });
-define("project/app", ["require", "exports", "common/component", "project/login", "project/add-product", "project/add-category", "project/order-create-marketplace", "project/order-create-courier", "project/create-order", "project/order-list", "project/create-news", "project/restock", "project/create-supplier", "project/list-supplier", "project/retur", "project/adjustment-stock", "project/restock-list", "project/marketplace-list", "project/adjustment-list", "project/courier-list", "project/category-list", "project/product-list", "project/employee-list", "project/add-employee"], function (require, exports, component_31, login_1, add_product_1, add_category_1, order_create_marketplace_1, order_create_courier_1, create_order_1, order_list_1, create_news_1, restock_1, create_supplier_1, list_supplier_1, retur_1, adjustment_stock_1, restock_list_1, marketplace_list_1, adjustment_list_1, courier_list_1, category_list_1, product_list_1, employee_list_1, add_employee_1) {
+define("project/add-reseller-form", ["require", "exports", "common/form", "common/input-field", "common/text-area-field", "common/system"], function (require, exports, form_14, input_field_15, text_area_field_5, system_27) {
+    "use strict";
+    var AddResellerForm = (function (_super) {
+        __extends(AddResellerForm, _super);
+        function AddResellerForm(root) {
+            var _this = _super.call(this, root) || this;
+            _this.successCb = function (data) {
+                window.location.href = system_27.System.getBaseUrl() + "/reseller/list";
+            }.bind(_this);
+            return _this;
+        }
+        AddResellerForm.prototype.rules = function () {
+            this.setRequiredField([this.firstNameField, this.emailField, this.passwordField]);
+            this.registerFields([this.firstNameField, this.lastNameField,
+                this.telpField, this.addrField, this.emailField, this.passwordField]);
+        };
+        AddResellerForm.prototype.decorate = function () {
+            _super.prototype.decorate.call(this);
+            this.firstNameField = new input_field_15.InputField(document.getElementById(this.id + "-first-name"));
+            this.lastNameField = new input_field_15.InputField(document.getElementById(this.id + "-last-name"));
+            this.telpField = new input_field_15.InputField(document.getElementById(this.id + "-telephone"));
+            this.addrField = new text_area_field_5.TextAreaField(document.getElementById(this.id + "-address"));
+            this.emailField = new input_field_15.InputField(document.getElementById(this.id + "-email"));
+            this.passwordField = new input_field_15.InputField(document.getElementById(this.id + "-password"));
+        };
+        AddResellerForm.prototype.bindEvent = function () {
+            _super.prototype.bindEvent.call(this);
+        };
+        AddResellerForm.prototype.detach = function () {
+            _super.prototype.detach.call(this);
+        };
+        AddResellerForm.prototype.unbindEvent = function () {
+            // no event to unbind
+        };
+        return AddResellerForm;
+    }(form_14.Form));
+    exports.AddResellerForm = AddResellerForm;
+});
+define("project/add-reseller", ["require", "exports", "common/component", "project/add-reseller-form"], function (require, exports, component_32, add_reseller_form_1) {
+    "use strict";
+    var AddReseller = (function (_super) {
+        __extends(AddReseller, _super);
+        function AddReseller(root) {
+            return _super.call(this, root) || this;
+        }
+        AddReseller.prototype.decorate = function () {
+            _super.prototype.decorate.call(this);
+            this.form = new add_reseller_form_1.AddResellerForm(document.getElementById(this.id + "-form"));
+        };
+        AddReseller.prototype.bindEvent = function () {
+            _super.prototype.bindEvent.call(this);
+        };
+        AddReseller.prototype.detach = function () {
+            _super.prototype.detach.call(this);
+        };
+        AddReseller.prototype.unbindEvent = function () {
+            // no event to unbind
+        };
+        return AddReseller;
+    }(component_32.Component));
+    exports.AddReseller = AddReseller;
+});
+define("project/app", ["require", "exports", "common/component", "project/login", "project/add-product", "project/add-category", "project/order-create-marketplace", "project/order-create-courier", "project/create-order", "project/order-list", "project/create-news", "project/restock", "project/create-supplier", "project/list-supplier", "project/retur", "project/adjustment-stock", "project/restock-list", "project/marketplace-list", "project/adjustment-list", "project/courier-list", "project/category-list", "project/product-list", "project/employee-list", "project/list-reseller", "project/add-employee", "project/add-reseller"], function (require, exports, component_33, login_1, add_product_1, add_category_1, order_create_marketplace_1, order_create_courier_1, create_order_1, order_list_1, create_news_1, restock_1, create_supplier_1, list_supplier_1, retur_1, adjustment_stock_1, restock_list_1, marketplace_list_1, adjustment_list_1, courier_list_1, category_list_1, product_list_1, employee_list_1, list_reseller_1, add_employee_1, add_reseller_1) {
     "use strict";
     var App = (function (_super) {
         __extends(App, _super);
@@ -2994,8 +3083,14 @@ define("project/app", ["require", "exports", "common/component", "project/login"
             else if (this.root.getElementsByClassName('add-emp').length !== 0) {
                 this.addEmployee = new add_employee_1.AddEmployee(document.getElementById("eae"));
             }
+            else if (this.root.getElementsByClassName('add-res').length !== 0) {
+                this.addReseller = new add_reseller_1.AddReseller(document.getElementById("rar"));
+            }
             else if (this.root.getElementsByClassName('emp-list').length !== 0) {
                 this.employeeList = new employee_list_1.EmployeeList(document.getElementById("ele"));
+            }
+            else if (this.root.getElementsByClassName('res-list').length !== 0) {
+                this.listReseller = new list_reseller_1.ListReseller(document.getElementById("rlr"));
             }
         };
         App.prototype.bindEvent = function () {
@@ -3008,7 +3103,7 @@ define("project/app", ["require", "exports", "common/component", "project/login"
             // no event to unbind
         };
         return App;
-    }(component_31.Component));
+    }(component_33.Component));
     exports.App = App;
 });
 define("project/init", ["require", "exports", "project/app"], function (require, exports, app_1) {
